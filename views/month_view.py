@@ -5,7 +5,7 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from utils.localizations import DAYS_OF_WEEK, _
 
-KV = """
+KV = '''
 <MonthView>:
     orientation: 'vertical'
     
@@ -13,12 +13,12 @@ KV = """
         id: label_month_year
         font_size: 24
         size_hint_y: 0.1
-        text: ""  # dynamically filled from Python
+        text: ''  # dynamically filled from Python
 
     GridLayout:
         id: calendar_grid
         cols: 7
-"""
+'''
 
 Builder.load_string(KV)
 
@@ -33,9 +33,9 @@ class MonthView(BoxLayout):
     def build_view(self):
         self.ids.calendar_grid.clear_widgets()
 
-        year, month = self.get_current_date()
+        year, month, _ = self.get_current_date()
 
-        self.ids.label_month_year.text = f"{calendar.month_name[month]} {year}"
+        self.ids.label_month_year.text = f'{calendar.month_name[month]} {year}'
 
         # Add weekday labels
         for day in DAYS_OF_WEEK:
@@ -46,7 +46,7 @@ class MonthView(BoxLayout):
         for week in month_days:
             for day in week:
                 if day == 0:
-                    self.ids.calendar_grid.add_widget(Label(text=""))
+                    self.ids.calendar_grid.add_widget(Label(text=''))
                 else:
                     day_btn = Button(text=str(day))
                     day_btn.bind(on_release=lambda instance, d=day: self.on_day_selected(d))

@@ -1,33 +1,46 @@
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.gridlayout import GridLayout
 from kivy.lang import Builder
 from kivy.uix.label import Label
+from kivy.uix.widget import Widget
 import calendar
 from utils.localizations import DAYS_OF_WEEK, _
+from datetime import datetime, timedelta
 
-KV = """
+KV = '''
 <WeekView>:
-    orientation: "vertical"
+    orientation: 'vertical'
 
     Label:
         id: label_month_year
         font_size: 24
         size_hint_y: 0.1
-        text: ""
+        text: ''
 
     Label:
         id: label_week
         font_size: 18
         size_hint_y: None
         height: 30
-        text: ""
+        text: ''
 
-    GridLayout:
-        id: calendar_grid
-        cols: 8
-        rows: 25
-        spacing: 2
-        size_hint_y: 1
-"""
+    FloatLayout:
+        id: main_container
+
+        GridLayout:
+            id: calendar_grid
+            cols: 8
+            rows: 25
+            spacing: 1
+            size_hint: (1, 1)
+            pos_hint: {'x': 0, 'y': 0}
+
+        FloatLayout:
+            id: event_overlay
+            size_hint: (1, 1)
+            pos_hint: {'x': 0, 'y': 0}
+'''
 
 Builder.load_string(KV)
 
@@ -38,26 +51,62 @@ class WeekView(BoxLayout):
         self.get_current_week = get_current_week
         self.controller = controller
         self.on_day_selected = on_day_selected
+        self.current_date = get_current_date()
         self.build_view()
 
     def build_view(self):
         self.ids.calendar_grid.clear_widgets()
+        self.ids.event_overlay.clear_widgets()
 
         this_week = self.get_current_week()
-        year, month = self.get_current_date()
-        self.ids.label_month_year.text = f"{calendar.month_name[month]} {year}"
+        year, month, _ = self.get_current_date()
+        today = datetime(*self.current_date)
+        start_on_sunday = (today.weekday() + 1 ) % 7 # shift start of week Monday -> Sunday
+        start_of_week = today - timedelta(days=start_on_sunday)
 
-        self.ids.calendar_grid.add_widget(Label(text=f"Week {this_week}"))
-        # Add weekday labels
+        # Display current year & headers
+        self.ids.label_month_year.text = f'{calendar.month_name[month]} {year}'
+        self.ids.calendar_grid.add_widget(Label(text=f'Week {this_week}'))
         for day in DAYS_OF_WEEK:
             self.ids.calendar_grid.add_widget(Label(text=day, bold=True))
 
-        # Add time grid
+        # Build empty 24-hour x 7-day grid
         for hour in range(24):
-            time_label = f"{hour:02}:00"
-            self.ids.calendar_grid.add_widget(Label(text=time_label, size_hint_x=None, width=60))
+            self.ids.calendar_grid.add_widget(Label(text=f'{hour:02}:00'))
             for _ in range(7):
-                self.ids.calendar_grid.add_widget(Label(text=""))
+                self.ids.calendar_grid.add_widget(Label())  # background cells
+
+        # Populate event blocks per day
+        for i in range(7):
+            current_day = (start_of_week + timedelta(days=i)).date()
+            events = self.controller.get_events_on(current_day)
+            for event in events:
+                self.add_event_block(event)
+        
+    def add_event_block(self, event):
+        dt = datetime.strptime(f'{event.date} {event.time}', '%Y-%m-%d %H:%M:%S')
+        weekday_index = (dt.weekday() + 1) % 7
+        hour = dt.hour
+        minute = dt.minute
+
+        # Assuming grid is full width/height, calculate positions
+        grid_width = self.ids.calendar_grid.width
+        grid_height = self.ids.calendar_grid.height
+
+        col_width = grid_width / 8  # 1 for hour labels + 7 days
+        row_height = grid_height / 25  # 1 row for weekday labels + 24 hours
+
+        x = col_width * (weekday_index + 1)
+        y = row_height * (24 - hour - (minute / 60))
+
+        event_label = Label(
+            text=event.title,
+            size_hint=(None, None),
+            size=(col_width, row_height),
+            pos=(x, y),
+            color=(1, 1, 1, 1)
+        )
+        self.ids.event_overlay.add_widget(event_label)
 
     def update_week(self, year, month):
         self.build_view()

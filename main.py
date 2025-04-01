@@ -63,25 +63,25 @@ class CalendarUI(BoxLayout):
     # screen orientation check
     def check_orientation(self):
         if Window.width > Window.height:
-            return "landscape"
+            return 'landscape'
         else:
-            return "portrait"
+            return 'portrait'
 
     def on_window_resize(self, instance, width, height):
         orientation = self.check_orientation()
-        # print(f"[DEBUG] Orientation changed: {orientation}")
+        # print(f'[DEBUG] Orientation changed: {orientation}')
         self.adjust_layout(orientation)
     
     def adjust_layout(self, orientation):
-        if orientation == "landscape":
-            self.orientation = "horizontal"
+        if orientation == 'landscape':
+            self.orientation = 'horizontal'
         else:
-            self.orientation = "vertical"
+            self.orientation = 'vertical'
     # orientation check ends here
 
     # update current year & month
     def get_current_date(self):
-        return self.current_year, self.current_month
+        return self.current_year, self.current_month, self.current_day
     
     # update current week
     def get_current_week(self):
@@ -240,7 +240,7 @@ class MainApp(MDApp):
         # load events on startup
         self.event_controller = EventController()
         self.event_controller.load_from_file()
-        self.theme_cls.theme_style = "Dark"
+        self.theme_cls.theme_style = 'Dark'
         return CalendarUI(controller=self.event_controller)
 
 if __name__ == '__main__':

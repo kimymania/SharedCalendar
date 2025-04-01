@@ -3,7 +3,7 @@ from kivy.lang import Builder
 from kivy.uix.button import Button
 from utils.localizations import MONTHS_OF_YEAR, _
 
-KV = """
+KV = '''
 <YearView>:
     orientation: 'vertical'
 
@@ -11,7 +11,7 @@ KV = """
         id: label_year
         font_size: 24
         size_hint_y: 0.1
-        text: ""  # filled in build_view()
+        text: ''  # filled in build_view()
 
     GridLayout:
         id: calendar_grid
@@ -19,7 +19,7 @@ KV = """
         rows: 4
         spacing: 5
         padding: 10
-"""
+'''
 
 Builder.load_string(KV)
 
@@ -34,7 +34,7 @@ class YearView(BoxLayout):
     def build_view(self):
         self.ids.calendar_grid.clear_widgets()
 
-        year, _ = self.get_current_date()
+        year, _, _ = self.get_current_date()
         self.ids.label_year.text = str(year)
 
         for index, month_name in enumerate(MONTHS_OF_YEAR, start=1):

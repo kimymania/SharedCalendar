@@ -11,5 +11,9 @@ v0.1 (MVP version)
 
 To-do:
 - Add date, time pickers for add event popup
+- Add date selector for event
+- Split event time into start time & end time
 - Show selected date & time in add event popup
 - Display event data on WeekView, MonthView
+- Create view_event_popup to view event details
+- NEEDS FIXING: events not showing up on WeekView

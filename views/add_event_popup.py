@@ -7,44 +7,44 @@ from kivy.metrics import dp
 from models.events import EventContainer
 from datetime import datetime
 
-KV = """
+KV = '''
 <AddEventPopup>:
     BoxLayout:
-        orientation: "vertical"
+        orientation: 'vertical'
         spacing: 10
         padding: 10
 
         MDTextField:
             id: title_input
-            mode: "outlined"
+            mode: 'outlined'
             MDTextFieldHintText:
-                text: "Title"
+                text: 'Title'
 
         MDButton:
             id: time_input
-            style: "outlined"
+            style: 'outlined'
             on_release: root.show_time_picker()
             MDButtonText:
-                text: "Select time"
+                text: 'Select time'
 
         MDTextField:
             id: location_input
-            mode: "outlined"
+            mode: 'outlined'
             MDTextFieldHintText:
-                text: "Location"
+                text: 'Location'
 
         MDTextField:
             id: type_input
-            mode: "outlined"
+            mode: 'outlined'
             MDTextFieldHintText:
-                text: "Type"
+                text: 'Type'
 
         MDButton:
-            style: "outlined"
+            style: 'outlined'
             on_release: root.add_event()
             MDButtonText:
-                text: "Add Event"
-"""
+                text: 'Add Event'
+'''
 
 Builder.load_string(KV)
 
@@ -54,26 +54,26 @@ class AddEventPopup(Popup):
         self.selected_date = selected_date
         self.controller = controller
         self.on_event_added = on_event_added
-        self.title = f"Add Event on {selected_date}"
+        self.title = f'Add Event on {selected_date}'
         self.size_hint = (0.8, 0.6)
 
-        self.selected_hour = "12"
-        self.selected_minute = "00"
-        self.selected_am_pm = "am"
+        self.selected_hour = '12'
+        self.selected_minute = '00'
+        self.selected_am_pm = 'am'
 
     def add_event(self):
         hour = int(self.selected_hour)
-        if self.selected_am_pm == "pm" and hour < 12:
+        if self.selected_am_pm == 'pm' and hour < 12:
             hour += 12
-        elif self.selected_am_pm == "am" and hour == 12:
+        elif self.selected_am_pm == 'am' and hour == 12:
             hour = 0
         self.selected_hour = str(hour)
-        selected_time = f"{self.selected_hour}:{self.selected_minute}"
+        selected_time = f'{self.selected_hour}:{self.selected_minute}'
 
         event = EventContainer(
             title=self.ids.title_input.text.strip(),
             date=self.selected_date, # considering implementing date picker
-            time=datetime.strptime(selected_time, "%H:%M").time(),
+            time=datetime.strptime(selected_time, '%H:%M').time(),
             type=self.ids.type_input.text.strip(),
             location=self.ids.location_input.text.strip()
         )
