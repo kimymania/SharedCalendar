@@ -54,11 +54,10 @@ class MonthView(BoxLayout):
 
     def load_events_for_date(self, selected_date):
         """
-        Example method to load events for a specific date and update the UI.
+        Load events for a specific date and update the UI.
         """
-        events = self.event_controller.get_events_by_date(selected_date)
-        # Now update your UI with the retrieved events
-        print("Loaded events:", events)
+        events = self.controller.get_events_by_date(selected_date)  # Updated method
+        print("Loaded events:", events)  # Example debug output
 
     def update_month(self, year, month) -> None:
         self.build_view()

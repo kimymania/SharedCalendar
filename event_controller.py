@@ -56,6 +56,31 @@ class EventController:
             except Exception as e:
                 print("Error processing event row:", row, e)
         return events
+
+    def get_event_by_id(self, event_id: int) -> EventContainer:
+        """
+        Retrieve a single event by its ID.
+        """
+        with get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT id, title, date, time_start, time_end, type, location
+                FROM events
+                WHERE id = ?
+            ''', (event_id,))
+            row = cursor.fetchone()
+
+        if row:
+            return EventContainer(
+                index=row[0],
+                title=row[1],
+                date=date.fromisoformat(row[2]),
+                time_start=datetime.strptime(row[3], '%H:%M').time(),
+                time_end=datetime.strptime(row[4], '%H:%M').time() if row[4] else None,
+                type=row[5],
+                location=row[6]
+            )
+        return None
     
     def search_by_type_or_title(self, keyword: str):
         keyword = keyword.lower()

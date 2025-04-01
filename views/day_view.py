@@ -44,13 +44,13 @@ class DayView(Popup):
     def build_view(self):
         self.ids.event_list.clear_widgets()
 
-        events = self.controller.get_events_on(self.selected_date)
+        events = self.controller.get_events_by_date(self.selected_date)  # Updated method
         if events:
             for event in events:
                 self.ids.event_list.add_widget(
                     Button(
-                        text=f'{event.time_start.strftime('%H:%M')} - {event.title}'
-                        )
+                        text=f'{event.time_start.strftime("%H:%M")} - {event.title}'  # Fixed formatting
+                    )
                 )
         else:
             self.ids.event_list.add_widget(Label(text='No events'))

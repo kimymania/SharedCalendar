@@ -1,9 +1,8 @@
 from kivy.uix.popup import Popup
 from kivy.lang import Builder
-from kivymd.uix.pickers import MDTimePickerDialVertical
-from kivy.metrics import dp
 from models import EventContainer
 from datetime import datetime
+from tpicker import TimePicker
 
 KV = '''
 <AddEventPopup>:
@@ -23,11 +22,11 @@ KV = '''
             Button:
                 text: 'Start Time'
                 id: time_start_input
-                on_release: root.show_time_picker
+                on_release: root.toggle_time_picker('start')
             Button:
                 text: 'End Time'
                 id: time_end_input
-                on_release: root.show_time_picker
+                on_release: root.toggle_time_picker('end')
 
             Label:
                 text: 'Location'
@@ -38,6 +37,11 @@ KV = '''
                 text: 'Type'
             TextInput:
                 id: type_input
+
+        BoxLayout:
+            id: time_picker_container
+            size_hint_y: None
+            height: 0  # Initially hidden
 
         Button:
             text: 'Add Event'
@@ -55,11 +59,42 @@ class AddEventPopup(Popup):
         self.title = f'Add Event on {selected_date}'
         self.size_hint = (0.8, 0.6)
 
-        self.selected_hour_start = '11'
-        self.selected_minute_start = '00'
-        self.selected_hour_end = '12'
-        self.selected_minute_end = '00'
-        self.selected_am_pm = 'am'
+        self.time_picker = None  # Keep track of the active TimePicker
+        self.active_time_type = None  # Track whether it's 'start' or 'end'
+
+    def toggle_time_picker(self, time_type):
+        """
+        Toggle the TimePicker UI below the button.
+        :param time_type: 'start' or 'end' to indicate which time to update.
+        """
+        container = self.ids.time_picker_container
+
+        # If the TimePicker is already active, remove it
+        if self.time_picker:
+            container.clear_widgets()
+            container.height = 0
+            self.time_picker = None
+            self.active_time_type = None
+            return
+
+        # Create a new TimePicker
+        def on_time_selected(selected_time):
+            # Update the button text and store the selected time
+            if time_type == 'start':
+                self.ids.time_start_input.text = selected_time
+            elif time_type == 'end':
+                self.ids.time_end_input.text = selected_time
+
+            # Remove the TimePicker after selection
+            container.clear_widgets()
+            container.height = 0
+            self.time_picker = None
+            self.active_time_type = None
+
+        self.time_picker = TimePicker(on_time_selected=on_time_selected)
+        container.add_widget(self.time_picker)
+        container.height = 300  # Adjust height to fit the TimePicker
+        self.active_time_type = time_type
 
     def add_event(self) -> None:
         hour = int(self.selected_hour)
@@ -81,14 +116,9 @@ class AddEventPopup(Popup):
             location=self.ids.location_input.text.strip()
         )
 
-        self.controller.add_event(event)
-        self.controller.save_to_file()
+        self.controller.add_event(event)  # Save directly to SQLite
 
         if self.on_event_added:
             self.on_event_added(event)
 
         self.dismiss()
-
-    # Time picker needs construction
-    def show_time_picker(self, *args) -> None:
-        pass

@@ -76,7 +76,7 @@ class WeekView(BoxLayout):
         # Populate event blocks per day
         for i in range(7):
             current_day = (start_of_week + timedelta(days=i)).date()
-            events = self.controller.get_events_on(current_day)
+            events = self.controller.get_events_by_date(current_day)  # Updated method
             for event in events:
                 self.add_event_block(event)
         
