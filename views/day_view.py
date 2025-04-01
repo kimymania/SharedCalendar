@@ -1,7 +1,8 @@
 from kivy.uix.popup import Popup
 from kivy.lang import Builder
-from kivy.uix.label import Label
+from kivy.uix.button import Button
 from views.add_event_popup import AddEventPopup
+from views.view_event_popup import ViewEventPopup
 
 KV = '''
 <DayView>:
@@ -46,16 +47,25 @@ class DayView(Popup):
         if events:
             for event in events:
                 self.ids.event_list.add_widget(
-                    Label(text=f'{event.time.strftime('%H:%M')} - {event.title}')
+                    Button(
+                        text=f'{event.time.strftime('%H:%M')} - {event.title}',
+                        on_release=self.open_view_event_popup()
+                        )
                 )
         else:
-            self.ids.event_list.add_widget(Label(text='No events'))
+            self.ids.event_list.add_widget(Button(text='No events'))
 
     def open_add_event_popup(self, _):
         popup = AddEventPopup(
             selected_date=self.selected_date,
             controller=self.controller,
             on_event_added=self.refresh
+        )
+        popup.open()
+
+    def open_view_event_popup(self, _):
+        popup = ViewEventPopup(
+            controller=self.controller
         )
         popup.open()
 

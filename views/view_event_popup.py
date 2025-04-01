@@ -15,10 +15,10 @@ KV = '''
 
 Builder.load_string(KV)
 
-class EventView(Popup):
-    def __init__(self, selected_date, controller, **kwargs):
+class ViewEventPopup(Popup):
+    def __init__(self, event, controller, **kwargs):
         super().__init__(**kwargs)
-        self.selected_date = selected_date
+        self.event = event
         self.controller = controller
         self.build()
     
