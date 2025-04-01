@@ -1,9 +1,6 @@
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.gridlayout import GridLayout
 from kivy.lang import Builder
 from kivy.uix.label import Label
-from kivy.uix.widget import Widget
 import calendar
 from utils.localizations import DAYS_OF_WEEK, _
 from datetime import datetime, timedelta
@@ -54,7 +51,7 @@ class WeekView(BoxLayout):
         self.current_date = get_current_date()
         self.build_view()
 
-    def build_view(self):
+    def build_view(self) -> None:
         self.ids.calendar_grid.clear_widgets()
         self.ids.event_overlay.clear_widgets()
 
@@ -83,7 +80,7 @@ class WeekView(BoxLayout):
             for event in events:
                 self.add_event_block(event)
         
-    def add_event_block(self, event):
+    def add_event_block(self, event) -> None:
         dt = datetime.strptime(f'{event.date} {event.time}', '%Y-%m-%d %H:%M:%S')
         weekday_index = (dt.weekday() + 1) % 7
         hour = dt.hour
@@ -108,5 +105,5 @@ class WeekView(BoxLayout):
         )
         self.ids.event_overlay.add_widget(event_label)
 
-    def update_week(self, year, month):
+    def update_week(self, year, month) -> None:
         self.build_view()

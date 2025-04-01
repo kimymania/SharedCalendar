@@ -1,10 +1,8 @@
 from kivy.uix.popup import Popup
 from kivy.lang import Builder
-from kivymd.uix.button import MDButton, MDButtonIcon, MDButtonText
-from kivymd.uix.textfield import MDTextField, MDTextFieldHintText
-from kivymd.uix.pickers import MDDockedDatePicker, MDTimePickerDialVertical
+from kivymd.uix.pickers import MDTimePickerDialVertical
 from kivy.metrics import dp
-from models.events import EventContainer
+from models import EventContainer
 from datetime import datetime
 
 KV = '''
@@ -14,36 +12,36 @@ KV = '''
         spacing: 10
         padding: 10
 
-        MDTextField:
-            id: title_input
-            mode: 'outlined'
-            MDTextFieldHintText:
+        GridLayout:
+            cols: 2
+            rows: 4
+            Label:
                 text: 'Title'
+            TextInput:
+                id: title_input
 
-        MDButton:
-            id: time_input
-            style: 'outlined'
-            on_release: root.show_time_picker()
-            MDButtonText:
-                text: 'Select time'
+            Button:
+                text: 'Start Time'
+                id: time_start_input
+                on_release: root.show_time_picker
+            Button:
+                text: 'End Time'
+                id: time_end_input
+                on_release: root.show_time_picker
 
-        MDTextField:
-            id: location_input
-            mode: 'outlined'
-            MDTextFieldHintText:
+            Label:
                 text: 'Location'
-
-        MDTextField:
-            id: type_input
-            mode: 'outlined'
-            MDTextFieldHintText:
+            TextInput:
+                id: location_input
+        
+            Label:
                 text: 'Type'
+            TextInput:
+                id: type_input
 
-        MDButton:
-            style: 'outlined'
+        Button:
+            text: 'Add Event'
             on_release: root.add_event()
-            MDButtonText:
-                text: 'Add Event'
 '''
 
 Builder.load_string(KV)
@@ -57,23 +55,28 @@ class AddEventPopup(Popup):
         self.title = f'Add Event on {selected_date}'
         self.size_hint = (0.8, 0.6)
 
-        self.selected_hour = '12'
-        self.selected_minute = '00'
+        self.selected_hour_start = '11'
+        self.selected_minute_start = '00'
+        self.selected_hour_end = '12'
+        self.selected_minute_end = '00'
         self.selected_am_pm = 'am'
 
-    def add_event(self):
+    def add_event(self) -> None:
         hour = int(self.selected_hour)
         if self.selected_am_pm == 'pm' and hour < 12:
             hour += 12
         elif self.selected_am_pm == 'am' and hour == 12:
             hour = 0
-        self.selected_hour = str(hour)
-        selected_time = f'{self.selected_hour}:{self.selected_minute}'
+        self.selected_hour_start = str(hour)
+        self.selected_hour_end = str(hour)
+        selected_time_start = f'{self.selected_hour_start}:{self.selected_minute_start}'
+        selected_time_end = f'{self.selected_hour_end}:{self.selected_minute_end}'
 
         event = EventContainer(
             title=self.ids.title_input.text.strip(),
-            date=self.selected_date, # considering implementing date picker
-            time=datetime.strptime(selected_time, '%H:%M').time(),
+            date=self.selected_date,
+            time_start=datetime.strptime(selected_time_start, '%H:%M').time(),
+            time_end=datetime.strptime(selected_time_end, '%H:%M').time(),
             type=self.ids.type_input.text.strip(),
             location=self.ids.location_input.text.strip()
         )
@@ -86,32 +89,6 @@ class AddEventPopup(Popup):
 
         self.dismiss()
 
-    # DatePicker - not implemented yet
-    # def show_date_picker(self, focus):
-    #     if not focus:
-    #         return
-        
-    #     date_dialog = MDDockedDatePicker()
-    #     date_dialog.pos = [
-    #         self.root.ids.field.center_x - date_dialog.width / 2,
-    #         self.root.ids.field.y - (date_dialog.height + dp(32)),
-    #     ]
-    #     date_dialog.open()
-
-    def show_time_picker(self, *args):
-        time_picker = MDTimePickerDialVertical(hour=self.selected_hour, minute=self.selected_minute)
-        time_picker.bind(on_cancel=self.time_picker_cancel)
-        time_picker.bind(on_ok=self.time_picker_ok)
-        time_picker.bind(on_am_pm=self.time_picker_am_pm)
-        time_picker.open()
-
-    def time_picker_cancel(self, time_picker):
-        time_picker.dismiss()
-    
-    def time_picker_ok(self, time_picker):
-        self.selected_hour = time_picker.hour
-        self.selected_minute = time_picker.minute
-        time_picker.dismiss()
-    
-    def time_picker_am_pm(self, time_picker, am_pm_value):
-        self.selected_am_pm = am_pm_value
+    # Time picker needs construction
+    def show_time_picker(self, *args) -> None:
+        pass

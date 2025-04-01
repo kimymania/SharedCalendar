@@ -1,6 +1,6 @@
 README
 
-v0.1 (MVP version)
+v0.3 (MVP version)
 - Week, Month, Year View added
 - Navigation & date sync between views implemented
 - DayView popup upon clicking on date in MonthView calendar
@@ -8,6 +8,7 @@ v0.1 (MVP version)
 - Save event data in .json file
 - Load event data on startup
 - Display event data on DayView
+- Implementing SQLite3 as database handling
 
 To-do:
 - Add date, time pickers for add event popup

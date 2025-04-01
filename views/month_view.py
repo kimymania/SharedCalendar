@@ -30,7 +30,7 @@ class MonthView(BoxLayout):
         self.on_day_selected = on_day_selected
         self.build_view()
 
-    def build_view(self):
+    def build_view(self) -> None:
         self.ids.calendar_grid.clear_widgets()
 
         year, month, _ = self.get_current_date()
@@ -52,5 +52,13 @@ class MonthView(BoxLayout):
                     day_btn.bind(on_release=lambda instance, d=day: self.on_day_selected(d))
                     self.ids.calendar_grid.add_widget(day_btn)
 
-    def update_month(self, year, month):
+    def load_events_for_date(self, selected_date):
+        """
+        Example method to load events for a specific date and update the UI.
+        """
+        events = self.event_controller.get_events_by_date(selected_date)
+        # Now update your UI with the retrieved events
+        print("Loaded events:", events)
+
+    def update_month(self, year, month) -> None:
         self.build_view()

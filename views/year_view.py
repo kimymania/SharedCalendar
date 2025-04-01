@@ -31,7 +31,7 @@ class YearView(BoxLayout):
         self.on_month_selected = on_month_selected
         self.build_view()
 
-    def build_view(self):
+    def build_view(self) -> None:
         self.ids.calendar_grid.clear_widgets()
 
         year, _, _ = self.get_current_date()
@@ -42,5 +42,5 @@ class YearView(BoxLayout):
             btn.bind(on_release=lambda instance, m=index: self.on_month_selected(m))
             self.ids.calendar_grid.add_widget(btn)
 
-    def update_year(self, year):
+    def update_year(self, year) -> None:
         self.build_view()

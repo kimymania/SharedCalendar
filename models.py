@@ -3,9 +3,11 @@ from datetime import date, time
 
 @dataclass
 class EventContainer:
+    index: None
     title: str
     date: date
-    time: time
+    time_start: time
+    time_end: time
     type: str
     location: str
 
