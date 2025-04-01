@@ -26,5 +26,12 @@
     "time": "14:00",
     "type": "sdfsf",
     "location": "dsfsf"
+  },
+  {
+    "title": "Test5",
+    "date": "2024-01-01",
+    "time": "16:00",
+    "type": "Typo",
+    "location": "TestLoc6"
   }
 ]
