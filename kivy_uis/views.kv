@@ -1,0 +1,31 @@
+<CalendarUI>:
+    orientation: 'vertical'
+    padding: dp(10)
+    spacing: dp(10)
+
+    Label:
+        id: month_label
+        size_hint_y: 0.1
+
+    GridLayout:
+        id: calendar_grid
+        cols: 7
+
+<DayView>:
+    title: root.selected_day
+    title_align: 'center'
+    size_hint: 0.9, 0.9
+    BoxLayout:
+        orientation: 'vertical'
+
+        BoxLayout:
+            id: events_list
+            orientation: 'vertical'
+            size_hint_y: 0.9
+            padding: dp(10)
+            spacing: dp(10)
+
+        Button:
+            text: 'Close'
+            size_hint_y: 0.1
+            on_release: root.close_popup(self)
