@@ -4,7 +4,7 @@ MainApp class
 """
 from kivy.app import App
 
-from calendar_logic import CalendarUI
+from cal_functions import CalendarUI
 
 # kivy doesn't require def __init__() - uses build() instead
 class MainApp(App):

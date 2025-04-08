@@ -1,0 +1,72 @@
+# Display mini calendar to choose date from - hidden by default
+<DateSelector>
+    title: 'Select Date'
+    title_align: 'center'
+    size_hint: 0.8, 0.6
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.1
+            spacing: dp(10)
+            Button:
+                id: selector_prev_month
+                text: '<'
+                # on_release:
+
+            Label:
+                id: selector_month
+                text_align: 'center'
+
+            Button:
+                id: selector_next_month
+                text: '>'
+                # on_release:
+
+        GridLayout:
+            id: selector_calendar
+            cols: 7
+
+<TimeSelector>
+    title: 'Select Time'
+    title_align: 'center'
+    size_hint: 0.8, 0.4
+    BoxLayout:
+        orientation: 'horizontal'
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            GridLayout:
+                id: select_meridiem
+                cols: 1
+                rows: 2
+                size_hint_y: None
+                height: self.minimum_height
+                Button:
+                    id: am_indicator
+                    text: 'AM'
+                    size_hint_y: None
+                    height: dp(40)
+                Button:
+                    id: pm_indicator
+                    text: 'PM'
+                    size_hint_y: None
+                    height: dp(40)
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            GridLayout:
+                id: select_hour
+                cols: 1
+                rows: 12
+                size_hint_y: None
+                height: self.minimum_height
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            GridLayout:
+                id: select_minute
+                cols: 1
+                rows: 60
+                size_hint_y: None
+                height: self.minimum_height
