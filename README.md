@@ -11,6 +11,10 @@ Implementations
 - Add Event Popup
   - Clickable buttons for start/end day & start/end time
   - Day selector - calendar view
-    - WIP: Calendar Navigation
+    - Calendar navigation complete
+    - Pressing on buttons save date for later use -> returns as datetime.date() type
+    - Button widget text updates upon selecting & closing selector popup window
   - Time selector - meridiem indicator/hour/minute, scrollable
-    - WIP: Button actions
+    - Button Actions complete
+    - Pressing on buttons save date for later use -> returns as datetime.time() type
+    - Button widget text updates upon selecting & closing selector popup window

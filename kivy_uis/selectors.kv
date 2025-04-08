@@ -1,5 +1,5 @@
-# Display mini calendar to choose date from - hidden by default
-<DateSelector>
+#:kivy 2.3.1
+<DateSelector>:
     title: 'Select Date'
     title_align: 'center'
     size_hint: 0.8, 0.6
@@ -12,7 +12,8 @@
             Button:
                 id: selector_prev_month
                 text: '<'
-                # on_release:
+                size_hint_x: 0.3
+                on_release: root.navigate_cal('prev')
 
             Label:
                 id: selector_month
@@ -21,17 +22,19 @@
             Button:
                 id: selector_next_month
                 text: '>'
-                # on_release:
+                size_hint_x: 0.3
+                on_release: root.navigate_cal('next')
 
         GridLayout:
             id: selector_calendar
             cols: 7
 
-<TimeSelector>
+<TimeSelector>:
     title: 'Select Time'
     title_align: 'center'
     size_hint: 0.8, 0.4
     BoxLayout:
+        id: time_selector
         orientation: 'horizontal'
         ScrollView:
             do_scroll_x: False
@@ -47,11 +50,13 @@
                     text: 'AM'
                     size_hint_y: None
                     height: dp(40)
+                    on_release: root.select_meridiem_indicator(self, 'AM')
                 Button:
                     id: pm_indicator
                     text: 'PM'
                     size_hint_y: None
                     height: dp(40)
+                    on_release: root.select_meridiem_indicator(self, 'PM')
         ScrollView:
             do_scroll_x: False
             do_scroll_y: True

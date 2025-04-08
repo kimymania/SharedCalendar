@@ -22,15 +22,17 @@ class AddEventPopup(Popup):
     """ Popup for adding events """
     selected_date_start = StringProperty('')
     selected_date_end = StringProperty('')
-    selected_time = StringProperty('')
+    selected_time_start = StringProperty('')
+    selected_time_end = StringProperty('')
     def __init__(self, selected_day: datetime, **kwargs) -> None:
         super().__init__(**kwargs)
         self.selected_date: datetime = selected_day
-        self.selected_date_start = str(selected_day)
-        self.selected_date_end = str(selected_day)
+        self.selected_date_start = selected_day.strftime('%y/%m/%d')
+        self.selected_date_end = selected_day.strftime('%y/%m/%d')
         hour: str = '12'
         minute: str = '00'
-        self.selected_time: str = f'{hour}:{minute}'
+        self.selected_time_start: str = f'{hour}:{minute}'
+        self.selected_time_end: str = f'{hour}:{minute}'
         self.build_view()
 
     def build_view(self) -> None:
@@ -38,38 +40,43 @@ class AddEventPopup(Popup):
 
     def toggle_date_selector(self, instance, target: str) -> None:
         """ Toggle date selector for start/end date """
-        #
-        # TRIED AND FAILED TO MAKE DROPDOWN STYLE CALENDAR
-        #
-        # widget = self.ids.date_selector
-        # if widget.disabled:
-        #     widget.size = 350, 600
-        #     widget.opacity = 1
-        #     widget.disabled = False
-        # else:
-        #     widget.size = 0, 0
-        #     widget.opacity = 0
-        #     widget.disabled = True
-
         if target == 'start':
-            date_selector = DateSelector(current_day=self.selected_date)
+            date_selector = DateSelector(
+                current_day=self.selected_date,
+                return_date=self.receive_selected_date_start
+            )
             date_selector.open()
         elif target == 'end':
-            date_selector = DateSelector(current_day=self.selected_date)
+            date_selector = DateSelector(
+                current_day=self.selected_date,
+                return_date=self.receive_selected_date_end
+            )
             date_selector.open()
         else:
             return
+
+    def receive_selected_date_start(self, date: datetime):
+        self.selected_date_start = date.strftime('%y/%m/%d')
+
+    def receive_selected_date_end(self, date: datetime):
+        self.selected_date_end = str(date)
 
     def toggle_time_selector(self, instance, target: str) -> None:
         """ Open time selector for start/end time """
         if target == 'start':
-            time_selector = TimeSelector()
+            time_selector = TimeSelector(return_time=self.receive_selected_time_start)
             time_selector.open()
         elif target == 'end':
-            time_selector = TimeSelector()
+            time_selector = TimeSelector(return_time=self.receive_selected_time_end)
             time_selector.open()
         else:
             return
+
+    def receive_selected_time_start(self, time: datetime):
+        self.selected_time_start = time.strftime('%H:%M')
+
+    def receive_selected_time_end(self, time: datetime):
+        self.selected_time_end = time.strftime('%H:%M')
 
     def save_event(self, instance) -> None:
         """ Save to JSON DB """
