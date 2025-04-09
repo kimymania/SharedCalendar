@@ -1,7 +1,6 @@
 README
 
-2025/Apr/08
-Implementations
+25/04/08
 
 - CalendarUI (Month View)
   - Navigation between months
@@ -18,4 +17,11 @@ Implementations
     - Button Actions complete
     - Pressing on buttons save date for later use -> returns as datetime.time() type
     - Button widget text updates upon selecting & closing selector popup window
-- WIP: save/load data to/from db.json
+
+25/04/09
+
+- 'Add Event' button functionality in AddEventPopup
+  - Save event data to db.json file -> close popup
+  - WIP: Load event data to DayView
+    - Events are not loaded in order of start time
+    - Align text to the left

@@ -10,6 +10,7 @@ from kivy.uix.button import Button
 from kivy.core.window import Window
 from kivy.properties import StringProperty
 from kivy.lang import Builder
+from kivy.metrics import dp
 
 from database import Database
 from cal_selectors import DateSelector, TimeSelector
@@ -79,7 +80,7 @@ class AddEventPopup(Popup):
         self.selected_time_end = time.strftime('%H:%M')
 
     def save_event(self, instance) -> None:
-        """ Save to JSON DB """
+        """ Save to db.json and close popup """
         Database().add_event(
             title=self.ids.event_name.text,
             start_date=self.selected_date_start,
@@ -88,6 +89,7 @@ class AddEventPopup(Popup):
             end_time=self.selected_time_end,
             location=self.ids.event_location.text
         )
+        self.dismiss()
 
 class DayView(Popup):
     """ Selected day view popup """
@@ -99,8 +101,52 @@ class DayView(Popup):
         self.build_view()
 
     def build_view(self) -> None:
-        # Database.load_event()
-        pass
+        """ Load events from database """
+        current_day: str = self.selected_day.strftime('%y/%m/%d')
+        db = Database()
+        events = db.load_event()
+        no_events = True
+        for event in events:
+            if current_day == event['start_date'] or current_day == event['end_date']:
+                # Create event UI boxes
+                event_box = BoxLayout(
+                    orientation='horizontal',
+                    size_hint_y=None,
+                    height=dp(40),
+                )
+                event_time_box = BoxLayout(
+                    orientation='vertical',
+                    size_hint_x=0.2
+                )
+                event_title = event['title']
+                event_start_time = event['start_time']
+                event_end_time = event['end_time']
+                event_location = event['location']
+
+                event_time_box.add_widget(Label(
+                    text=event_start_time,
+                    font_size=dp(15)
+                ))
+                event_time_box.add_widget(Label(
+                    text=event_end_time,
+                    font_size=dp(15)
+                ))
+                event_box.add_widget(event_time_box)
+                event_box.add_widget(Label(
+                    text=event_title,
+                    halign='left'
+                ))
+                event_box.add_widget(Label(
+                    text=event_location,
+                    halign='left'
+                ))
+                self.ids.events_list.add_widget(event_box)
+                no_events = False
+            else:
+                continue
+        if no_events:
+            no_label = Label(text='No Events')
+            self.ids.events_list.add_widget(no_label)
 
     def add_event(self, instance) -> None:
         """ Load AddEvent popup """

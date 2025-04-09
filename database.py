@@ -15,7 +15,8 @@ class Database:
             self, title: str, start_date: str, end_date: str,
             start_time: str, end_time: str, location: str
         ) -> None:
-        new_event = {
+        """ Add Event to db.json file """
+        new_event: dict = {
             'title': title,
             'start_date': start_date,
             'end_date': end_date,
@@ -24,7 +25,6 @@ class Database:
             'location': location
         }
 
-        # get file and store data in local 'events' list
         if os.path.isfile(self.db_path):
             with open(self.db_path, 'r', encoding='utf-8') as f:
                 try:
@@ -34,12 +34,19 @@ class Database:
         else:
             events = []
 
-        # add new data to this list
-        events.append(new_event)
+        events.append(dict(new_event))
 
-        # rewrite all data to .json file
         with open(self.db_path, 'w', encoding='utf-8') as f:
-            json.dump(self.db_path, f, ensure_ascii=False, indent=4)
+            json.dump(events, f, ensure_ascii=False, indent=4)
 
-    def load_event(self):
-        pass
+    def load_event(self) -> list | None:
+        """ Get data from db.json -> return list to caller """
+        if os.path.isfile(self.db_path):
+            with open(self.db_path, 'r', encoding='utf-8') as f:
+                try:
+                    events: list = json.load(f)
+                    return events
+                except json.JSONDecodeError:
+                    return None
+        else:
+            return
