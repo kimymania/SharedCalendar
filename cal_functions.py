@@ -59,7 +59,7 @@ class AddEventPopup(Popup):
         self.selected_date_start = date.strftime('%y/%m/%d')
 
     def receive_selected_date_end(self, date: datetime):
-        self.selected_date_end = str(date)
+        self.selected_date_end = date.strftime('%y/%m/%d')
 
     def toggle_time_selector(self, instance, target: str) -> None:
         """ Open time selector for start/end time """
@@ -81,7 +81,12 @@ class AddEventPopup(Popup):
     def save_event(self, instance) -> None:
         """ Save to JSON DB """
         Database().add_event(
-
+            title=self.ids.event_name.text,
+            start_date=self.selected_date_start,
+            end_date=self.selected_date_end,
+            start_time=self.selected_time_start,
+            end_time=self.selected_time_end,
+            location=self.ids.event_location.text
         )
 
 class DayView(Popup):
@@ -94,6 +99,7 @@ class DayView(Popup):
         self.build_view()
 
     def build_view(self) -> None:
+        # Database.load_event()
         pass
 
     def add_event(self, instance) -> None:

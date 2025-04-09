@@ -1,0 +1,15 @@
+{
+    "title": "TestEvent",
+    "start_date": "25/04/03",
+    "end_date": "25/04/18",
+    "start_time": "12:00",
+    "end_time": "12:00",
+    "location": "TestLocation"
+}{
+    "title": "",
+    "start_date": "25/04/15",
+    "end_date": "25/04/15",
+    "start_time": "12:00",
+    "end_time": "12:00",
+    "location": ""
+}

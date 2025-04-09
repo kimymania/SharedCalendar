@@ -20,11 +20,15 @@
         orientation: 'vertical'
 
         BoxLayout:
-            id: events_list
             orientation: 'vertical'
             size_hint_y: 0.8
             padding: dp(10)
             spacing: dp(10)
+            GridLayout:
+                id: events_list
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
 
         Button:
             text: 'Add Event'

@@ -104,7 +104,7 @@ class TimeSelector(Popup):
         self.build()
 
     def build(self) -> None:
-        for hour in range(12):
+        for hour in range(1, 13):
             btn_hour = Button(
                 text=f'{hour}',
                 size_hint_y=None,

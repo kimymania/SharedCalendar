@@ -18,3 +18,4 @@ Implementations
     - Button Actions complete
     - Pressing on buttons save date for later use -> returns as datetime.time() type
     - Button widget text updates upon selecting & closing selector popup window
+- WIP: save/load data to/from db.json
