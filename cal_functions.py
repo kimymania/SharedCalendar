@@ -12,8 +12,9 @@ from kivy.properties import StringProperty
 from kivy.lang import Builder
 from kivy.metrics import dp
 
+from selectors_logic import DateSelector, TimeSelector
+
 from database import Database
-from cal_selectors import DateSelector, TimeSelector
 from common_utils import LOCAL_CALENDAR, get_month
 
 Builder.load_file('kivy_uis/views.kv')

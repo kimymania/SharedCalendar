@@ -16,6 +16,7 @@ Builder.load_file('kivy_uis/selectors.kv')
 class DateSelector(Popup):
     def __init__(self, current_day: datetime = None, return_date=None, **kwargs) -> None:
         super().__init__(**kwargs)
+        self.calendar = LOCAL_CALENDAR
         self.selected_day = current_day or date.today()
         self.year: int = self.selected_day.year
         self.month: int = self.selected_day.month
@@ -31,7 +32,7 @@ class DateSelector(Popup):
         year: int = self.year
         month: int = self.month
 
-        self.ids.selector_month.text = f"{LOCAL_CALENDAR.formatmonthname(
+        self.ids.selector_month.text = f"{self.calendar.formatmonthname(
             theyear=year,
             themonth=month,
             width=0,
@@ -39,13 +40,11 @@ class DateSelector(Popup):
         )}"
 
         for weekday in range(7):
-            self.ids.selector_calendar.add_widget(Label(text=LOCAL_CALENDAR.formatweekday(day=weekday, width=2)))
+            self.ids.selector_calendar.add_widget(Label(text=self.calendar.formatweekday(day=(weekday + 6) % 7, width=2)))
         for week in get_month(year=year, month=month):
             for day in week:
                 if day.month == month:
-                    btn = Button(
-                        text=str(day.day)
-                    )
+                    btn = Button(text=str(day.day))
                     btn.bind(on_release=self.on_day_selected)
                     self.ids.selector_calendar.add_widget(btn)
                 else:

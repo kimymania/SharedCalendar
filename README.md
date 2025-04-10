@@ -22,6 +22,10 @@ README
 
 - 'Add Event' button functionality in AddEventPopup
   - Save event data to db.json file -> close popup
-  - WIP: Load event data to DayView
+  - Event data loaded to DayView
+  (WIP):
     - Events are not loaded in order of start time
     - Align text to the left
+
+25/04/10
+- Fixed date selector to display Sunday as first day of week (weekday + 6) % 7
