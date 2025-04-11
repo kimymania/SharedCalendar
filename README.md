@@ -25,9 +25,11 @@ README
   - Event data loaded to DayView
 
 25/04/10
+
 - Fixed date selector to display Sunday as first day of week (weekday + 6) % 7
 
 25/04/11
+
 - Events sorted by date & time
 - Adjusted event GUI properties (padding, spacing, alignment)
-- Started coding year_view (need to add logic to switch view)
+- Adding YearView page

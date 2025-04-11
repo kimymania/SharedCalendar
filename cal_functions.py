@@ -121,7 +121,7 @@ class DayView(Popup):
                     orientation='vertical',
                     size_hint_x=0.35
                 )
-                
+
                 event_title_label = Label(
                     text=event['title'],
                     halign='left',
@@ -135,7 +135,7 @@ class DayView(Popup):
                     font_size=dp(15)
                 )
 
-                event_end_time_label = Label(   
+                event_end_time_label = Label(
                     text=event['end_time'],
                     halign='left',
                     font_size=dp(15)
@@ -221,11 +221,6 @@ class MonthView(BoxLayout):
         """ Refresh screen """
         self.build_view()
 
-    def open_year_view(self) -> None:
-        """ Load YearView popup """
-        year_view = YearView(current_year=self.current_year)
-        year_view.build_view()
-
     def on_day_selected(self, day: str) -> None:
         """ Load DayView popup """
         day_view = DayView(selected_day=day)
@@ -234,7 +229,7 @@ class MonthView(BoxLayout):
     def on_key_down(self, window, key, scancode, codepoint, modifier) -> None:
         """ Keyboard key press """
         if key == 273:  # Arrow Up
-            return self.open_year_view()
+            ...
         elif key == 274:  # Arrow Down
             ...
         elif key == 276:  # Left arrow
@@ -254,7 +249,7 @@ class MonthView(BoxLayout):
         dx = touch.x - self._touch_start_x
         if abs(dy) > 50:  # minimum swipe distance
             if dy > 0:
-                self.open_year_view()
+                ...
             else:
                 ...
         if abs(dx) > 50:
@@ -298,28 +293,3 @@ class MonthView(BoxLayout):
             self.orientation = 'horizontal'
         else:
             self.orientation = 'vertical'
-
-class YearView(BoxLayout):
-    def __init__(self, current_year: int, **kwargs) -> None:
-        super().__init__(**kwargs)
-        self.current_year = current_year
-        self.build_view()
-
-    def build_view(self) -> None:
-        self.ids.year_grid.clear_widgets()
-
-        self.ids.year_label.text = f"{self.current_year}"
-
-        for month in range(1, 13):
-            month_btn = Button(text=LOCAL_CALENDAR.formatmonthname(
-                theyear=self.current_year,
-                themonth=month,
-                width=0,
-                withyear=False
-            ))
-            month_btn.bind(on_release=lambda instance, m=month: self.on_month_selected(m))
-            self.ids.year_grid.add_widget(month_btn)
-
-    def on_month_selected(self, month: int) -> None:
-        """ Load MonthView popup """
-        pass
