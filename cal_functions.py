@@ -114,33 +114,44 @@ class DayView(Popup):
                     orientation='horizontal',
                     size_hint_y=None,
                     height=dp(40),
+                    spacing=dp(10),
+                    padding=[dp(10), dp(5)]
                 )
                 event_time_box = BoxLayout(
                     orientation='vertical',
-                    size_hint_x=0.2
+                    size_hint_x=0.35
                 )
-                event_title = event['title']
-                event_start_time = event['start_time']
-                event_end_time = event['end_time']
-                event_location = event['location']
+                
+                event_title_label = Label(
+                    text=event['title'],
+                    halign='left',
+                    valign='middle'
+                )
+                event_title_label.bind(size=event_title_label.setter('text_size'))
 
-                event_time_box.add_widget(Label(
-                    text=event_start_time,
+                event_start_time_label = Label(
+                    text=event['start_time'],
+                    halign='left',
                     font_size=dp(15)
-                ))
-                event_time_box.add_widget(Label(
-                    text=event_end_time,
+                )
+
+                event_end_time_label = Label(   
+                    text=event['end_time'],
+                    halign='left',
                     font_size=dp(15)
-                ))
+                )
+
+                event_location_label = Label(
+                    text=event['location'],
+                    halign='left'
+                )
+                event_location_label.bind(size=event_location_label.setter('text_size'))
+
+                event_time_box.add_widget(event_start_time_label)
+                event_time_box.add_widget(event_end_time_label)
                 event_box.add_widget(event_time_box)
-                event_box.add_widget(Label(
-                    text=event_title,
-                    halign='left'
-                ))
-                event_box.add_widget(Label(
-                    text=event_location,
-                    halign='left'
-                ))
+                event_box.add_widget(event_title_label)
+                event_box.add_widget(event_location_label)
                 self.ids.events_list.add_widget(event_box)
                 no_events = False
             else:
@@ -158,11 +169,10 @@ class DayView(Popup):
         """ Close DayView """
         self.dismiss()
 
-class CalendarUI(BoxLayout):
-    """ Main Calendar UI """
+class MonthView(BoxLayout):
+    """ Main Calendar UI - MonthView """
     def __init__(self, locale: str, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.orientation = 'vertical'
         LOCAL_CALENDAR.locale = locale
         today = datetime.today()
         self.current_year: int = today.year
@@ -184,7 +194,7 @@ class CalendarUI(BoxLayout):
         self.touch_start_y = 0
 
     def build_view(self) -> None:
-        self.ids.calendar_grid.clear_widgets()
+        self.ids.month_grid.clear_widgets()
 
         year = self.current_year
         month = self.current_month
@@ -197,19 +207,24 @@ class CalendarUI(BoxLayout):
         )}"
 
         for day in range(7):
-            self.ids.calendar_grid.add_widget(Label(text=LOCAL_CALENDAR.formatweekday(day=day, width=3)))
+            self.ids.month_grid.add_widget(Label(text=LOCAL_CALENDAR.formatweekday(day=day, width=3)))
         for week in get_month(year=year, month=month):
             for day in week:
                 if day.month == month:
                     btn = Button(text=str(day.day))
                     btn.bind(on_release=lambda instance, d=day: self.on_day_selected(d))
-                    self.ids.calendar_grid.add_widget(btn)
+                    self.ids.month_grid.add_widget(btn)
                 else:
-                    self.ids.calendar_grid.add_widget(Label(text=' '))
+                    self.ids.month_grid.add_widget(Label(text=' '))
 
     def update_view(self, year: int, month: int) -> None:
         """ Refresh screen """
         self.build_view()
+
+    def open_year_view(self) -> None:
+        """ Load YearView popup """
+        year_view = YearView(current_year=self.current_year)
+        year_view.build_view()
 
     def on_day_selected(self, day: str) -> None:
         """ Load DayView popup """
@@ -219,7 +234,7 @@ class CalendarUI(BoxLayout):
     def on_key_down(self, window, key, scancode, codepoint, modifier) -> None:
         """ Keyboard key press """
         if key == 273:  # Arrow Up
-            ...
+            return self.open_year_view()
         elif key == 274:  # Arrow Down
             ...
         elif key == 276:  # Left arrow
@@ -239,7 +254,7 @@ class CalendarUI(BoxLayout):
         dx = touch.x - self._touch_start_x
         if abs(dy) > 50:  # minimum swipe distance
             if dy > 0:
-                ...
+                self.open_year_view()
             else:
                 ...
         if abs(dx) > 50:
@@ -283,3 +298,28 @@ class CalendarUI(BoxLayout):
             self.orientation = 'horizontal'
         else:
             self.orientation = 'vertical'
+
+class YearView(BoxLayout):
+    def __init__(self, current_year: int, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.current_year = current_year
+        self.build_view()
+
+    def build_view(self) -> None:
+        self.ids.year_grid.clear_widgets()
+
+        self.ids.year_label.text = f"{self.current_year}"
+
+        for month in range(1, 13):
+            month_btn = Button(text=LOCAL_CALENDAR.formatmonthname(
+                theyear=self.current_year,
+                themonth=month,
+                width=0,
+                withyear=False
+            ))
+            month_btn.bind(on_release=lambda instance, m=month: self.on_month_selected(m))
+            self.ids.year_grid.add_widget(month_btn)
+
+    def on_month_selected(self, month: int) -> None:
+        """ Load MonthView popup """
+        pass

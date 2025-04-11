@@ -1,5 +1,5 @@
 #:kivy 2.3.1
-<CalendarUI>:
+<MonthView>:
     orientation: 'vertical'
     padding: dp(10)
     spacing: dp(10)
@@ -9,8 +9,21 @@
         size_hint_y: 0.1
 
     GridLayout:
-        id: calendar_grid
+        id: month_grid
         cols: 7
+
+<YearView>:
+    orientation: 'vertical'
+    padding: dp(10)
+    spacing: dp(10)
+
+    Label:
+        id: year_label
+        size_hint_y: 0.1
+
+    GridLayout:
+        id: year_grid
+        cols: 3
 
 <DayView>:
     title: root.selected_day_text
