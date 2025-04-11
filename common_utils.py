@@ -4,14 +4,29 @@ LOCAL_CALENDAR = calendar.LocaleTextCalendar(firstweekday=6)
 
 # ...datescalendar returns MonthList[WeekList[datetime.date]]
 def get_year(year: int) -> list:
-    """ get datetime by year """
+    """
+    get datetime by year
+
+    returns year[quarter[month[week[date]]]]
+    """
     year_keys = LOCAL_CALENDAR.yeardatescalendar(year)
     return year_keys
 
 def get_month(year: int, month: int) -> list:
-    """ get datetime by month """
+    """
+    get datetime by month
+
+    returns month[week[date]]
+    """
     month_keys = LOCAL_CALENDAR.monthdatescalendar(year, month)
     return month_keys
+
+def get_month_name(month: int) -> str:
+    """
+    return string type month name
+    """
+    month_index = month
+    return calendar.month_name[month_index]
 
 def get_week(year: int, month: int, day: int) -> str:
     """ get day numbers by week """

@@ -24,6 +24,21 @@
     GridLayout:
         id: year_grid
         cols: 3
+        rows: 4
+
+<WeekView>:
+    orientation: 'vertical'
+    padding: dp(10)
+    spacing: dp(10)
+
+    Label:
+        id: week_label
+        size_hint_y: 0.1
+
+    GridLayout:
+        id: week_grid
+        cols: 7
+
 
 <DayView>:
     title: root.selected_day_text
