@@ -13,6 +13,7 @@
 
 - WeekView display
 - WeekView navigation (previous/next week)
+- Explanation dialog for Database class
 
 2025/04/11
 

@@ -9,6 +9,7 @@ from datetime import datetime
 DB_PATH = os.path.join(os.path.dirname(__file__), 'db.json')
 
 class Database:
+    """ Control database manipulation, App <-> JSON db """
     def __init__(self) -> None:
         self.db_path = DB_PATH
 

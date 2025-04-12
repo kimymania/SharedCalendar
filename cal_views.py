@@ -255,7 +255,16 @@ class WeekView(BoxLayout):
         self.week: list = get_week_days(current_day=current_day)
         self.build()
 
-    def build(self):
+        db = Database()
+        events = db.load_event()
+        # wip = trying to match event['start_date'], which is in YYYY/MM/DD format to
+        # self.week which currently returns MM/DD
+        # date_condition = f'{self.current_day.year}'
+        # for event in events:
+        #     if event['start_date'] == self.current_day
+        self.build_events(events)
+
+    def build(self) -> None:
         """
         Top: Month, Year & Week Number
 
@@ -274,11 +283,20 @@ class WeekView(BoxLayout):
                 widget = WeekGrid()
                 self.ids.week_grid.add_widget(widget)
 
+    def build_events(self, events) -> None:
+        for event in events:
+            # if current_day == event['start_date'] or current_day == event['end_date']:
+            #     # Create event UI boxes
+            #     pass
+            # else:
+            #     continue
+            pass
+
 class WeekGrid(Widget):
     """ Used to create empty grid in weekview"""
     def __init__(self, **kwargs) -> None:
         super().__init__(*kwargs)
         self.build()
 
-    def build(self):
+    def build(self) -> None:
         pass
