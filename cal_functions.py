@@ -2,7 +2,7 @@
 Core functions - calendar logic goes through here
 Orientation isn't implemented yet
 """
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout
@@ -18,11 +18,7 @@ class CoreFunctions(BoxLayout):
         self.current_year: int = today.year
         self.current_month: int = today.month
         self.current_day: int = today.day
-        self.current_date: tuple[int, int, int] = (
-            self.current_year,
-            self.current_month,
-            self.current_day
-        )
+        self.current_date: datetime = today
 
         # initialize app window & input controls
         Window.size = (360, 780)
@@ -38,7 +34,7 @@ class CoreFunctions(BoxLayout):
         self.views = [
             YearView(year=self.current_year),
             MonthView(year=self.current_year, month=self.current_month),
-            WeekView()
+            WeekView(current_day=self.current_date)
         ]
         self.view_index = 1 # initialize to MonthView
         self.add_widget(self.views[self.view_index])
@@ -126,9 +122,9 @@ class CoreFunctions(BoxLayout):
 
         elif self.view_index == 2:
             if go_right is True:
-                pass
+                self.current_date += timedelta(days=7)
             elif go_right is False:
-                pass
+                self.current_date += timedelta(days=-7)
         self.update_calendar_gui()
 
     def update_calendar_gui(self, *args) -> None:
@@ -146,7 +142,7 @@ class CoreFunctions(BoxLayout):
         elif self.view_index == 1:
             self.add_widget(MonthView(year=year, month=month))
         elif self.view_index == 2:
-            self.add_widget(WeekView())
+            self.add_widget(WeekView(current_day=self.current_date))
 
     def switch_view(self, go_up: bool, view_number: int) -> None:
         """

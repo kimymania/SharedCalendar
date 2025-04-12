@@ -1,10 +1,18 @@
 # WIP:
 
-- WeekView functionality
-- Event data editing
+- Displaying events in WeekView
+- View event
+- Event editing
 - Display daily events in MonthView
 
 ######
+
+2025/04/12
+
+# ADDED:
+
+- WeekView display
+- WeekView navigation (previous/next week)
 
 2025/04/11
 

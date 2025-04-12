@@ -20,7 +20,6 @@
     Label:
         id: year_label
         size_hint_y: 0.1
-
     GridLayout:
         id: year_grid
         cols: 3
@@ -34,11 +33,34 @@
     Label:
         id: week_label
         size_hint_y: 0.1
+        halign: 'center'
 
     GridLayout:
-        id: week_grid
+        id: week_days
         cols: 7
+        size_hint_y: 0.1
 
+    BoxLayout:
+        orientation: 'vertical'
+        # ScrollView:
+        #     do_scroll_x: False
+        #     do_scroll_y: True
+        GridLayout:
+            id: week_grid
+            cols: 7
+
+<WeekGrid>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 0.2
+        Rectangle:
+            size: self.size
+            pos: self.pos
+        Color:
+            rgba: 0, 0, 0, 1
+        Line:
+            rectangle: (*self.pos, *self.size)
+            width: 1.1
 
 <DayView>:
     title: root.selected_day_text

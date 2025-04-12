@@ -5,6 +5,7 @@ from datetime import datetime
 
 from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.properties import StringProperty
@@ -14,7 +15,9 @@ from kivy.metrics import dp
 from selectors_logic import DateSelector, TimeSelector
 
 from database import Database
-from common_utils import LOCAL_CALENDAR, get_year, get_month, get_month_name, get_week
+from common_utils import (
+    LOCAL_CALENDAR, get_month, get_month_name, get_week_number, get_week_days
+)
 
 Builder.load_file('kivy_uis/views.kv')
 
@@ -193,7 +196,10 @@ class MonthView(BoxLayout):
         )}"
 
         for day in range(7):
-            self.ids.month_grid.add_widget(Label(text=LOCAL_CALENDAR.formatweekday(day=day, width=3)))
+            self.ids.month_grid.add_widget(Label(
+                text=LOCAL_CALENDAR.formatweekday(day=day, width=3),
+                size_hint_y=0.15
+            ))
         for week in get_month(year=year, month=month):
             for day in week:
                 if day.month == month:
@@ -236,10 +242,43 @@ class YearView(BoxLayout):
 
 class WeekView(BoxLayout):
     """ Week View - shows days of week, display week number """
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, current_day: datetime, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.week_label = 'Week' # placeholder, needs changing
+        self.current_day: datetime = current_day
+        self.year_month_label: str = LOCAL_CALENDAR.formatmonthname(
+            theyear=self.current_day.year,
+            themonth=self.current_day.month,
+            width=0,
+            withyear=True
+        )
+        self.week_label: str = get_week_number(current_day=current_day)
+        self.week: list = get_week_days(current_day=current_day)
         self.build()
 
     def build(self):
-        self.ids.week_label.text = self.week_label
+        """
+        Top: Month, Year & Week Number
+
+        Add empty grid at first column
+        """
+        self.ids.week_label.text = f'{self.year_month_label}\nWeek {self.week_label}'
+
+        for day in range(7):
+            self.ids.week_days.add_widget(Label(text=LOCAL_CALENDAR.formatweekday(day=day, width=3)))
+        for date in self.week:
+            self.ids.week_days.add_widget(Label(text=f'{date}', font_size=dp(13)))
+
+        # Draw colored rectangles to show hour grid
+        for d in range(7):
+            for h in range(24):
+                widget = WeekGrid()
+                self.ids.week_grid.add_widget(widget)
+
+class WeekGrid(Widget):
+    """ Used to create empty grid in weekview"""
+    def __init__(self, **kwargs) -> None:
+        super().__init__(*kwargs)
+        self.build()
+
+    def build(self):
+        pass
