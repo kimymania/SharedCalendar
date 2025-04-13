@@ -1,11 +1,25 @@
 # WIP:
 
-- Displaying events in WeekView
 - View event
 - Event editing
 - Display daily events in MonthView
 
 ######
+
+2025/04/13
+
+# ADDED:
+
+- WeekView displays events of the day (title only)
+- 'key' Key to events data - will be used to call up events ('key' will start from 1)
+
+# CHANGED:
+
+- Days of week displays Sunday to Saturday correctly
+
+# REMOVED:
+
+- WeekGrid canvas widget
 
 2025/04/12
 

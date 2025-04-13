@@ -14,19 +14,10 @@ class Database:
         self.db_path = DB_PATH
 
     def add_event(
-            self, title: str, start_date: str, end_date: str,
+            self, key: int, title: str, start_date: str, end_date: str,
             start_time: str, end_time: str, location: str
         ) -> None:
         """ Add Event to db.json file """
-        new_event: dict = {
-            'title': title,
-            'start_date': start_date,
-            'end_date': end_date,
-            'start_time': start_time,
-            'end_time': end_time,
-            'location': location
-        }
-
         if os.path.isfile(self.db_path):
             with open(self.db_path, 'r', encoding='utf-8') as f:
                 try:
@@ -35,6 +26,21 @@ class Database:
                     events = []
         else:
             events = []
+
+        # apply 'key' value to each event
+        keys: int = len(events)
+        if key is None:
+            key = keys + 1
+
+        new_event: dict = {
+            'key': key,
+            'title': title,
+            'start_date': start_date,
+            'end_date': end_date,
+            'start_time': start_time,
+            'end_time': end_time,
+            'location': location
+        }
 
         events.append(dict(new_event))
         events.sort(key=lambda x: (datetime.strptime(x['start_date'], '%y/%m/%d'), datetime.strptime(x['start_time'], '%H:%M')))

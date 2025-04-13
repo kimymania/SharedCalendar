@@ -36,9 +36,9 @@ class AddEventPopup(Popup):
         minute: str = '00'
         self.selected_time_start: str = f'{hour}:{minute}'
         self.selected_time_end: str = f'{hour}:{minute}'
-        self.build_view()
+        self.build()
 
-    def build_view(self) -> None:
+    def build(self) -> None:
         pass
 
     def toggle_date_selector(self, instance, target: str) -> None:
@@ -88,6 +88,7 @@ class AddEventPopup(Popup):
     def save_event(self, instance) -> None:
         """ Save to db.json and close popup """
         Database().add_event(
+            key=None,
             title=self.ids.event_name.text,
             start_date=self.selected_date_start,
             end_date=self.selected_date_end,
@@ -97,6 +98,22 @@ class AddEventPopup(Popup):
         )
         self.dismiss()
 
+class ViewEventPopup(Popup):
+    """ Popup for viewing events """
+    def __init__(self, event_key: int, selected_day: datetime, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.selected_date: datetime = selected_day
+        self.selected_date_start = selected_day.strftime('%y/%m/%d')
+        self.selected_date_end = selected_day.strftime('%y/%m/%d')
+        hour: str = '12'
+        minute: str = '00'
+        self.selected_time_start: str = f'{hour}:{minute}'
+        self.selected_time_end: str = f'{hour}:{minute}'
+        self.build()
+
+    def build(self):
+        pass
+
 class DayView(Popup):
     """ Selected day view popup """
     selected_day_text = StringProperty('')
@@ -104,9 +121,9 @@ class DayView(Popup):
         super().__init__(**kwargs)
         self.selected_day: datetime = selected_day
         self.selected_day_text: str = f'{selected_day.strftime('%Y / %m / %d %A')}'
-        self.build_view()
+        self.build()
 
-    def build_view(self) -> None:
+    def build(self) -> None:
         """ Load events from database """
         current_day: str = self.selected_day.strftime('%y/%m/%d')
         db = Database()
@@ -180,9 +197,9 @@ class MonthView(BoxLayout):
         super().__init__(**kwargs)
         self.current_year = year
         self.current_month = month
-        self.build_view()
+        self.build()
 
-    def build_view(self) -> None:
+    def build(self) -> None:
         self.ids.month_grid.clear_widgets()
 
         year = self.current_year
@@ -197,7 +214,7 @@ class MonthView(BoxLayout):
 
         for day in range(7):
             self.ids.month_grid.add_widget(Label(
-                text=LOCAL_CALENDAR.formatweekday(day=day, width=3),
+                text=LOCAL_CALENDAR.formatweekday(day=(day + 6) % 7, width=3),
                 size_hint_y=0.15
             ))
         for week in get_month(year=year, month=month):
@@ -267,53 +284,29 @@ class WeekView(BoxLayout):
     def build(self) -> None:
         """
         Top: Month, Year & Week Number
-
-        Add empty grid at first column
         """
         self.ids.week_label.text = f'{self.year_month_label}\nWeek {self.week_label}'
 
         for day in range(7):
-            self.ids.week_days.add_widget(Label(text=LOCAL_CALENDAR.formatweekday(day=day, width=3)))
+            self.ids.week_days.add_widget(Label(text=LOCAL_CALENDAR.formatweekday(day=(day + 6) % 7, width=3)))
         for date in self.week:
             self.ids.week_days.add_widget(Label(text=f'{date}', font_size=dp(13)))
 
-        # Draw colored rectangles to show hour grid
-        for d in range(7):
-            for h in range(24):
-                widget = WeekGrid()
-                time_label: str = f'{h:02}:00'
-                self.ids.week_grid.add_widget(widget)
-                # if d == 0:
-                #     self.ids.week_grid.add_widget(Label(
-                #         text=time_label,
-                #         halign='left',
-                #         valign='top',
-                #         text_size=self.size
-                #     ))
-
     def build_events(self, events) -> None:
+        week: list = self.week
         for event in events:
-            # if current_day == event['start_date'] or current_day == event['end_date']:
-            #     # Create event UI boxes
-            #     pass
-            # else:
-            #     continue
-            pass
+            for day in week:
+                formatted_day = f'{self.current_day.strftime('%y')}/{day}'
+                if formatted_day == event['start_date'] or formatted_day == event['end_date']:
+                    event_title_label = Label(
+                        text=event['title'],
+                        halign='left',
+                        valign='middle',
+                        size_hint_y=None,
+                        height=dp(40)
+                    )
+                    event_title_label.bind(size=event_title_label.setter('text_size'))
 
-class WeekGrid(Widget):
-    """ Used to create empty grid in weekview"""
-    def __init__(self, **kwargs) -> None:
-        super().__init__(*kwargs)
-        self.build()
-
-    def build(self) -> None:
-        pass
-
-class WeekEvent(Widget):
-    """ Used to draw event widgets on grid """
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
-        self.build()
-
-    def build(self) -> None:
-        pass
+                    self.ids.week_grid.add_widget(event_title_label)
+                else:
+                    self.ids.week_grid.add_widget(Label(text=''))

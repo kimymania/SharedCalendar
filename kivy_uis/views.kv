@@ -40,35 +40,9 @@
         cols: 7
         size_hint_y: 0.1
 
-    BoxLayout:
-        orientation: 'vertical'
-        # ScrollView:
-        #     do_scroll_x: False
-        #     do_scroll_y: True
-        GridLayout:
-            id: week_grid
-            cols: 7
-
-<WeekGrid>:
-    canvas.before:
-        Color:
-            rgba: 1, 1, 1, 0.2
-        Rectangle:
-            size: self.size
-            pos: self.pos
-        Color:
-            rgba: 0, 0, 0, 1
-        Line:
-            rectangle: (*self.pos, *self.size)
-            width: 1.1
-
-<WeekEvent>:
-    canvas:
-        Color:
-            rgba: 0, 0.9, 0.6, 1
-        Rectangle:
-            size: self.size
-            pos: self.pos
+    GridLayout:
+        id: week_grid
+        cols: 7
 
 <DayView>:
     title: root.selected_day_text
@@ -156,3 +130,62 @@
                 spacing: dp(5)
                 size_hint: 0.5, 0.3
                 on_release: root.save_event(self)
+
+<ViewEventPopup>:
+    title: 'View Event'
+    title_align: 'center'
+    size_hint: 0.8, 0.6
+    auto_dismiss: True
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(10)
+        padding: dp(10)
+        TextInput:
+            id: event_name
+            size_hint_y: 0.35
+            hint_text: 'Event Name'
+            multiline: False
+
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(10)
+            size_hint_y: 0.35
+            Label:
+                text: 'Date'
+                size_hint_x: 0.2
+            Button:
+                text: root.selected_date_start
+                on_release: root.toggle_date_selector(self, 'start')
+
+            Button:
+                text: root.selected_date_end
+                on_release: root.toggle_date_selector(self, 'end')
+
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(10)
+            size_hint_y: 0.35
+            Label:
+                text: 'Time'
+                size_hint_x: 0.2
+            Button:
+                text: root.selected_time_start
+                on_release: root.toggle_time_selector(self, 'start')
+
+            Button:
+                text: root.selected_time_end
+                on_release: root.toggle_time_selector(self, 'end')
+
+        Label:
+            id: event_location
+            size_hint_y: 0.35
+
+        AnchorLayout:
+            anchor_x: 'center'
+            anchor_y: 'bottom'
+            Button:
+                id: event_edit_btn
+                text: 'Edit Event'
+                spacing: dp(5)
+                size_hint: 0.5, 0.3
+                on_release: root.open_edit_event(self)
