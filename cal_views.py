@@ -281,7 +281,15 @@ class WeekView(BoxLayout):
         for d in range(7):
             for h in range(24):
                 widget = WeekGrid()
+                time_label: str = f'{h:02}:00'
                 self.ids.week_grid.add_widget(widget)
+                # if d == 0:
+                #     self.ids.week_grid.add_widget(Label(
+                #         text=time_label,
+                #         halign='left',
+                #         valign='top',
+                #         text_size=self.size
+                #     ))
 
     def build_events(self, events) -> None:
         for event in events:
@@ -296,6 +304,15 @@ class WeekGrid(Widget):
     """ Used to create empty grid in weekview"""
     def __init__(self, **kwargs) -> None:
         super().__init__(*kwargs)
+        self.build()
+
+    def build(self) -> None:
+        pass
+
+class WeekEvent(Widget):
+    """ Used to draw event widgets on grid """
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
         self.build()
 
     def build(self) -> None:
