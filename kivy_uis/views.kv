@@ -140,11 +140,9 @@
         orientation: 'vertical'
         spacing: dp(10)
         padding: dp(10)
-        TextInput:
+        Label:
             id: event_name
             size_hint_y: 0.35
-            hint_text: 'Event Name'
-            multiline: False
 
         BoxLayout:
             orientation: 'horizontal'
@@ -153,13 +151,10 @@
             Label:
                 text: 'Date'
                 size_hint_x: 0.2
-            Button:
-                text: root.selected_date_start
-                on_release: root.toggle_date_selector(self, 'start')
-
-            Button:
-                text: root.selected_date_end
-                on_release: root.toggle_date_selector(self, 'end')
+            Label:
+                id: date_start
+            Label:
+                id: date_end
 
         BoxLayout:
             orientation: 'horizontal'
@@ -168,13 +163,10 @@
             Label:
                 text: 'Time'
                 size_hint_x: 0.2
-            Button:
-                text: root.selected_time_start
-                on_release: root.toggle_time_selector(self, 'start')
-
-            Button:
-                text: root.selected_time_end
-                on_release: root.toggle_time_selector(self, 'end')
+            Label:
+                id: time_start
+            Label:
+                id: time_end
 
         Label:
             id: event_location
@@ -189,3 +181,31 @@
                 spacing: dp(5)
                 size_hint: 0.5, 0.3
                 on_release: root.open_edit_event(self)
+
+<DayViewEvent@ButtonBehavior+BoxLayout>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: dp(40)
+    spacing: dp(10)
+    padding: dp(10), dp(5)
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_x: 0.3
+        Label:
+            id: start_time
+            halign: 'left'
+            font_size: dp(15)
+        Label:
+            id: end_time
+            halign: 'left'
+            font_size: dp(15)
+
+    Label:
+        id: event_name
+        halign: 'left'
+        valign: 'middle'
+
+    Label:
+        id: event_location
+        halign: 'left'
+        valign: 'middle'

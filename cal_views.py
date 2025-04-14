@@ -4,8 +4,8 @@ Calendar UI using Kivy
 from datetime import datetime
 
 from kivy.uix.popup import Popup
+from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.properties import StringProperty
@@ -36,10 +36,6 @@ class AddEventPopup(Popup):
         minute: str = '00'
         self.selected_time_start: str = f'{hour}:{minute}'
         self.selected_time_end: str = f'{hour}:{minute}'
-        self.build()
-
-    def build(self) -> None:
-        pass
 
     def toggle_date_selector(self, instance, target: str) -> None:
         """ Toggle date selector for start/end date """
@@ -100,18 +96,20 @@ class AddEventPopup(Popup):
 
 class ViewEventPopup(Popup):
     """ Popup for viewing events """
-    def __init__(self, event_key: int, selected_day: datetime, **kwargs) -> None:
+    def __init__(self, event_key: int, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.selected_date: datetime = selected_day
-        self.selected_date_start = selected_day.strftime('%y/%m/%d')
-        self.selected_date_end = selected_day.strftime('%y/%m/%d')
-        hour: str = '12'
-        minute: str = '00'
-        self.selected_time_start: str = f'{hour}:{minute}'
-        self.selected_time_end: str = f'{hour}:{minute}'
-        self.build()
+        db = Database()
+        events = db.load_event()
+        for event in events:
+            if events and event['key'] == event_key:
+                self.ids.event_name.text = event['title']
+                self.ids.date_start.text = event['start_date']
+                self.ids.date_end.text = event['end_date']
+                self.ids.time_start.text = event['start_time']
+                self.ids.time_end.text = event['end_time']
+                self.ids.event_location.text = event['location']
 
-    def build(self):
+    def open_edit_event(self, instance):
         pass
 
 class DayView(Popup):
@@ -132,49 +130,7 @@ class DayView(Popup):
         for event in events:
             if current_day == event['start_date'] or current_day == event['end_date']:
                 # Create event UI boxes
-                event_box = BoxLayout(
-                    orientation='horizontal',
-                    size_hint_y=None,
-                    height=dp(40),
-                    spacing=dp(10),
-                    padding=[dp(10), dp(5)]
-                )
-                event_time_box = BoxLayout(
-                    orientation='vertical',
-                    size_hint_x=0.35
-                )
-
-                event_title_label = Label(
-                    text=event['title'],
-                    halign='left',
-                    valign='middle'
-                )
-                event_title_label.bind(size=event_title_label.setter('text_size'))
-
-                event_start_time_label = Label(
-                    text=event['start_time'],
-                    halign='left',
-                    font_size=dp(15)
-                )
-
-                event_end_time_label = Label(
-                    text=event['end_time'],
-                    halign='left',
-                    font_size=dp(15)
-                )
-
-                event_location_label = Label(
-                    text=event['location'],
-                    halign='left'
-                )
-                event_location_label.bind(size=event_location_label.setter('text_size'))
-
-                event_time_box.add_widget(event_start_time_label)
-                event_time_box.add_widget(event_end_time_label)
-                event_box.add_widget(event_time_box)
-                event_box.add_widget(event_title_label)
-                event_box.add_widget(event_location_label)
-                self.ids.events_list.add_widget(event_box)
+                self.ids.events_list.add_widget(DayViewEvent(event))
                 no_events = False
             else:
                 continue
@@ -190,6 +146,22 @@ class DayView(Popup):
     def close_popup(self, instance) -> None:
         """ Close DayView """
         self.dismiss()
+
+class DayViewEvent(ButtonBehavior, BoxLayout):
+    """ Reusable Event block viewed in DayView """
+    def __init__(self, event_data, **kwargs):
+        super().__init__(**kwargs)
+        self.event_data = event_data
+        self.ids.event_name.text = self.event_data['title']
+        self.ids.start_time.text = self.event_data['start_time']
+        self.ids.end_time.text = self.event_data['end_time']
+        self.ids.event_location.text = self.event_data['location']
+        self.bind(on_release=self._on_release)
+
+    def _on_release(self, instance) -> None:
+        """ Open ViewEvent Popup """
+        popup = ViewEventPopup(self.event_data['key'])
+        popup.open()
 
 class MonthView(BoxLayout):
     """ Main Calendar UI - MonthView """

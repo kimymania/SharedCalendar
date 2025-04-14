@@ -3,8 +3,21 @@
 - View event
 - Event editing
 - Display daily events in MonthView
+- DayView doesn't refresh and display newly added events and need to be re-loaded to view them
 
 ######
+
+2025/04/14
+
+# ADDED:
+
+- ViewEvent Popup
+- Loaded events in DayView are now BoxLayouts with ButtonBehaviour
+- Added new KV class DayViewEvent to use as template for loaded events
+
+# CHANGED:
+
+- Moved the Event Layout Widget from python script to view.kv for reusability
 
 2025/04/13
 

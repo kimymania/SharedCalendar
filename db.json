@@ -1,2 +1,11 @@
 [
+    {
+        "key": 1,
+        "title": "Worship",
+        "start_date": "25/04/14",
+        "end_date": "25/04/14",
+        "start_time": "05:20",
+        "end_time": "06:00",
+        "location": "CSChurch"
+    }
 ]
