@@ -1,9 +1,21 @@
 # WIP:
 
+- Event data: Group tags, Recurrency, Notification, Important! factor
+- Group tags have separate settings options (select colour)
+- Important! factor is bool -> will display on YearView specifically (I haven't yet decided the details on how to implement)
+
+- I think changes to event data should be made first, to avoid re-writing as much as possible
+
+- Display additional event data (other than time, date, title) as icons (with mouse hover tooltip?) in DayView
 - Event editing
+- Settings tab
+- 'Today' button to move back to current day's MonthView instantly
 - Display daily events in MonthView
-- GUI
-- Colors
+- Display month & dates properly in YearView (Button -> BoxLayout w/ ButtonBehavior?)
+- Fix WeekView (looks lame atm)
+- Korean support
+- Dependencies file (kivy fonts)
+- Colors, Graphics
 - Animations
 
 ######
