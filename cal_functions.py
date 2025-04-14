@@ -59,15 +59,19 @@ class CoreFunctions(BoxLayout):
             self.orientation = 'vertical'
 
     def on_key_down(self, window, key, scancode, codepoint, modifier) -> None:
-        """ Keyboard key press """
+        """
+        Keyboard key press -
+        left/right is inverted as the argument go_right was
+        based on swiping movement when it was first made
+        """
         if key == 273:  # Arrow Up
-            return self.switch_view(go_up=True, view_number=self.view_index)
+            return self.switch_view(go_down=True, view_number=self.view_index)
         elif key == 274:  # Arrow Down
-            return self.switch_view(go_up=False, view_number=self.view_index)
+            return self.switch_view(go_down=False, view_number=self.view_index)
         elif key == 276:  # Left arrow
-            return self.navigate(go_right=False)
-        elif key == 275:  # Right arrows
             return self.navigate(go_right=True)
+        elif key == 275:  # Right arrows
+            return self.navigate(go_right=False)
 
     def on_touch_down(self, touch) -> bool | None:
         """ Touch down press """
@@ -83,10 +87,10 @@ class CoreFunctions(BoxLayout):
         dy = touch.y - self._touch_start_y
         dx = touch.x - self._touch_start_x
         if abs(dy) > 50:  # minimum swipe distance
-            if dy > 0:
-                self.switch_view(go_up=True, view_number=self.view_index)
+            if dy < 0:
+                self.switch_view(go_down=True, view_number=self.view_index)
             else:
-                self.switch_view(go_up=False, view_number=self.view_index)
+                self.switch_view(go_down=False, view_number=self.view_index)
         if abs(dx) > 50:
             if dx > 0:
                 self.navigate(go_right=True)
@@ -144,19 +148,19 @@ class CoreFunctions(BoxLayout):
         elif self.view_index == 2:
             self.add_widget(WeekView(current_day=self.current_date))
 
-    def switch_view(self, go_up: bool, view_number: int) -> None:
+    def switch_view(self, go_down: bool, view_number: int) -> None:
         """
         Clear current view, load new view.
         if True -> go up / if False -> go down
         Booleans just feel much faster
         """
         index = view_number
-        if go_up is True:
+        if go_down is True:
             if index == 0:
                 index = 2
             else:
                 index -= 1
-        elif go_up is False:
+        elif go_down is False:
             if index == 2:
                 index = 0
             else:

@@ -19,6 +19,10 @@
 
 - Moved the Event Layout Widget from python script to view.kv for reusability
 
+# FIXED:
+
+- Wrong direction (left/right, up/down) caused by inverted swiping vs arrow keys now works correctly
+
 2025/04/13
 
 # ADDED:
