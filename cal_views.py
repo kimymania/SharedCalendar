@@ -123,6 +123,8 @@ class DayView(Popup):
 
     def build(self) -> None:
         """ Load events from database """
+        self.ids.events_list.clear_widgets()
+
         current_day: str = self.selected_day.strftime('%y/%m/%d')
         db = Database()
         events = db.load_event()
@@ -142,6 +144,11 @@ class DayView(Popup):
         """ Load AddEvent popup """
         add_event = AddEventPopup(selected_day=self.selected_day)
         add_event.open()
+        add_event.bind(on_dismiss=self.refresh_view)
+
+    def refresh_view(self, instance) -> None:
+        """ Refresh after adding new event """
+        self.build()
 
     def close_popup(self, instance) -> None:
         """ Close DayView """
