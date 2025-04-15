@@ -1,2 +1,25 @@
 [
+    {
+        "key": 1,
+        "title": "TestEvent",
+        "start_date": "25/04/11",
+        "end_date": "25/04/11",
+        "start_time": "17:00",
+        "end_time": "17:03",
+        "group_tag": {
+            "name": "TestGroup",
+            "colour": [
+                0,
+                0,
+                1,
+                1
+            ]
+        },
+        "location": "Test",
+        "repeat": true,
+        "repeat_details": {},
+        "notification": true,
+        "notification_details": {},
+        "important": true
+    }
 ]

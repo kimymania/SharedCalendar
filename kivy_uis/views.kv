@@ -118,15 +118,14 @@
         BoxLayout:
             orientation: 'horizontal'
             spacing: dp(10)
+            size_hint_y: 0.35
             TextInput:
                 id: event_group_tag_name
                 hint_text: 'Group Tag'
-                size_hint_y: 0.35
                 multiline: False
             Button:
                 id: colour_picker_btn
                 text: 'Pick Colour'
-                size_hint_y: 0.35
                 on_release: root.open_colour_picker(self)
 
         TextInput:
@@ -134,7 +133,7 @@
             hint_text: 'Location'
             size_hint_y: 0.35
             multiline: False
-        
+
         BoxLayout:
             orientation: 'horizontal'
             spacing: dp(10)
@@ -146,7 +145,7 @@
                 id: event_repeat_checkbox
                 size_hint_x: 0.2
                 on_active: root.toggle_repeat(self)
-        
+
         BoxLayout:
             orientation: 'horizontal'
             spacing: dp(10)
@@ -218,9 +217,55 @@
             Label:
                 id: time_end
 
-        Label:
-            id: event_location
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(10)
             size_hint_y: 0.35
+            Label:
+                text: 'Group Tag'
+                halign: 'right'
+                valign: 'middle'
+            Label:
+                id: group_tag
+                halign: 'left'
+                valign: 'middle'
+
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.35
+            Label:
+                text: 'Location: '
+                halign: 'right'
+                valign: 'middle'
+            Label:
+                id: event_location
+                halign: 'left'
+                valign: 'middle'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.35
+            Label:
+                text: 'Repeat: '
+                halign: 'right'
+                valign: 'middle'
+            Label:
+                id: repeat
+                halign: 'left'
+                valign: 'middle'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.35
+            Label:
+                text: 'Notification: '
+                halign: 'right'
+                valign: 'middle'
+            Label:
+                id: notification
+                halign: 'left'
+                valign: 'middle'
 
         AnchorLayout:
             anchor_x: 'center'

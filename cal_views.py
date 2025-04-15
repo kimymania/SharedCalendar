@@ -94,27 +94,27 @@ class AddEventPopup(Popup):
     def update_group_tag_colour(self, instance) -> None:
         """ Update group tag colour """
         if self.group_tag_colour:
-            self.group_tag_colour = instance.colour
+            self.group_tag_colour = instance
 
     def toggle_repeat(self, instance) -> None:
         """ Toggle repeat checkbox """
-        if self.ids.event_repeat_checkbox.active is False:
+        if not self.ids.event_repeat_checkbox.active:
             self.repeat = False
-        elif self.ids.event_repeat_checkbox.active is True:
+        elif self.ids.event_repeat_checkbox.active:
             self.repeat = True
 
     def toggle_notification(self, instance) -> None:
         """ Toggle notification checkbox """
-        if self.ids.event_notification_checkbox.active is False:
-            self.repeat = False
-        elif self.ids.event_notification_checkbox.active is True:
-            self.repeat = True
+        if not self.ids.event_notification_checkbox.active:
+            self.notification = False
+        elif self.ids.event_notification_checkbox.active:
+            self.notification = True
 
     def toggle_important(self, instance) -> None:
         """ Toggle important checkbox """
-        if self.ids.event_important_checkbox.active is False:
+        if not self.ids.event_important_checkbox.active:
             self.important = False
-        elif self.ids.event_important_checkbox.active is True:
+        elif self.ids.event_important_checkbox.active:
             self.important = True
 
     def save_event(self, instance) -> None:
@@ -149,7 +149,17 @@ class ViewEventPopup(Popup):
                 self.ids.date_end.text = event['end_date']
                 self.ids.time_start.text = event['start_time']
                 self.ids.time_end.text = event['end_time']
+                self.ids.group_tag.text = event['group_tag']['name']
+                self.ids.group_tag.color = event['group_tag']['colour']
                 self.ids.event_location.text = event['location']
+                if event['repeat']:
+                    self.ids.repeat.text = 'Yes'
+                elif not event['repeat']:
+                    self.ids.repeat.text = 'No'
+                if event['notification']:
+                    self.ids.notification.text = 'Yes'
+                elif not event['notification']:
+                    self.ids.notification.text = 'No'
 
     def open_edit_event(self, instance):
         pass

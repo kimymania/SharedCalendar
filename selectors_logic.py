@@ -168,11 +168,11 @@ class ColourPicker(Popup):
         self.selected_colour = [1, 1, 1, 1]
         self.bind(on_dismiss=self._on_dismiss)
 
-    def select_colour(self, instance, background_color) -> None:
+    def select_colour(self, instance) -> None:
         """ Logic to set selected colour """
-        self.selected_colour = background_color
+        self.selected_colour = instance
 
-    def _on_dismiss(self) -> None:
+    def _on_dismiss(self, instance) -> None:
         """ on_dismiss logic """
         if self.return_colour:
             self.return_colour(self.selected_colour)

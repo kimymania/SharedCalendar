@@ -76,7 +76,7 @@
                 size_hint_y: None
                 height: self.minimum_height
 
-# Basic 2 x 3 colour selector 
+# Basic 2 x 3 colour selector
 <ColourPicker>:
     title: 'Select Colour'
     title_align: 'center'
@@ -96,24 +96,24 @@
                 Button:
                     text: ''
                     background_color: 1, 0, 0, 1
-                    on_release: root.select_colour(background_color)
+                    on_release: root.select_colour(self.background_color)
                 Button:
                     text: ''
                     background_color: 0, 1, 0, 1
-                    on_release: root.select_colour(background_color)
+                    on_release: root.select_colour(self.background_color)
                 Button:
                     text: ''
                     background_color: 0, 0, 1, 1
-                    on_release: root.select_colour(background_color)
+                    on_release: root.select_colour(self.background_color)
                 Button:
                     text: ''
                     background_color: 1, 1, 0, 1
-                    on_release: root.select_colour(background_color)
+                    on_release: root.select_colour(self.background_color)
                 Button:
                     text: ''
                     background_color: 1, 0, 1, 1
-                    on_release: root.select_colour(background_color)
+                    on_release: root.select_colour(self.background_color)
                 Button:
                     text: ''
                     background_color: 0, 1, 1, 1
-                    on_release: root.select_colour(background_color)
+                    on_release: root.select_colour(self.background_color)
