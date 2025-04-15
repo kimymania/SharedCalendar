@@ -51,7 +51,15 @@ class DateSelector(Popup):
                     self.ids.selector_calendar.add_widget(Label(text=' '))
 
     def on_day_selected(self, instance) -> None:
-        """ Highlight selected day, update self.selected day to this day """
+        """
+        Highlight selected day, update self.selected day to this day
+
+        If the day was previously selected, close popup
+        """
+        if self.selected_day.day == int(instance.text):
+            self.return_day(selected_day=self.selected_day)
+            self.dismiss()
+
         for child in self.ids.selector_calendar.children:
             if isinstance(child, Button):
                 child.background_color = [1, 1, 1, 1]  # reset others

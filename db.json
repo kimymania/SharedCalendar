@@ -21,5 +21,28 @@
         "notification": true,
         "notification_details": {},
         "important": true
+    },
+    {
+        "key": 2,
+        "title": "Go out",
+        "start_date": "25/04/15",
+        "end_date": "25/04/15",
+        "start_time": "20:00",
+        "end_time": "20:05",
+        "group_tag": {
+            "name": "Together",
+            "colour": [
+                1,
+                0,
+                0,
+                1
+            ]
+        },
+        "location": "Outside",
+        "repeat": false,
+        "repeat_details": {},
+        "notification": false,
+        "notification_details": {},
+        "important": false
     }
 ]

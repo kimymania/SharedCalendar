@@ -33,48 +33,62 @@
     title: 'Select Time'
     title_align: 'center'
     size_hint: 0.8, 0.4
-    BoxLayout:
-        id: time_selector
-        orientation: 'horizontal'
-        ScrollView:
-            do_scroll_x: False
-            do_scroll_y: True
-            GridLayout:
-                id: select_meridiem
-                cols: 1
-                rows: 2
-                size_hint_y: None
-                height: self.minimum_height
-                Button:
-                    id: am_indicator
-                    text: 'AM'
+
+    FloatLayout:
+        BoxLayout:
+            id: time_selector
+            orientation: 'horizontal'
+            size_hint: 1, 1
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            ScrollView:
+                do_scroll_x: False
+                do_scroll_y: True
+                GridLayout:
+                    id: select_meridiem
+                    cols: 1
+                    rows: 2
                     size_hint_y: None
-                    height: dp(40)
-                    on_release: root.select_meridiem_indicator(self, 'AM')
-                Button:
-                    id: pm_indicator
-                    text: 'PM'
+                    height: self.minimum_height
+                    Button:
+                        id: am_indicator
+                        text: 'AM'
+                        size_hint_y: None
+                        height: dp(40)
+                        on_release: root.select_meridiem_indicator(self, 'AM')
+                    Button:
+                        id: pm_indicator
+                        text: 'PM'
+                        size_hint_y: None
+                        height: dp(40)
+                        on_release: root.select_meridiem_indicator(self, 'PM')
+            ScrollView:
+                do_scroll_x: False
+                do_scroll_y: True
+                GridLayout:
+                    id: select_hour
+                    cols: 1
+                    rows: 12
                     size_hint_y: None
-                    height: dp(40)
-                    on_release: root.select_meridiem_indicator(self, 'PM')
-        ScrollView:
-            do_scroll_x: False
-            do_scroll_y: True
-            GridLayout:
-                id: select_hour
-                cols: 1
-                rows: 12
-                size_hint_y: None
-                height: self.minimum_height
-        ScrollView:
-            do_scroll_x: False
-            do_scroll_y: True
-            GridLayout:
-                id: select_minute
-                cols: 1
-                rows: 60
-                size_hint_y: None
-                height: self.minimum_height
+                    height: self.minimum_height
+            ScrollView:
+                do_scroll_x: False
+                do_scroll_y: True
+                GridLayout:
+                    id: select_minute
+                    cols: 1
+                    rows: 60
+                    size_hint_y: None
+                    height: self.minimum_height
+        Widget:
+            size_hint: 1, None
+            height: dp(40)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            canvas:
+                Color:
+                    rgba: 0, 0, 1, 0.5
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
 
 # Basic 2 x 3 colour selector
 <ColourPicker>:
