@@ -1,6 +1,6 @@
 # TODO:
 
-- Group tags have separate settings options (select colour)
+- Need to implement live updates for color picker
 - Important! factor will display on YearView specifically (I haven't yet decided the details on how to implement)
 
 - I think changes to event data should be made first, to avoid re-writing as much as possible
@@ -24,7 +24,13 @@
 2025/04/15
 
 # ADDED:
-- Group tags, Repeat, Repeat details, Notification, Notification details and Important! factors to event
+- Group tags, Repeat, Repeat details, Notification, Notification details and Important? factors to event
+  - Group tag naming
+  - Basic 2x3 colour selector for selecting group tag colours 
+  - Repeat checkbox
+  - Notification checkbox
+  - Important? checkbox
+- requirements.txt (currently only contains Kivy 2.3.1)
 
 2025/04/14
 

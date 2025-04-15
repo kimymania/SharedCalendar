@@ -12,7 +12,7 @@ from kivy.properties import StringProperty
 from kivy.lang import Builder
 from kivy.metrics import dp
 
-from selectors_logic import DateSelector, TimeSelector
+from selectors_logic import DateSelector, TimeSelector, ColourPicker
 
 from database import Database
 from common_utils import (
@@ -36,6 +36,11 @@ class AddEventPopup(Popup):
         minute: str = '00'
         self.selected_time_start: str = f'{hour}:{minute}'
         self.selected_time_end: str = f'{hour}:{minute}'
+        self.group_tag_name: str = 'None'
+        self.group_tag_colour: list = [1, 1, 1, 1]  # white by default
+        self.repeat: bool = False
+        self.notification: bool = False
+        self.important: bool = False
 
     def toggle_date_selector(self, instance, target: str) -> None:
         """ Toggle date selector for start/end date """
@@ -73,40 +78,44 @@ class AddEventPopup(Popup):
         else:
             return
 
-    def receive_selected_time_start(self, time: datetime):
+    def receive_selected_time_start(self, time: datetime) -> None:
         """ Store start time """
         self.selected_time_start = time.strftime('%H:%M')
 
-    def receive_selected_time_end(self, time: datetime):
+    def receive_selected_time_end(self, time: datetime) -> None:
         """ Store end time """
         self.selected_time_end = time.strftime('%H:%M')
 
+    def open_colour_picker(self, instance) -> None:
+        """ Open colour picker """
+        picker = ColourPicker(return_colour=self.update_group_tag_colour)
+        picker.open()
+
+    def update_group_tag_colour(self, instance) -> None:
+        """ Update group tag colour """
+        if self.group_tag_colour:
+            self.group_tag_colour = instance.colour
+
     def toggle_repeat(self, instance) -> None:
         """ Toggle repeat checkbox """
-        if instance.state == 'down':
-            instance.state = 'normal'
-            self.ids.event_repeat_checkbox.active = False
-        else:
-            instance.state = 'down'
-            self.ids.event_repeat_checkbox.active = True
+        if self.ids.event_repeat_checkbox.active is False:
+            self.repeat = False
+        elif self.ids.event_repeat_checkbox.active is True:
+            self.repeat = True
 
     def toggle_notification(self, instance) -> None:
         """ Toggle notification checkbox """
-        if instance.state == 'down':
-            instance.state = 'normal'
-            self.ids.event_notification_checkbox.active = False
-        else:
-            instance.state = 'down'
-            self.ids.event_notification_checkbox.active = True
+        if self.ids.event_notification_checkbox.active is False:
+            self.repeat = False
+        elif self.ids.event_notification_checkbox.active is True:
+            self.repeat = True
 
     def toggle_important(self, instance) -> None:
         """ Toggle important checkbox """
-        if instance.state == 'down':
-            instance.state = 'normal'
-            self.ids.event_important_checkbox.active = False
-        else:
-            instance.state = 'down'
-            self.ids.event_important_checkbox.active = True
+        if self.ids.event_important_checkbox.active is False:
+            self.important = False
+        elif self.ids.event_important_checkbox.active is True:
+            self.important = True
 
     def save_event(self, instance) -> None:
         """ Save to db.json and close popup """
@@ -117,13 +126,13 @@ class AddEventPopup(Popup):
             end_date=self.selected_date_end,
             start_time=self.selected_time_start,
             end_time=self.selected_time_end,
-            group_tag={},
+            group_tag={'name': self.ids.event_group_tag_name.text, 'colour': self.group_tag_colour},
             location=self.ids.event_location.text,
-            repeat=self.ids.event_repeat_checkbox.active,
+            repeat=self.repeat,
             repeat_details={},
-            notification=self.ids.event_notification_checkbox.active,
+            notification=self.notification,
             notification_details={},
-            important=self.ids.event_important_checkbox.active
+            important=self.important
         )
         self.dismiss()
 

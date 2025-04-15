@@ -158,3 +158,21 @@ class TimeSelector(Popup):
         """ (Callback function) return selected time value to AddEventPopup """
         if self.return_time:
             self.return_time(selected_time)
+
+class ColourPicker(Popup):
+    """ Colour Picker Popup """
+    selected_colour = [1, 1, 1, 1]  # defaulted to white
+    def __init__(self, return_colour=None, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.return_colour = return_colour
+        self.selected_colour = [1, 1, 1, 1]
+        self.bind(on_dismiss=self._on_dismiss)
+
+    def select_colour(self, instance, background_color) -> None:
+        """ Logic to set selected colour """
+        self.selected_colour = background_color
+
+    def _on_dismiss(self) -> None:
+        """ on_dismiss logic """
+        if self.return_colour:
+            self.return_colour(self.selected_colour)

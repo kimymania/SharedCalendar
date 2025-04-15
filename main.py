@@ -1,6 +1,7 @@
 """
 MVP Version with Kivy
 MainApp class
+Written in Python 3.13.3
 """
 from kivy.app import App
 

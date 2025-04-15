@@ -115,26 +115,61 @@
                 text: root.selected_time_end
                 on_release: root.toggle_time_selector(self, 'end')
 
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(10)
+            TextInput:
+                id: event_group_tag_name
+                hint_text: 'Group Tag'
+                size_hint_y: 0.35
+                multiline: False
+            Button:
+                id: colour_picker_btn
+                text: 'Pick Colour'
+                size_hint_y: 0.35
+                on_release: root.open_colour_picker(self)
+
         TextInput:
             id: event_location
             hint_text: 'Location'
             size_hint_y: 0.35
             multiline: False
         
-        CheckBox:
-            id: event_repeat_checkbox
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(10)
             size_hint_y: 0.35
-            on_active: root.toggle_repeat(self)
+            Label:
+                text: 'Repeat'
+                size_hint_x: 0.2
+            CheckBox:
+                id: event_repeat_checkbox
+                size_hint_x: 0.2
+                on_active: root.toggle_repeat(self)
         
-        Checkbox:
-            id: event_notification_checkbox
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(10)
             size_hint_y: 0.35
-            on_active: root.toggle_notification(self)
+            Label:
+                text: 'Notification'
+                size_hint_x: 0.2
+            CheckBox:
+                id: event_notification_checkbox
+                size_hint_x: 0.2
+                on_active: root.toggle_notification(self)
 
-        Checkbox:
-            id: event_important_checkbox
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(10)
             size_hint_y: 0.35
-            on_active: root.toggle_important(self)
+            Label:
+                text: 'Important'
+                size_hint_x: 0.2
+            CheckBox:
+                id: event_important_checkbox
+                size_hint_x: 0.2
+                on_active: root.toggle_important(self)
 
         AnchorLayout:
             anchor_x: 'center'

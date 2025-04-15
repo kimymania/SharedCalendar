@@ -75,3 +75,45 @@
                 rows: 60
                 size_hint_y: None
                 height: self.minimum_height
+
+# Basic 2 x 3 colour selector 
+<ColourPicker>:
+    title: 'Select Colour'
+    title_align: 'center'
+    size_hint: 0.5, 0.5
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Selected Colour'
+            size_hint_y: 0.1
+            color: root.selected_colour
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.9
+            GridLayout:
+                cols: 2
+                rows: 3
+                Button:
+                    text: ''
+                    background_color: 1, 0, 0, 1
+                    on_release: root.select_colour(background_color)
+                Button:
+                    text: ''
+                    background_color: 0, 1, 0, 1
+                    on_release: root.select_colour(background_color)
+                Button:
+                    text: ''
+                    background_color: 0, 0, 1, 1
+                    on_release: root.select_colour(background_color)
+                Button:
+                    text: ''
+                    background_color: 1, 1, 0, 1
+                    on_release: root.select_colour(background_color)
+                Button:
+                    text: ''
+                    background_color: 1, 0, 1, 1
+                    on_release: root.select_colour(background_color)
+                Button:
+                    text: ''
+                    background_color: 0, 1, 1, 1
+                    on_release: root.select_colour(background_color)
