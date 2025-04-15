@@ -1,29 +1,2 @@
 [
-    {
-        "key": 1,
-        "title": "Worship",
-        "start_date": "25/04/14",
-        "end_date": "25/04/14",
-        "start_time": "05:20",
-        "end_time": "06:00",
-        "location": "CSChurch"
-    },
-    {
-        "key": 2,
-        "title": "Worship Service 2",
-        "start_date": "25/04/15",
-        "end_date": "25/04/15",
-        "start_time": "05:20",
-        "end_time": "06:00",
-        "location": "CSChurch"
-    },
-    {
-        "key": 3,
-        "title": "Work",
-        "start_date": "25/04/15",
-        "end_date": "25/04/15",
-        "start_time": "08:30",
-        "end_time": "17:30",
-        "location": "MusicMetro"
-    }
 ]

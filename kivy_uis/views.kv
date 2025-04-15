@@ -120,6 +120,21 @@
             hint_text: 'Location'
             size_hint_y: 0.35
             multiline: False
+        
+        CheckBox:
+            id: event_repeat_checkbox
+            size_hint_y: 0.35
+            on_active: root.toggle_repeat(self)
+        
+        Checkbox:
+            id: event_notification_checkbox
+            size_hint_y: 0.35
+            on_active: root.toggle_notification(self)
+
+        Checkbox:
+            id: event_important_checkbox
+            size_hint_y: 0.35
+            on_active: root.toggle_important(self)
 
         AnchorLayout:
             anchor_x: 'center'

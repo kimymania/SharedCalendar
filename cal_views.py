@@ -81,6 +81,33 @@ class AddEventPopup(Popup):
         """ Store end time """
         self.selected_time_end = time.strftime('%H:%M')
 
+    def toggle_repeat(self, instance) -> None:
+        """ Toggle repeat checkbox """
+        if instance.state == 'down':
+            instance.state = 'normal'
+            self.ids.event_repeat_checkbox.active = False
+        else:
+            instance.state = 'down'
+            self.ids.event_repeat_checkbox.active = True
+
+    def toggle_notification(self, instance) -> None:
+        """ Toggle notification checkbox """
+        if instance.state == 'down':
+            instance.state = 'normal'
+            self.ids.event_notification_checkbox.active = False
+        else:
+            instance.state = 'down'
+            self.ids.event_notification_checkbox.active = True
+
+    def toggle_important(self, instance) -> None:
+        """ Toggle important checkbox """
+        if instance.state == 'down':
+            instance.state = 'normal'
+            self.ids.event_important_checkbox.active = False
+        else:
+            instance.state = 'down'
+            self.ids.event_important_checkbox.active = True
+
     def save_event(self, instance) -> None:
         """ Save to db.json and close popup """
         Database().add_event(
@@ -90,7 +117,13 @@ class AddEventPopup(Popup):
             end_date=self.selected_date_end,
             start_time=self.selected_time_start,
             end_time=self.selected_time_end,
-            location=self.ids.event_location.text
+            group_tag={},
+            location=self.ids.event_location.text,
+            repeat=self.ids.event_repeat_checkbox.active,
+            repeat_details={},
+            notification=self.ids.event_notification_checkbox.active,
+            notification_details={},
+            important=self.ids.event_important_checkbox.active
         )
         self.dismiss()
 

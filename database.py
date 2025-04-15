@@ -15,7 +15,9 @@ class Database:
 
     def add_event(
             self, key: int, title: str, start_date: str, end_date: str,
-            start_time: str, end_time: str, location: str
+            start_time: str, end_time: str, group_tag: dict, location: str,
+            repeat: bool, repeat_details: dict, notification: bool, notification_details: dict,
+            important: bool
         ) -> None:
         """ Add Event to db.json file """
         if os.path.isfile(self.db_path):
@@ -39,7 +41,13 @@ class Database:
             'end_date': end_date,
             'start_time': start_time,
             'end_time': end_time,
-            'location': location
+            'group_tag': group_tag,
+            'location': location,
+            'repeat': repeat,
+            'repeat_details': repeat_details,
+            'notification': notification,
+            'notification_details': notification_details,
+            'important': important
         }
 
         events.append(dict(new_event))
