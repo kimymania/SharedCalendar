@@ -16,7 +16,7 @@ from selectors_logic import DateSelector, TimeSelector, ColourPicker
 
 from database import Database
 from common_utils import (
-    LOCAL_CALENDAR, get_month, get_month_name, get_week_number, get_week_days
+    LOCAL_CALENDAR, _get_month, _get_month_name, _get_week_number, _get_week_days
 )
 
 Builder.load_file('kivy_uis/views.kv')
@@ -248,7 +248,7 @@ class MonthView(BoxLayout):
                 text=LOCAL_CALENDAR.formatweekday(day=(day + 6) % 7, width=3),
                 size_hint_y=0.15
             ))
-        for week in get_month(year=year, month=month):
+        for week in _get_month(year=year, month=month):
             for day in week:
                 if day.month == month:
                     btn = Button(text=str(day.day))
@@ -276,7 +276,7 @@ class YearView(BoxLayout):
         self.ids.year_grid.clear_widgets()
 
         for month in range(1, 13):
-            month_name = get_month_name(month)
+            month_name = _get_month_name(month)
             btn = Button(text=month_name)
             btn.bind(on_release=lambda instance, m=month: self.on_month_selected(m))
             self.ids.year_grid.add_widget(btn)
@@ -299,8 +299,8 @@ class WeekView(BoxLayout):
             width=0,
             withyear=True
         )
-        self.week_label: str = get_week_number(current_day=current_day)
-        self.week: list = get_week_days(current_day=current_day)
+        self.week_label: str = _get_week_number(current_day=current_day)
+        self.week: list = _get_week_days(current_day=current_day)
         self.build()
 
         db = Database()

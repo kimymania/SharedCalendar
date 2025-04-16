@@ -1,6 +1,7 @@
 # TODO:
 
-- Refine selectors
+- Refine selectors <<< HALTED - will continue later >>>
+
 - Need to implement live updates for color picker
 - Important! factor will display on YearView specifically (I haven't yet decided the details on how to implement)
 
@@ -21,6 +22,19 @@
 - Animations
 
 ######
+
+# 2025/04/16
+
+# \_ADDED:
+
+- COLOUR_RGBA_SELECTED global variable now controls colours displayed for selected values
+
+# \_CHANGED:
+
+- Commented out code related to time selector's fixed bar. Visual & behaviour coding will continue later
+- Time Selector: Added OK / Cancel buttons to make saving / cancelling time selection more straightforward
+  - Closing Time selector in any method other than clicking OK will result in just closing the popup without saving
+- Time Selector: Now displays currently selected time when opened
 
 # 2025/04/15
 

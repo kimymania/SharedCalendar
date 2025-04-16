@@ -34,13 +34,16 @@
     title_align: 'center'
     size_hint: 0.8, 0.4
 
-    FloatLayout:
+    # FloatLayout:
+    BoxLayout:
+        orientation: 'vertical'
         BoxLayout:
             id: time_selector
             orientation: 'horizontal'
-            size_hint: 1, 1
+            size_hint: 1, 0.9
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             ScrollView:
+                id: scroll_view_meridian
                 do_scroll_x: False
                 do_scroll_y: True
                 GridLayout:
@@ -62,6 +65,7 @@
                         height: dp(40)
                         on_release: root.select_meridiem_indicator(self, 'PM')
             ScrollView:
+                id: scroll_view_hour
                 do_scroll_x: False
                 do_scroll_y: True
                 GridLayout:
@@ -71,6 +75,7 @@
                     size_hint_y: None
                     height: self.minimum_height
             ScrollView:
+                id: scroll_view_minute
                 do_scroll_x: False
                 do_scroll_y: True
                 GridLayout:
@@ -79,18 +84,36 @@
                     rows: 60
                     size_hint_y: None
                     height: self.minimum_height
-        Widget:
-            size_hint: 1, None
-            height: dp(40)
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-            canvas:
-                Color:
-                    rgba: 0, 0, 1, 0.5
+        # Widget:
+        #     size_hint: 1, None
+        #     height: dp(40)
+        #     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        #     canvas:
+        #         Color:
+        #             rgba: 0, 0, 1, 0.5
+        #         Rectangle:
+        #             pos: self.pos
+        #             size: self.size
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, 0.1
+            canvas.before:
                 Rectangle:
-                    pos: self.pos
                     size: self.size
+                    pos: self.pos
+                Color:
+                    rgba: 0.2, 0.2, 0.2, 1
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, 0.1
+            Button:
+                text: 'OK'
+                on_release: root.close_and_save(self)
+            Button:
+                text: 'Cancel'
+                on_release: root.dismiss()
 
-# Basic 2 x 3 colour selector
+# Basic 2 x 3 colour selector`
 <ColourPicker>:
     title: 'Select Colour'
     title_align: 'center'
