@@ -35,6 +35,7 @@
 - Time Selector: Added OK / Cancel buttons to make saving / cancelling time selection more straightforward
   - Closing Time selector in any method other than clicking OK will result in just closing the popup without saving
 - Time Selector: Now displays currently selected time when opened
+  - WIP: It only displays the DEFAULT TIME atm. Working on fixing it
 
 # 2025/04/15
 

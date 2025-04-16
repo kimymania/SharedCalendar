@@ -117,6 +117,9 @@ class TimeSelector(Popup):
 
     def build(self) -> None:
         """ Build hour & minute grids. Meridian indicators are included in KV file """
+        # self.ids.select_hour.clear_widgets()
+        # self.ids.select_minute.clear_widgets()
+
         for hour in range(1, 13):
             btn_hour = Button(
                 text=f'{hour}',
@@ -143,7 +146,9 @@ class TimeSelector(Popup):
         minute = self.selected_minute
         if meridiem == 'AM':
             self.ids.am_indicator.background_color = COLOUR_RGBA_SELECTED
+            self.ids.pm_indicator.background_color = [1, 1, 1, 1]
         elif meridiem == 'PM':
+            self.ids.am_indicator.background_color = [1, 1, 1, 1]
             self.ids.pm_indicator.background_color = COLOUR_RGBA_SELECTED
 
         for child in self.ids.select_hour.children:
@@ -252,9 +257,8 @@ class TimeSelector(Popup):
         """ (Callback function) return selected time value to AddEventPopup """
         if self.return_time:
             self.return_time(selected_time)
-
-    def cancel(self, instance) -> None:
-        pass
+        self.selected_hour = self.selected_time.hour % 12 or 12
+        self.selected_minute = self.selected_time.minute
 
 class ColourPicker(Popup):
     """ Colour Picker Popup """
