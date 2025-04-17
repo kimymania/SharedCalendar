@@ -70,10 +70,16 @@ class AddEventPopup(Popup):
     def toggle_time_selector(self, instance, target: str) -> None:
         """ Open time selector for start/end time """
         if target == 'start':
-            time_selector = TimeSelector(return_time=self.receive_selected_time_start)
+            time_selector = TimeSelector(
+                return_time=self.receive_selected_time_start,
+                time=self.selected_time_start
+            )
             time_selector.open()
         elif target == 'end':
-            time_selector = TimeSelector(return_time=self.receive_selected_time_end)
+            time_selector = TimeSelector(
+                return_time=self.receive_selected_time_end,
+                time=self.selected_time_end
+            )
             time_selector.open()
         else:
             return

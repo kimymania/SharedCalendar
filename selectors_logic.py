@@ -101,25 +101,42 @@ class DateSelector(Popup):
             self.return_date(selected_day)
 
 class TimeSelector(Popup):
-    """ Time selector - divided into Meridiem Indicator(AM/PM), Hour and Minute """
-    def __init__(self, return_time=None, **kwargs):
+    """
+    Time selector - divided into Meridiem Indicator(AM/PM), Hour and Minute
+    
+    'time' receives string value of 'HH:MM'
+
+    Returns datetime value to parent class after closing
+    """
+    def __init__(self, return_time=None, time='', **kwargs):
         super().__init__(**kwargs)
         self.return_time = return_time
-        self.meridiem_indicator: str = 'AM' # defaulted to 'AM'
-        self.selected_hour: str = '12'
-        self.selected_minute: str = '00'
-        self.selected_time_string: str = f'{self.selected_hour}:{self.selected_minute} {self.meridiem_indicator}'
+
+        if time:
+            base = datetime.strptime(time, '%H:%M')
+            hour = base.strftime('%I')
+            minute = base.strftime('%M')
+            mer = base.strftime('%p')
+        else:
+            now = datetime.now()
+            hour = now.strftime('%I')
+            minute = now.strftime('%M')
+            mer = now.strftime('%p')
+        
+        self.selected_hour: str = hour
+        self.selected_minute: str = minute
+        self.meridiem_indicator: str = mer
+        
+        self.selected_time_string: str = f'{hour}:{minute} {mer}'
         self.selected_time = datetime.strptime(self.selected_time_string, '%I:%M %p')
         # self.scroll_timeout = None
         # self.snap_to_nearest = None
 
         self.build()
+        self.highlight_selected()
 
     def build(self) -> None:
         """ Build hour & minute grids. Meridian indicators are included in KV file """
-        # self.ids.select_hour.clear_widgets()
-        # self.ids.select_minute.clear_widgets()
-
         for hour in range(1, 13):
             btn_hour = Button(
                 text=f'{hour}',
@@ -137,27 +154,20 @@ class TimeSelector(Popup):
             btn_minute.bind(on_release=lambda instance, m=minute: self.select_minute(instance, m))
             self.ids.select_minute.add_widget(btn_minute)
 
-            self.highlight_selected()
-
     def highlight_selected(self) -> None:
         """ Highlight initial values """
-        meridiem = self.meridiem_indicator
-        hour = self.selected_hour
-        minute = self.selected_minute
-        if meridiem == 'AM':
+        if self.meridiem_indicator == 'AM':
             self.ids.am_indicator.background_color = COLOUR_RGBA_SELECTED
             self.ids.pm_indicator.background_color = [1, 1, 1, 1]
-        elif meridiem == 'PM':
+        else:
             self.ids.am_indicator.background_color = [1, 1, 1, 1]
             self.ids.pm_indicator.background_color = COLOUR_RGBA_SELECTED
 
         for child in self.ids.select_hour.children:
-            if isinstance(child, Button) and child.text == hour:
-                child.background_color = COLOUR_RGBA_SELECTED
+            child.background_color = (child.text == self.selected_hour) and COLOUR_RGBA_SELECTED or [1,1,1,1]
 
         for child in self.ids.select_minute.children:
-            if isinstance(child, Button) and child.text == minute:
-                child.background_color = COLOUR_RGBA_SELECTED
+            child.background_color = (child.text == self.selected_minute) and COLOUR_RGBA_SELECTED or [1,1,1,1]
 
     # def on_kv_post(self, base_widget):
     #     """ Scroll stop detection -> calls on_scroll_stop"""
@@ -216,9 +226,8 @@ class TimeSelector(Popup):
 
     def select_meridiem_indicator(self, instance, indicator: str) -> None:
         """ Highlight selected hour """
-        for child in self.ids.select_meridiem.children:
-            if isinstance(child, Button):
-                child.background_color = [1, 1, 1, 1]  # reset others
+        self.ids.am_indicator.background_color = [1,1,1,1]
+        self.ids.pm_indicator.background_color = [1,1,1,1]
         instance.background_color = COLOUR_RGBA_SELECTED  # highlight selected
         self.meridiem_indicator = indicator
 
@@ -238,10 +247,12 @@ class TimeSelector(Popup):
         instance.background_color = COLOUR_RGBA_SELECTED  # highlight selected
         self.selected_minute = str(minute)
 
-    def update_selected_time(self) -> None:
+    def update_selected_time(self) -> str:
         """ Update the time string so that it's sendable - formatting it into 24-hr time """
-        self.selected_time_string: str = f'{self.selected_hour}:{self.selected_minute} {self.meridiem_indicator}'
-        self.selected_time = datetime.strptime(self.selected_time_string, '%I:%M %p').time()
+        dt = datetime.strptime(f'{self.selected_hour}:{self.selected_minute} {self.meridiem_indicator}', '%I:%M %p')
+        self.selected_time_string = dt.strftime('%I:%M %p')
+        self.selected_time = dt
+        return dt
 
     def close_and_save(self, instance) -> None:
         """
@@ -249,16 +260,17 @@ class TimeSelector(Popup):
 
         Use .dismiss() to close without saving
         """
-        self.update_selected_time()
-        self.return_selected_time(self.selected_time)
+        dt: datetime = self.update_selected_time()
+        if self.return_time:
+            self.return_time(dt)
         self.dismiss()
 
-    def return_selected_time(self, selected_time: datetime) -> None:
-        """ (Callback function) return selected time value to AddEventPopup """
-        if self.return_time:
-            self.return_time(selected_time)
-        self.selected_hour = self.selected_time.hour % 12 or 12
-        self.selected_minute = self.selected_time.minute
+    # def return_selected_time(self, selected_time: datetime) -> None:
+    #     """ (Callback function) return selected time value to AddEventPopup """
+    #     if self.return_time:
+    #         self.return_time(selected_time)
+    #     self.selected_hour = self.selected_time.hour % 12 or 12
+    #     self.selected_minute = self.selected_time.minute
 
 class ColourPicker(Popup):
     """ Colour Picker Popup """
