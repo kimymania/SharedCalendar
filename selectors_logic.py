@@ -103,7 +103,7 @@ class DateSelector(Popup):
 class TimeSelector(Popup):
     """
     Time selector - divided into Meridiem Indicator(AM/PM), Hour and Minute
-    
+
     'time' receives string value of 'HH:MM'
 
     Returns datetime value to parent class after closing
@@ -122,11 +122,11 @@ class TimeSelector(Popup):
             hour = now.strftime('%I')
             minute = now.strftime('%M')
             mer = now.strftime('%p')
-        
+
         self.selected_hour: str = hour
         self.selected_minute: str = minute
         self.meridiem_indicator: str = mer
-        
+
         self.selected_time_string: str = f'{hour}:{minute} {mer}'
         self.selected_time = datetime.strptime(self.selected_time_string, '%I:%M %p')
         # self.scroll_timeout = None
@@ -265,13 +265,6 @@ class TimeSelector(Popup):
             self.return_time(dt)
         self.dismiss()
 
-    # def return_selected_time(self, selected_time: datetime) -> None:
-    #     """ (Callback function) return selected time value to AddEventPopup """
-    #     if self.return_time:
-    #         self.return_time(selected_time)
-    #     self.selected_hour = self.selected_time.hour % 12 or 12
-    #     self.selected_minute = self.selected_time.minute
-
 class ColourPicker(Popup):
     """ Colour Picker Popup """
     selected_colour = [1, 1, 1, 1]  # defaulted to white
@@ -284,6 +277,9 @@ class ColourPicker(Popup):
     def select_colour(self, instance) -> None:
         """ Logic to set selected colour """
         self.selected_colour = instance
+        self.ids.colour_text.clear_widget()
+        self.ids.colour_text.text = 'Selected Colour'
+        self.ids.colour_text.color = self.selected_colour
 
     def _on_dismiss(self, instance) -> None:
         """ on_dismiss logic """
