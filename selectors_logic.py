@@ -277,7 +277,7 @@ class ColourPicker(Popup):
     def select_colour(self, instance) -> None:
         """ Logic to set selected colour """
         self.selected_colour = instance
-        self.ids.colour_text.clear_widget()
+        self.ids.colour_text.clear_widgets()
         self.ids.colour_text.text = 'Selected Colour'
         self.ids.colour_text.color = self.selected_colour
 

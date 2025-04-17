@@ -169,6 +169,7 @@ class ViewEventPopup(Popup):
                     self.ids.notification.text = 'No'
 
     def open_edit_event(self, instance):
+        """ 'Edit Event' function """
         pass
 
 class DayView(Popup):
@@ -221,7 +222,6 @@ class DayViewEvent(ButtonBehavior, BoxLayout):
         self.ids.event_name.text = self.event_data['title']
         self.ids.start_time.text = self.event_data['start_time']
         self.ids.end_time.text = self.event_data['end_time']
-        self.ids.event_location.text = self.event_data['location']
         self.bind(on_release=self._on_release)
 
     def _on_release(self, instance) -> None:

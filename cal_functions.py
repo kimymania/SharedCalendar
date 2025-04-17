@@ -21,7 +21,7 @@ class CoreFunctions(BoxLayout):
         self.current_date: datetime = today
 
         # initialize app window & input controls
-        Window.size = (360, 780)
+        Window.size = (414, 896) # iPhone 13 resolution scaled down to half
         self.orientation = 'vertical'
         Window.bind(
             on_key_down=self.on_key_down,
