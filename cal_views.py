@@ -283,25 +283,17 @@ class YearView(BoxLayout):
         self.ids.year_grid.clear_widgets()
 
         for month in range(1, 13):
-            # month_name = get_month_name(month)
-            # btn = Button(text=month_name)
-            # btn.bind(on_release=lambda instance, m=month: self.on_month_selected(m))
-            # self.ids.year_grid.add_widget(btn)
-            self.ids.year_grid.add_widget(MonthBlock(month=month))
+            month_name = get_month_name(month)
+            btn = Button(text=month_name)
+            btn.bind(on_release=lambda instance, m=month: self.on_month_selected(m))
+            self.ids.year_grid.add_widget(btn)
 
     def on_month_selected(self, month: str) -> None:
         """ Callback to CoreFunctions to load MonthView """
         selected_month = month
         if self.callback:
             callback = self.callback(self.year, selected_month)
-        # MonthView(year=self.year, month=selected_month)
-
-class MonthBlock(GridLayout, ButtonBehavior):
-    """ Months placed in YearView - miniature versions of MonthView """
-    def __init__(self, month, **kwargs) -> None:
-        super().__init__(**kwargs)
-        this_month=get_month(year=self.year, month=month)
-        # add functionality to this!
+        MonthView(year=self.year, month=selected_month)
 
 class WeekView(BoxLayout):
     """ Week View - shows days of week, display week number """
