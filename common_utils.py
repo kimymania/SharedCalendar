@@ -11,7 +11,7 @@ LOCAL_CALENDAR = calendar.LocaleTextCalendar(firstweekday=6)
 COLOUR_RGBA_SELECTED: list = [0.4, 0.9, 1, 1]
 
 # ...datescalendar returns MonthList[WeekList[datetime.date]]
-def _get_year(year: int) -> list:
+def get_year(year: int) -> list:
     """
     Get datetime by year
 
@@ -21,7 +21,7 @@ def _get_year(year: int) -> list:
     year_keys = LOCAL_CALENDAR.yeardatescalendar(year, width=1)
     return year_keys
 
-def _get_month(year: int, month: int) -> list:
+def get_month(year: int, month: int) -> list:
     """
     Get datetime by month
 
@@ -30,20 +30,20 @@ def _get_month(year: int, month: int) -> list:
     month_keys = LOCAL_CALENDAR.monthdatescalendar(year, month)
     return month_keys
 
-def _get_month_name(month: int) -> str:
+def get_month_name(month: int) -> str:
     """
     Returns Month name as a string
     """
     month_index = month
     return calendar.month_name[month_index]
 
-def _get_week_number(current_day: datetime) -> str:
+def get_week_number(current_day: datetime) -> str:
     """
     Get current day value -> Return that date's week number
     """
     return current_day.strftime('%U')
 
-def _get_week_days(current_day: datetime) -> list:
+def get_week_days(current_day: datetime) -> list:
     """
     Get current day value -> Return datetime values of that day's week
 
@@ -53,7 +53,7 @@ def _get_week_days(current_day: datetime) -> list:
     """
     year: int = current_day.year
     current_date = current_day.date()
-    year_list = _get_year(year)
+    year_list = get_year(year)
     week_index = []
     for m in year_list:
         for w in m[0]:

@@ -11,7 +11,7 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.metrics import dp
 
-from common_utils import LOCAL_CALENDAR, COLOUR_RGBA_SELECTED, _get_month
+from common_utils import LOCAL_CALENDAR, COLOUR_RGBA_SELECTED, get_month
 
 Builder.load_file('kivy_uis/selectors.kv')
 
@@ -43,7 +43,7 @@ class DateSelector(Popup):
 
         for weekday in range(7):
             self.ids.selector_calendar.add_widget(Label(text=self.calendar.formatweekday(day=(weekday + 6) % 7, width=2)))
-        for week in _get_month(year=year, month=month):
+        for week in get_month(year=year, month=month):
             for day in week:
                 if day.month == month:
                     btn = Button(text=str(day.day))

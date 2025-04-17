@@ -5,9 +5,6 @@
 - Need to implement live updates for color picker
 - Important! factor will display on YearView specifically (I haven't yet decided the details on how to implement)
 
-- I think changes to event data should be made first, to avoid re-writing as much as possible
-
-- Change date & time selectors' popup close & save method - currently, user has to click/press any other place on the screen
 - Change time selector graphic display to show selected values in the center
 - Display additional event data (other than time, date, title) as icons (with mouse hover tooltip?) in DayView
 - Event editing
@@ -16,8 +13,7 @@
 - Display daily events in MonthView
 - Display month & dates properly in YearView (Button -> BoxLayout w/ ButtonBehavior?)
 - Fix WeekView (looks lame atm)
-- Korean support
-- Dependencies file (kivy fonts)
+- Korean support, fonts
 - Colors, Graphics
 - Animations
 
