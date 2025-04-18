@@ -8,6 +8,7 @@ import calendar
 from datetime import datetime
 
 LOCAL_CALENDAR = calendar.LocaleTextCalendar(firstweekday=6)
+TODAY = datetime.today()
 COLOUR_RGBA_SELECTED: list = [0.4, 0.9, 1, 1]
 
 # ...datescalendar returns MonthList[WeekList[datetime.date]]
