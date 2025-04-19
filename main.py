@@ -4,6 +4,7 @@ MainApp class
 Written in Python 3.13.3
 """
 from kivy.app import App
+from kivy.uix.screenmanager import ScreenManager
 
 from cal_functions import CoreFunctions
 
