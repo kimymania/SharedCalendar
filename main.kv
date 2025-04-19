@@ -1,2 +1,19 @@
 #:kivy 2.3.1
-#include kivy_uis/selectors.kv
+#:include kivy_uis/year_screen.kv
+#:include kivy_uis/month_screen.kv
+#:include kivy_uis/week_screen.kv
+#:include kivy_uis/selectors.kv
+
+GridLayout:
+    cols: 1
+    ScreenManager:
+        id: calendar_screen_manager
+        MonthScreen:
+            name: 'month_screen'
+            id: month_screen
+        YearScreen:
+            name: 'year_screen'
+            id: year_screen
+        WeekScreen:
+            name: 'week_screen'
+            id: week_screen

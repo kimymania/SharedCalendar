@@ -17,9 +17,15 @@
 
 ######
 
+# 2025/04/19
+
+# \_ADDED:
+
+- New branch: experimenting with Kivy Screen Manager & central main.kv file to control GUI
+
 # 2025/04/18
 
-# _ADDED:
+# \_ADDED:
 
 - TODAY constant
 
