@@ -6,20 +6,46 @@
 
 GridLayout:
     cols: 1
-    ScreenManager:
+    CalendarScreens:
         id: calendar_screen_manager
-        CurrentMonthScreen:
-            name: 'current_month_screen'
-            id: current_month_screen
-        PrevMonthScreen:
-            name: 'prev_month_screen'
-            id: prev_month_screen
-        NextMonthScreen:
-            name: 'next_month_screen'
-            id: next_month_screen
-        YearScreen:
-            name: 'year_screen'
-            id: year_screen
-        WeekScreen:
-            name: 'week_screen'
-            id: week_screen
+
+<CalendarScreens@ScreenManager>:
+    Screen:
+        name: 'year_screen'
+        YearScreens:
+            id: year_screen_manager
+    Screen:
+        name: 'month_screen'
+        Label:
+            id: ad
+            text: 'ThisScreen'
+        MonthScreens:
+            id: month_screen_manager
+    Screen:
+        name: 'week_screen'
+        WeekScreens:
+            id: week_screen_manager
+
+<YearScreens@ScreenManager>:
+    PrevYearScreen:
+        name: 'prev_year'
+    CurrentYearScreen:
+        name: 'current_year'
+    NextYearScreen:
+        name: 'next_year'
+
+<MonthScreens@ScreenManager>:
+    PrevMonthScreen:
+        name: 'prev_month'
+    CurrentMonthScreen:
+        name: 'current_month'
+    NextMonthScreen:
+        name: 'next_month'
+
+<WeekScreens@ScreenManager>:
+    PrevWeekScreen:
+        name: 'prev_week'
+    CurrentWeekScreen:
+        name: 'current_week'
+    NextWeekScreen:
+        name: 'next_week'
