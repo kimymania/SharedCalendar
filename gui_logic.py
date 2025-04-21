@@ -1,18 +1,17 @@
 """
-MVP Version with Kivy
-MainApp class
-Written in Python 3.13.2
+This file contains all GUI logic for Kivy
 """
-from kivy.app import App
+from datetime import datetime
+
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 
-# from cal_functions import CoreFunctions
-import gui_logic
 from common_utils import LOCAL_CALENDAR, get_month
+
+TODAY = datetime.today()
 
 class CalendarScreens(ScreenManager):
     pass
@@ -133,17 +132,4 @@ class NextMonthScreen(Screen):
 class WeekScreen(Screen):
     pass
 
-GUI = Builder.load_file('main.kv')
-
-class MainApp(App):
-    def build(self):
-        self.title = 'Calendar App'
-        self.screen_manager = self.root.ids.calendar_screen_manager
-        self.screen_manager.current = 'current_month_screen' # can't set first screen like this. why?
-        return GUI
-    
-    def switch_screen(self, new_screen):
-        self.screen_manager.current = new_screen
-
-if __name__ == '__main__':
-    MainApp().run()
+Builder.load_file('main.kv')

@@ -3,7 +3,6 @@
 - Refine selectors <<< HALTED - will continue later >>>
 
 - Important! factor will display on YearView specifically (I haven't yet decided the details on how to implement)
-
 - Change time selector graphic display to show selected values in the center
 - Display additional event data (other than time, date, title) as icons (with mouse hover tooltip?) in DayView
 - Event editing
@@ -15,13 +14,23 @@
 - Colors, Graphics
 - Animations
 
+
+- Load previous, next month/year view > cache data, load when pulled up
+
 ######
+
+# 2025/04/21
+
+# _ADDED:
+
+- MonthView generation logic
+- Scrolling logic to move screen views for infinite scrolling (previous, current, next)
 
 # 2025/04/19
 
 # \_ADDED:
 
-- New branch: experimenting with Kivy Screen Manager & central main.kv file to control GUI
+- New branch: experimenting with Kivy Screen Manager & central main.kv file to control GUI > Will be working on this branch for now
 
 # 2025/04/18
 

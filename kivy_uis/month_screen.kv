@@ -1,6 +1,39 @@
 #:kivy 2.3.1
-<MonthScreen>:
-    name: 'month_screen'
-    Label:
-        id: month_screen_label
-        text: 'MonthScreen'
+<CurrentMonthScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(10)
+        spacing: dp(10)
+        Label:
+            id: current_month_label
+            size_hint_y: 0.1
+
+        GridLayout:
+            id: current_month_grid
+            cols: 7
+
+<PrevMonthScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(10)
+        spacing: dp(10)
+        Label:
+            id: prev_month_label
+            size_hint_y: 0.1
+
+        GridLayout:
+            id: prev_month_grid
+            cols: 7
+
+<NextMonthScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(10)
+        spacing: dp(10)
+        Label:
+            id: next_month_label
+            size_hint_y: 0.1
+
+        GridLayout:
+            id: next_month_grid
+            cols: 7
