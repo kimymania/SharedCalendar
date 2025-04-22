@@ -16,9 +16,6 @@ GridLayout:
             id: year_screen_manager
     Screen:
         name: 'month_screen'
-        Label:
-            id: ad
-            text: 'ThisScreen'
         MonthScreens:
             id: month_screen_manager
     Screen:
@@ -27,25 +24,25 @@ GridLayout:
             id: week_screen_manager
 
 <YearScreens@ScreenManager>:
-    PrevYearScreen:
-        name: 'prev_year'
     CurrentYearScreen:
         name: 'current_year'
     NextYearScreen:
         name: 'next_year'
+    PrevYearScreen:
+        name: 'prev_year'
 
 <MonthScreens@ScreenManager>:
-    PrevMonthScreen:
-        name: 'prev_month'
     CurrentMonthScreen:
         name: 'current_month'
     NextMonthScreen:
         name: 'next_month'
+    PrevMonthScreen:
+        name: 'prev_month'
 
 <WeekScreens@ScreenManager>:
-    PrevWeekScreen:
-        name: 'prev_week'
     CurrentWeekScreen:
         name: 'current_week'
     NextWeekScreen:
         name: 'next_week'
+    PrevWeekScreen:
+        name: 'prev_week'

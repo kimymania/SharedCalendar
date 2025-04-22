@@ -1,36 +1,39 @@
 #:kivy 2.3.1
 <CurrentYearScreen>:
-    orientation: 'vertical'
-    padding: dp(10)
-    spacing: dp(10)
-    Label:
-        id: current_year_label
-        size_hint_y: 0.1
-    GridLayout:
-        id: current_year_grid
-        cols: 3
-        rows: 4
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(10)
+        spacing: dp(10)
+        Label:
+            id: current_year_label
+            size_hint_y: 0.1
+        GridLayout:
+            id: current_year_grid
+            cols: 3
+            rows: 4
 
 <PrevYearScreen>:
-    orientation: 'vertical'
-    padding: dp(10)
-    spacing: dp(10)
-    Label:
-        id: prev_year_label
-        size_hint_y: 0.1
-    GridLayout:
-        id: prev_year_grid
-        cols: 3
-        rows: 4
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(10)
+        spacing: dp(10)
+        Label:
+            id: prev_year_label
+            size_hint_y: 0.1
+        GridLayout:
+            id: prev_year_grid
+            cols: 3
+            rows: 4
 
 <NextYearScreen>:
-    orientation: 'vertical'
-    padding: dp(10)
-    spacing: dp(10)
-    Label:
-        id: next_year_label
-        size_hint_y: 0.1
-    GridLayout:
-        id: next_year_grid
-        cols: 3
-        rows: 4
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(10)
+        spacing: dp(10)
+        Label:
+            id: next_year_label
+            size_hint_y: 0.1
+        GridLayout:
+            id: next_year_grid
+            cols: 3
+            rows: 4

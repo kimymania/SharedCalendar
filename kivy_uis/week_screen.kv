@@ -1,15 +1,57 @@
 #:kivy 2.3.1
 <CurrentWeekScreen>:
-    Label:
-        id: current_week_label
-        text: 'WeekScreen'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(10)
+        spacing: dp(10)
+        Label:
+            id: current_week_label
+            size_hint_y: 0.1
+            halign: 'center'
+
+        GridLayout:
+            id: current_week_days
+            cols: 7
+            size_hint_y: 0.1
+
+        GridLayout:
+            id: current_week_grid
+            cols: 7
 
 <PrevWeekScreen>:
-    Label:
-        id: prev_week_label
-        text: 'PrevWeekScreen'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(10)
+        spacing: dp(10)
+        Label:
+            id: prev_week_label
+            size_hint_y: 0.1
+            halign: 'center'
+
+        GridLayout:
+            id: prev_week_days
+            cols: 7
+            size_hint_y: 0.1
+
+        GridLayout:
+            id: prev_week_grid
+            cols: 7
 
 <NextWeekScreen>:
-    Label:
-        id: next_week_label
-        text: 'NextWeekScreen'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(10)
+        spacing: dp(10)
+        Label:
+            id: next_week_label
+            size_hint_y: 0.1
+            halign: 'center'
+
+        GridLayout:
+            id: next_week_days
+            cols: 7
+            size_hint_y: 0.1
+
+        GridLayout:
+            id: next_week_grid
+            cols: 7

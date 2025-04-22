@@ -14,17 +14,17 @@
 - Colors, Graphics
 - Animations
 
-
 - Load previous, next month/year view > cache data, load when pulled up
 
 ######
 
 # 2025/04/21
 
-# _ADDED:
+# \_ADDED:
 
 - MonthView generation logic
-- Scrolling logic to move screen views for infinite scrolling (previous, current, next)
+- Backbone to scrolling logic to move screen views for infinite scrolling (previous, current, next)
+  - Actual logic not implemented yet
 
 # 2025/04/19
 
