@@ -8,18 +8,26 @@ from datetime import datetime
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.clock import Clock
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.metrics import dp
 
 from common_utils import (
-    LOCAL_CALENDAR, current_date, get_month,
+    LOCAL_CALENDAR, get_month,
     get_month_name, get_week_number, get_week_days
 )
 
-def switch_to(*args, screen=None, view=None) -> None:
-    App.get_running_app().switch_screen(*args, screen=screen, view=view)
+TODAY = datetime.today()
+
+def get_selected_date(date_string: str | None = None) -> datetime:
+    """ Take string value (YYYYMMDD) or none """
+    date: datetime = App.get_running_app().get_date(date_string)
+    return date
+
+def switch_to(new_screen: str) -> None:
+    App.get_running_app().switch_screen(new_screen)
 
 class CalendarScreens(ScreenManager):
     """ Switches between different views - Up/Down (y axis) movement """
@@ -35,12 +43,10 @@ class CalendarScreens(ScreenManager):
         dy = touch.y - self._touch_start_y
         if abs(dy) > 50:
             if dy > 0:
-                new_screen = self.next()
-                self.transition.direction = 'up'
+                direction = 'up'
             else:
-                new_screen = self.previous()
-                self.transition.direction = 'down'
-            self.current = new_screen
+                direction = 'down'
+            self.transition.direction = direction
         return super().on_touch_up(touch)
 
 class YearScreens(ScreenManager):
@@ -113,7 +119,8 @@ class YearScreen(Screen):
     def update_label(self, _dt) -> None:
         self.ids.year_grid.clear_widgets()
 
-        year: int = 2025 # placeholder
+        self.date: datetime = get_selected_date()
+        year: int = self.date.year
         self.ids.year_label.text = f'{year}'
 
         for month in range(1, 13):
@@ -124,7 +131,9 @@ class YearScreen(Screen):
 
     def on_month_selected(self, month: int) -> None:
         """ Load MonthView """
-        switch_to(month, screen='month_screen', view='month')
+        date: str = f'{self.date.year}{month}{self.date.day}'
+        get_selected_date(date)
+        switch_to("month_screen")
 
 class MonthScreen(Screen):
     def on_pre_enter(self, *args) -> None:
@@ -133,8 +142,9 @@ class MonthScreen(Screen):
     def update_label(self, _dt) -> None:
         self.ids.month_grid.clear_widgets()
 
-        year: int = current_date().year
-        month: int = current_date().month
+        date: datetime = get_selected_date()
+        year: int = date.year
+        month: int = date.month
 
         self.ids.month_label.text = f"{LOCAL_CALENDAR.formatmonthname(
             theyear=year,
@@ -168,10 +178,10 @@ class WeekScreen(Screen):
     def update_label(self, _dt) -> None:
         self.ids.week_days.clear_widgets()
 
-        year: int = 2025
-        current_day = datetime.today()
-        week: str = get_week_number(current_day=current_day)
-        week_list: list = get_week_days(current_day=current_day)
+        date: datetime = get_selected_date()
+        year: int = date.year
+        week: str = get_week_number(current_day=date)
+        week_list: list = get_week_days(current_day=date)
 
         self.ids.week_label.text = f'{year}\nWeek {week}'
 

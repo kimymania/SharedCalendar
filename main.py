@@ -8,7 +8,6 @@ from datetime import datetime
 
 from kivy.app import App
 
-from common_utils import current_date
 from gui_logic import GUI
 
 class MainApp(App):
@@ -21,38 +20,23 @@ class MainApp(App):
         self.month_screen_manager = display.ids.calendar_screen_manager.ids.month_screen_manager
         self.week_screen_manager = display.ids.calendar_screen_manager.ids.week_screen_manager
         self.screen_manager.current = 'month_screen'
-        self.month_screen_manager.current = 'current_month'
         return display
 
     def get_date(self, date_string: str = None) -> datetime:
-        """ Get date in string format (YYYYMMDD) -> return datetime format """
-        self.displayed_date = datetime.strptime(date_string=date_string, format='%Y%m%d')
+        """ String (YYYYMMDD) -> return datetime format """
+        if date_string:
+            self.displayed_date = datetime.strptime(date_string, '%Y%m%d')
+        print(self.displayed_date)
         return self.displayed_date
 
-    def switch_screen(self, *args, screen: str = None, view: str = None) -> None:
-        """
-        Switch screens
-
-        [optional] Month value (int)
-
-        'screen' = year/month/week screen
-
-        'view' = next/previous year/month/week
-        """
-        if len(args) > 0:
-            month: int = args[0]
-            current_date(month=month)
-
-        if screen:
-            self.screen_manager.current = screen
-
-        if view:
-            if screen == 'year_screen':
-                self.year_screen_manager.current = view
-            elif screen == 'month_screen':
-                self.month_screen_manager.current = view
-            elif screen == 'week_screen':
-                self.week_screen_manager.current = view
+    def switch_screen(self, new_screen: str) -> None:
+        self.screen_manager.current = new_screen
+        if new_screen == 'year_screen':
+            self.year_screen_manager.current = 'year'
+        elif new_screen == 'month_screen':
+            self.month_screen_manager.current = 'month'
+        else:
+            self.week_screen_manager.current = 'week'
 
 if __name__ == '__main__':
     MainApp().run()

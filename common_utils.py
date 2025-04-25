@@ -5,28 +5,10 @@ Return calendar dates (year, month, week, weekdays)
 """
 
 import calendar
-from datetime import datetime, date
+from datetime import datetime
 
 LOCAL_CALENDAR = calendar.LocaleTextCalendar(firstweekday=6)
-TODAY = datetime.today()
 COLOUR_RGBA_SELECTED: list = [0.4, 0.9, 1, 1]
-
-def current_date(year: int = None, month: int = None, day: int = None) -> date:
-    """
-    Used to track current date on the screen - returns date object (no time data)
-
-    Parameters received = year, month, date
-    """
-    td = date.today()
-    _year, _month, _day = td.year, td.month, td.day
-    if year:
-        _year = year
-    if month:
-        _month = month
-    if day:
-        _day = day
-    new_date = date(_year, _month, _day)
-    return new_date
 
 # ...datescalendar returns MonthList[WeekList[datetime.date]]
 def get_year(year: int) -> list:

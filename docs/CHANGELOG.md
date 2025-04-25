@@ -16,7 +16,23 @@
 
 - Load previous, next month/year view > cache data, load when pulled up
 
-######
+- WIP NEXT: will add/remove screens dynamically w/ caching
+
+# 2025/04/25
+
+# \_ADDED:
+
+- Variable (self.displayed_date) and function (get_date) to control date navigation centrally
+
+# \_CHANGED:
+
+- Another overhaul (can't remember what i was doing previously)
+
+# \_REMOVED:
+
+- previous/next screens, to focus on navigation between views first
+
+---
 
 # 2025/04/22
 
@@ -24,6 +40,8 @@
 
 - View population logic for YearView & WeekView, with placeholder values for year & month
 - Comments to suppress pylint warnings related to Kivy
+
+---
 
 # 2025/04/21
 
@@ -33,17 +51,23 @@
 - Backbone to scrolling logic to move screen views for infinite scrolling (previous, current, next)
   - Actual logic not implemented yet
 
+---
+
 # 2025/04/19
 
 # \_ADDED:
 
 - New branch: experimenting with Kivy Screen Manager & central main.kv file to control GUI > Will be working on this branch for now
 
+---
+
 # 2025/04/18
 
 # \_ADDED:
 
 - TODAY constant
+
+---
 
 # 2025/04/17
 
@@ -59,6 +83,8 @@
   - Closing Time selector in any method other than clicking OK will result in just closing the popup without saving
 - Time Selector: Now displays currently selected time correctly when opened
 - Window size adjusted to iPhone 13 (half-scale) resolution
+
+---
 
 # 2025/04/15
 
@@ -78,6 +104,8 @@
 - Date selector: clicking on a selected date will now close the selector and store the selected day value
 - Time selector: added fixed bar to use as a time selector - WIP
 
+---
+
 # 2025/04/14
 
 # \_ADDED:
@@ -96,6 +124,8 @@
 
 - Wrong direction (left/right, up/down) caused by inverted swiping vs arrow keys now works correctly
 
+---
+
 # 2025/04/13
 
 # \_ADDED:
@@ -111,6 +141,8 @@
 
 - WeekGrid canvas widget
 
+---
+
 # 2025/04/12
 
 # \_ADDED:
@@ -118,6 +150,8 @@
 - WeekView display
 - WeekView navigation (previous/next week)
 - Explanation dialog for Database class
+
+---
 
 # 2025/04/11
 
@@ -137,11 +171,15 @@
 - Moved README content over to new CHANGELOG as it's more appropriate here
 - Now using ISO
 
+---
+
 # 2025/04/10
 
 # \_FIXED:
 
 - Date selector now displays Sunday as first day of week (used to be Monday) [(weekday + 6) % 7]
+
+---
 
 # 2025/04/09
 
@@ -149,6 +187,8 @@
 
 - 'Add Event' button functionality in AddEventPopup (Save event data to db.json file -> close popup)
 - Loading event data to DayView
+
+---
 
 # 2025/04/08
 
