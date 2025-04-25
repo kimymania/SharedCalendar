@@ -1,8 +1,11 @@
 """
 This file contains all GUI logic for Kivy
 """
+# pylint: disable=attribute-defined-outside-init
+# pylint: disable=unused-argument
 from datetime import datetime
 
+from kivy.app import App
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -10,9 +13,10 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.metrics import dp
 
-from common_utils import LOCAL_CALENDAR, get_month, get_month_name, get_week_number, get_week_days
+from common_utils import LOCAL_CALENDAR, current_date, get_month, get_month_name, get_week_number, get_week_days
 
-TODAY = datetime.today()
+def switch_to(*args, screen=None, view=None) -> None:
+    App.get_running_app().switch_screen(*args, screen=screen, view=view)
 
 class CalendarScreens(ScreenManager):
     """ Switches between different views - Up/Down (y axis) movement """
@@ -107,7 +111,7 @@ class CurrentYearScreen(Screen):
     def on_pre_enter(self, *args) -> None:
         Clock.schedule_once(self.update_label, 0)
 
-    def update_label(self, dt) -> None:
+    def update_label(self, _dt) -> None:
         self.ids.current_year_grid.clear_widgets()
 
         year: int = 2025 # placeholder
@@ -119,15 +123,15 @@ class CurrentYearScreen(Screen):
             btn.bind(on_release=lambda instance, m=month: self.on_month_selected(m))
             self.ids.current_year_grid.add_widget(btn)
 
-    def on_month_selected(self, month) -> None:
+    def on_month_selected(self, month: int) -> None:
         """ Load MonthView """
-        print('call month')
+        switch_to(month, screen='month_screen', view='current_month')
 
 class PrevYearScreen(Screen):
     def on_pre_enter(self, *args) -> None:
         Clock.schedule_once(self.update_label, 0)
 
-    def update_label(self, dt) -> None:
+    def update_label(self, _dt) -> None:
         self.ids.prev_year_grid.clear_widgets()
 
         year: int = 2024
@@ -147,7 +151,7 @@ class NextYearScreen(Screen):
     def on_pre_enter(self, *args) -> None:
         Clock.schedule_once(self.update_label, 0)
 
-    def update_label(self, dt) -> None:
+    def update_label(self, _dt) -> None:
         self.ids.next_year_grid.clear_widgets()
 
         year: int = 2026
@@ -169,12 +173,13 @@ class CurrentMonthScreen(Screen):
         """ Delay load until widget tree is complete """
         Clock.schedule_once(self.update_label, 0)
 
-    def update_label(self, dt) -> None:
+    def update_label(self, _dt) -> None:
         self.ids.current_month_grid.clear_widgets()
 
-        # placeholder values
-        year: int = 2025
-        month: int = 4
+        year: int = current_date().year
+        month: int = current_date().month
+
+        print(f'{year}, {month}')
 
         self.ids.current_month_label.text = f"{LOCAL_CALENDAR.formatmonthname(
             theyear=year,
@@ -200,14 +205,12 @@ class CurrentMonthScreen(Screen):
     def on_day_selected(self, day) -> None:
         """ Load DayView popup """
         print('dayview load')
-        # day_view = DayView(selected_day=day)
-        # day_view.open()
 
 class PrevMonthScreen(Screen):
     def on_pre_enter(self, *args) -> None:
         Clock.schedule_once(self.update_label, 0)
 
-    def update_label(self, dt) -> None:
+    def update_label(self, _dt) -> None:
         self.ids.prev_month_grid.clear_widgets()
 
         # placeholder values
@@ -245,7 +248,7 @@ class NextMonthScreen(Screen):
     def on_pre_enter(self, *args) -> None:
         Clock.schedule_once(self.update_label, 0)
 
-    def update_label(self, dt) -> None:
+    def update_label(self, _dt) -> None:
         self.ids.next_month_label.clear_widgets()
         self.ids.next_month_grid.clear_widgets()
 
@@ -284,7 +287,7 @@ class CurrentWeekScreen(Screen):
     def on_pre_enter(self, *args) -> None:
         Clock.schedule_once(self.update_label, 0)
 
-    def update_label(self, dt) -> None:
+    def update_label(self, _dt) -> None:
         self.ids.current_week_days.clear_widgets()
 
         year: int = 2025
@@ -307,7 +310,7 @@ class PrevWeekScreen(Screen):
     def on_pre_enter(self, *args) -> None:
         Clock.schedule_once(self.update_label, 0)
 
-    def update_label(self, dt) -> None:
+    def update_label(self, _dt) -> None:
         self.ids.prev_week_days.clear_widgets()
 
         year: int = 2025
@@ -330,7 +333,7 @@ class NextWeekScreen(Screen):
     def on_pre_enter(self, *args) -> None:
         Clock.schedule_once(self.update_label, 0)
 
-    def update_label(self, dt) -> None:
+    def update_label(self, _dt) -> None:
         self.ids.next_week_days.clear_widgets()
 
         year: int = 2025

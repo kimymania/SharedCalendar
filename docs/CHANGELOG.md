@@ -18,6 +18,13 @@
 
 ######
 
+# 2025/04/22
+
+# \_ADDED:
+
+- View population logic for YearView & WeekView, with placeholder values for year & month
+- Comments to suppress pylint warnings related to Kivy
+
 # 2025/04/21
 
 # \_ADDED:
