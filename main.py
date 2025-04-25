@@ -15,15 +15,19 @@ class MainApp(App):
     def build(self):
         self.title = 'Calendar App'
         display = GUI
+        self.displayed_date = datetime.today()
         self.screen_manager = display.ids.calendar_screen_manager
         self.year_screen_manager = display.ids.calendar_screen_manager.ids.year_screen_manager
         self.month_screen_manager = display.ids.calendar_screen_manager.ids.month_screen_manager
         self.week_screen_manager = display.ids.calendar_screen_manager.ids.week_screen_manager
-        # if self.screen_manager.current != 'month_screen':
-        #     self.screen_manager.current = 'month_screen'
-        #     if self.month_screen_manager.current != 'current_month':
-        #         self.month_screen_manager.current = 'current_month'
+        self.screen_manager.current = 'month_screen'
+        self.month_screen_manager.current = 'current_month'
         return display
+
+    def get_date(self, date_string: str = None) -> datetime:
+        """ Get date in string format (YYYYMMDD) -> return datetime format """
+        self.displayed_date = datetime.strptime(date_string=date_string, format='%Y%m%d')
+        return self.displayed_date
 
     def switch_screen(self, *args, screen: str = None, view: str = None) -> None:
         """
