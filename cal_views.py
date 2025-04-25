@@ -6,10 +6,9 @@ from datetime import datetime
 from kivy.uix.popup import Popup
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.button import Button
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, ColorProperty
 from kivy.lang import Builder
 from kivy.metrics import dp
 
@@ -19,11 +18,11 @@ from database import Database
 from common_utils import (
     LOCAL_CALENDAR, get_month, get_month_name, get_week_number, get_week_days
 )
+import palette
 
 Builder.load_file('kivy_uis/views.kv')
 
 class AddEventPopup(Popup):
-    """ Popup for adding events """
     selected_date_start = StringProperty('')
     selected_date_end = StringProperty('')
     selected_time_start = StringProperty('')
@@ -144,7 +143,6 @@ class AddEventPopup(Popup):
         self.dismiss()
 
 class ViewEventPopup(Popup):
-    """ Popup for viewing events """
     def __init__(self, event_key: int, **kwargs) -> None:
         super().__init__(**kwargs)
         db = Database()
@@ -173,7 +171,6 @@ class ViewEventPopup(Popup):
         pass
 
 class DayView(Popup):
-    """ Selected day view popup """
     selected_day_text = StringProperty('')
     def __init__(self, selected_day: datetime, **kwargs) -> None:
         super().__init__(**kwargs)
@@ -182,7 +179,6 @@ class DayView(Popup):
         self.build()
 
     def build(self) -> None:
-        """ Load events from database """
         self.ids.events_list.clear_widgets()
 
         current_day: str = self.selected_day.strftime('%y/%m/%d')
@@ -201,17 +197,14 @@ class DayView(Popup):
             self.ids.events_list.add_widget(no_label)
 
     def add_event(self, instance) -> None:
-        """ Load AddEvent popup """
         add_event = AddEventPopup(selected_day=self.selected_day)
         add_event.open()
         add_event.bind(on_dismiss=self.refresh_view)
 
     def refresh_view(self, instance) -> None:
-        """ Refresh after adding new event """
         self.build()
 
     def close_popup(self, instance) -> None:
-        """ Close DayView """
         self.dismiss()
 
 class DayViewEvent(ButtonBehavior, BoxLayout):
@@ -230,7 +223,6 @@ class DayViewEvent(ButtonBehavior, BoxLayout):
         popup.open()
 
 class MonthView(BoxLayout):
-    """ Main Calendar UI - MonthView """
     def __init__(self, year: int, month: int, **kwargs) -> None:
         super().__init__(**kwargs)
         self.current_year = year
@@ -258,19 +250,22 @@ class MonthView(BoxLayout):
         for week in get_month(year=year, month=month):
             for day in week:
                 if day.month == month:
-                    btn = Button(text=str(day.day))
+                    btn = \
+                        Button(
+                            text=str(day.day),
+                            background_color=palette.LIGHT_BACKGROUND,
+                            color=palette.LIGHT_TEXT
+                        )
                     btn.bind(on_release=lambda instance, d=day: self.on_day_selected(d))
                     self.ids.month_grid.add_widget(btn)
                 else:
                     self.ids.month_grid.add_widget(Label(text=' '))
 
     def on_day_selected(self, day: str) -> None:
-        """ Load DayView popup """
         day_view = DayView(selected_day=day)
         day_view.open()
 
 class YearView(BoxLayout):
-    """ Year View - show months & buttons for each month """
     def __init__(self, year: int, callback=None, **kwargs) -> None:
         super().__init__(**kwargs)
         self.year = year
@@ -284,7 +279,12 @@ class YearView(BoxLayout):
 
         for month in range(1, 13):
             month_name = get_month_name(month)
-            btn = Button(text=month_name)
+            btn = \
+                Button(
+                    text=month_name,
+                    background_color=palette.LIGHT_BACKGROUND,
+                    color=palette.LIGHT_TEXT
+                )
             btn.bind(on_release=lambda instance, m=month: self.on_month_selected(m))
             self.ids.year_grid.add_widget(btn)
 
@@ -296,7 +296,6 @@ class YearView(BoxLayout):
         MonthView(year=self.year, month=selected_month)
 
 class WeekView(BoxLayout):
-    """ Week View - shows days of week, display week number """
     def __init__(self, current_day: datetime, **kwargs) -> None:
         super().__init__(**kwargs)
         self.current_day: datetime = current_day
@@ -307,28 +306,29 @@ class WeekView(BoxLayout):
             withyear=True
         )
         self.week_label: str = get_week_number(current_day=current_day)
-        self.week: list = get_week_days(current_day=current_day)
+        self.week: list = get_week_days(current_day)
         self.build()
 
         db = Database()
         events = db.load_event()
-        # wip = trying to match event['start_date'], which is in YYYY/MM/DD format to
-        # self.week which currently returns MM/DD
-        # date_condition = f'{self.current_day.year}'
-        # for event in events:
-        #     if event['start_date'] == self.current_day
         self.build_events(events)
 
     def build(self) -> None:
-        """
-        Top: Month, Year & Week Number
-        """
         self.ids.week_label.text = f'{self.year_month_label}\nWeek {self.week_label}'
+        self.ids.week_label.color = palette.LIGHT_TEXT
 
         for day in range(7):
-            self.ids.week_days.add_widget(Label(text=LOCAL_CALENDAR.formatweekday(day=(day + 6) % 7, width=3)))
+            self.ids.week_days.add_widget(
+                Label(
+                    text=LOCAL_CALENDAR.formatweekday(day=(day + 6) % 7, width=3),
+                    color = palette.LIGHT_TEXT
+                ))
         for date in self.week:
-            self.ids.week_days.add_widget(Label(text=f'{date}', font_size=dp(13)))
+            self.ids.week_days.add_widget(
+                Label(
+                    text=f'{date}', font_size=dp(13),
+                    color = palette.LIGHT_TEXT
+                ))
 
     def build_events(self, events) -> None:
         week: list = self.week
@@ -336,13 +336,14 @@ class WeekView(BoxLayout):
             for day in week:
                 formatted_day = f'{self.current_day.strftime('%y')}/{day}'
                 if formatted_day == event['start_date'] or formatted_day == event['end_date']:
-                    event_title_label = Label(
-                        text=event['title'],
-                        halign='left',
-                        valign='middle',
-                        size_hint_y=None,
-                        height=dp(40)
-                    )
+                    event_title_label = \
+                        Label(
+                            text=event['title'],
+                            halign='left',
+                            valign='middle',
+                            size_hint_y=None,
+                            height=dp(40)
+                        )
                     event_title_label.bind(size=event_title_label.setter('text_size'))
 
                     self.ids.week_grid.add_widget(event_title_label)

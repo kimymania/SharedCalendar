@@ -12,16 +12,6 @@ TODAY = datetime.today()
 COLOUR_RGBA_SELECTED: list = [0.4, 0.9, 1, 1]
 
 # ...datescalendar returns MonthList[WeekList[datetime.date]]
-def get_year(year: int) -> list:
-    """
-    Get datetime by year
-
-    Returns year[month][0][week][date]
-    (width=1 reduces month sets to 1, so use that to get month)
-    """
-    year_keys = LOCAL_CALENDAR.yeardatescalendar(year, width=1)
-    return year_keys
-
 def get_month(year: int, month: int) -> list:
     """
     Get datetime by month
@@ -44,26 +34,17 @@ def get_week_number(current_day: datetime) -> str:
     """
     return current_day.strftime('%U')
 
-def get_week_days(current_day: datetime) -> list:
+def get_week_days(this_day: datetime) -> list:
     """
-    Get current day value -> Return datetime values of that day's week
+    Get current day value -> Return datetime values of that day's week as a list
 
     Checks if current day value is in [week] list (use entire year)
     -> If true, convert those values to string (MM/DD)
     -> Add to week_index list for exporting
     """
-    year: int = current_day.year
-    current_date = current_day.date()
-    year_list = get_year(year)
-    week_index = []
-    for m in year_list:
-        for w in m[0]:
-            try:
-                if current_date in w:
-                    for d in w:
-                        d = d.strftime('%m/%d')
-                        week_index.append(d)
-                        if len(week_index) == 7:
-                            return week_index
-            except IndexError:
-                break
+    current_day = this_day.date()
+    month_list = LOCAL_CALENDAR.monthdatescalendar(this_day.year, this_day.month)
+    for week in month_list:
+        if current_day in week:
+            return [d.strftime('%m/%d') for d in week]
+    return []

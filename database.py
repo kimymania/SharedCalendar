@@ -9,7 +9,7 @@ from datetime import datetime
 DB_PATH = os.path.join(os.path.dirname(__file__), 'db.json')
 
 class Database:
-    """ Control database manipulation, App <-> JSON db """
+    """ App <-> JSON db """
     def __init__(self) -> None:
         self.db_path = DB_PATH
 
@@ -19,7 +19,6 @@ class Database:
             repeat: bool, repeat_details: dict, notification: bool, notification_details: dict,
             important: bool
         ) -> None:
-        """ Add Event to db.json file """
         if os.path.isfile(self.db_path):
             with open(self.db_path, 'r', encoding='utf-8') as f:
                 try:

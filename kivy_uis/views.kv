@@ -1,29 +1,50 @@
 #:kivy 2.3.1
 <MonthView>:
+    canvas:
+        Color:
+            rgba: app.colour_light_base
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
     orientation: 'vertical'
     padding: dp(10)
     spacing: dp(10)
     Label:
         id: month_label
         size_hint_y: 0.1
+        color: app.colour_light_text
 
     GridLayout:
         id: month_grid
         cols: 7
 
 <YearView>:
+    canvas:
+        Color:
+            rgba: app.colour_light_base
+        Rectangle:
+            pos: self.pos
+            size: self.size
     orientation: 'vertical'
     padding: dp(10)
     spacing: dp(10)
     Label:
         id: year_label
         size_hint_y: 0.1
+        color: app.colour_light_text
     GridLayout:
         id: year_grid
         cols: 3
         rows: 4
 
 <WeekView>:
+    canvas:
+        Color:
+            rgba: app.colour_light_base
+        Rectangle:
+            pos: self.pos
+            size: self.size
     orientation: 'vertical'
     padding: dp(10)
     spacing: dp(10)
@@ -31,8 +52,15 @@
         id: week_label
         size_hint_y: 0.1
         halign: 'center'
+        color: app.colour_light_text
 
     GridLayout:
+        canvas:
+            Color:
+                rgba: app.colour_light_base
+            Rectangle:
+                pos: self.pos
+                size: self.size
         id: week_days
         cols: 7
         size_hint_y: 0.1

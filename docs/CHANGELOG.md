@@ -15,13 +15,30 @@
 - Colors, Graphics
 - Animations
 
-######
+---
+
+# 2025/04/25
+
+# \_ADDED:
+
+- UI Palette file
+- Canvas, UI update
 
 # 2025/04/18
 
-# _ADDED:
+# \_ADDED:
 
 - TODAY constant
+
+# \_FIXED:
+
+- Navigation direction for YearView & WeekView
+
+# CHANGED:
+
+- Optimizations for WeekView generation
+
+---
 
 # 2025/04/17
 
@@ -37,6 +54,8 @@
   - Closing Time selector in any method other than clicking OK will result in just closing the popup without saving
 - Time Selector: Now displays currently selected time correctly when opened
 - Window size adjusted to iPhone 13 (half-scale) resolution
+
+---
 
 # 2025/04/15
 
@@ -56,6 +75,8 @@
 - Date selector: clicking on a selected date will now close the selector and store the selected day value
 - Time selector: added fixed bar to use as a time selector - WIP
 
+---
+
 # 2025/04/14
 
 # \_ADDED:
@@ -74,6 +95,8 @@
 
 - Wrong direction (left/right, up/down) caused by inverted swiping vs arrow keys now works correctly
 
+---
+
 # 2025/04/13
 
 # \_ADDED:
@@ -89,6 +112,8 @@
 
 - WeekGrid canvas widget
 
+---
+
 # 2025/04/12
 
 # \_ADDED:
@@ -96,6 +121,8 @@
 - WeekView display
 - WeekView navigation (previous/next week)
 - Explanation dialog for Database class
+
+---
 
 # 2025/04/11
 
@@ -115,11 +142,15 @@
 - Moved README content over to new CHANGELOG as it's more appropriate here
 - Now using ISO
 
+---
+
 # 2025/04/10
 
 # \_FIXED:
 
 - Date selector now displays Sunday as first day of week (used to be Monday) [(weekday + 6) % 7]
+
+---
 
 # 2025/04/09
 
@@ -127,6 +158,8 @@
 
 - 'Add Event' button functionality in AddEventPopup (Save event data to db.json file -> close popup)
 - Loading event data to DayView
+
+---
 
 # 2025/04/08
 

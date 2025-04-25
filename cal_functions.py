@@ -10,6 +10,11 @@ from kivy.uix.boxlayout import BoxLayout
 from common_utils import LOCAL_CALENDAR
 from cal_views import MonthView, YearView, WeekView
 
+def get_displayed_date(date_string: str) -> datetime:
+    """ Universal date controller """
+    current_day: datetime = None
+    return current_day.strptime(date_string, '%Y%m%d')
+
 class CoreFunctions(BoxLayout):
     def __init__(self, locale: str, **kwargs):
         super().__init__(**kwargs)
@@ -18,9 +23,8 @@ class CoreFunctions(BoxLayout):
         self.current_year: int = today.year
         self.current_month: int = today.month
         self.current_day: int = today.day
-        self.current_date: datetime = today
+        self.current_date = today
 
-        # initialize app window & input controls
         Window.size = (414, 896) # iPhone 13 resolution scaled down to half
         self.orientation = 'vertical'
         Window.bind(
@@ -61,7 +65,7 @@ class CoreFunctions(BoxLayout):
     def on_key_down(self, window, key, scancode, codepoint, modifier) -> None:
         """
         Keyboard key press -
-        left/right is inverted as the argument go_right was
+        left/right is inverted as the argument swipe_right was
         based on swiping movement when it was first made
         """
         if key == 273:  # Arrow Up
@@ -69,9 +73,9 @@ class CoreFunctions(BoxLayout):
         elif key == 274:  # Arrow Down
             return self.switch_view(go_down=False, view_number=self.view_index)
         elif key == 276:  # Left arrow
-            return self.navigate(go_right=True)
+            return self.navigate(swipe_right=True)
         elif key == 275:  # Right arrows
-            return self.navigate(go_right=False)
+            return self.navigate(swipe_right=False)
 
     def on_touch_down(self, touch) -> bool | None:
         """ Touch down press """
@@ -93,31 +97,31 @@ class CoreFunctions(BoxLayout):
                 self.switch_view(go_down=False, view_number=self.view_index)
         if abs(dx) > 50:
             if dx > 0:
-                self.navigate(go_right=True)
+                self.navigate(swipe_right=True)
             else:
-                self.navigate(go_right=False)
+                self.navigate(swipe_right=False)
         return super().on_touch_up(touch)
 
-    def navigate(self, go_right: bool) -> None:
+    def navigate(self, swipe_right: bool) -> None:
         """
         Screen navigation
         Check view index -> Change current year/date/week accordingly
         ** Will add day index & navigation as well, hopefully **
         """
         if self.view_index == 0:
-            if go_right is True:
-                self.current_year += 1
-            elif go_right is False:
+            if swipe_right is True:
                 self.current_year -= 1
+            elif swipe_right is False:
+                self.current_year += 1
 
         elif self.view_index == 1:
-            if go_right is True:
+            if swipe_right is True:
                 if self.current_month == 1:
                     self.current_month = 12
                     self.current_year -= 1
                 else:
                     self.current_month -= 1
-            elif go_right is False:
+            elif swipe_right is False:
                 if self.current_month == 12:
                     self.current_month = 1
                     self.current_year += 1
@@ -125,16 +129,18 @@ class CoreFunctions(BoxLayout):
                     self.current_month += 1
 
         elif self.view_index == 2:
-            if go_right is True:
-                self.current_date += timedelta(days=7)
-            elif go_right is False:
+            if swipe_right is True:
                 self.current_date += timedelta(days=-7)
+            elif swipe_right is False:
+                self.current_date += timedelta(days=+7)
         self.update_calendar_gui()
 
     def update_calendar_gui(self, *args) -> None:
         """
         Update year/month/week display based on user input (left/right swipe or keyboard button press)
+
         Currently clears the entire widget and loads a new one
+
         You can give year & month arguments, though they default to self.current_year & self.current_month
         """
         year = args[0] if len(args) > 0 else self.current_year
@@ -151,7 +157,9 @@ class CoreFunctions(BoxLayout):
     def switch_view(self, go_down: bool, view_number: int) -> None:
         """
         Clear current view, load new view.
+
         if True -> go up / if False -> go down
+
         Booleans just feel much faster
         """
         index = view_number
