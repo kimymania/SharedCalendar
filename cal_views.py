@@ -8,7 +8,8 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.button import Button
-from kivy.properties import StringProperty, ColorProperty
+from kivy.properties import StringProperty
+from kivy.graphics import Canvas, Line, Color
 from kivy.lang import Builder
 from kivy.metrics import dp
 
@@ -243,10 +244,16 @@ class MonthView(BoxLayout):
         )}"
 
         for day in range(7):
-            self.ids.month_grid.add_widget(Label(
+            label = Label(
                 text=LOCAL_CALENDAR.formatweekday(day=(day + 6) % 7, width=3),
-                size_hint_y=0.15
-            ))
+                size_hint_y=0.2,
+                color=palette.LIGHT_TEXT
+                )
+            with label.canvas:
+                Color(0, 0, 0, 1)
+                label.border = Line(rectangle=(label.x, label.y, label.width, label.height), width=1)
+            label.bind(pos=self.update_label_border, size=self.update_label_border)
+            self.ids.month_grid.add_widget(label)
         for week in get_month(year=year, month=month):
             for day in week:
                 if day.month == month:
@@ -258,12 +265,18 @@ class MonthView(BoxLayout):
                         )
                     btn.bind(on_release=lambda instance, d=day: self.on_day_selected(d))
                     self.ids.month_grid.add_widget(btn)
+                    btn.canvas.add(Color(0, 0, 0, 1))
+                    btn.canvas.add(Line(rectangle=(btn.x, btn.y, btn.width, btn.height), width=1))
+                    # not working - perhaps add the canvas to the grid cell index???
                 else:
                     self.ids.month_grid.add_widget(Label(text=' '))
 
     def on_day_selected(self, day: str) -> None:
         day_view = DayView(selected_day=day)
         day_view.open()
+
+    def update_label_border(self, instance, *args):
+        instance.border.rectangle = (instance.x, instance.y, instance.width, instance.height)
 
 class YearView(BoxLayout):
     def __init__(self, year: int, callback=None, **kwargs) -> None:
