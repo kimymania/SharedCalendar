@@ -9,7 +9,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.properties import StringProperty
-from kivy.graphics import Canvas, Line, Color
+from kivy.graphics import Line, Color, Rectangle
 from kivy.lang import Builder
 from kivy.metrics import dp
 
@@ -20,8 +20,6 @@ from common_utils import (
     LOCAL_CALENDAR, get_month, get_month_name, get_week_number, get_week_days
 )
 import palette
-
-Builder.load_file('kivy_uis/views.kv')
 
 class AddEventPopup(Popup):
     selected_date_start = StringProperty('')
@@ -250,33 +248,36 @@ class MonthView(BoxLayout):
                 color=palette.LIGHT_TEXT
                 )
             with label.canvas:
-                Color(0, 0, 0, 1)
-                label.border = Line(rectangle=(label.x, label.y, label.width, label.height), width=1)
+                Color(palette.LIGHT_BACKGROUND)
+                label.border = Line(rectangle=(label.x, label.y, label.width, label.height), width=3)
             label.bind(pos=self.update_label_border, size=self.update_label_border)
             self.ids.month_grid.add_widget(label)
         for week in get_month(year=year, month=month):
             for day in week:
                 if day.month == month:
-                    btn = \
-                        Button(
-                            text=str(day.day),
-                            background_color=palette.LIGHT_BACKGROUND,
-                            color=palette.LIGHT_TEXT
-                        )
-                    btn.bind(on_release=lambda instance, d=day: self.on_day_selected(d))
+                    btn = MonthGridBox(day=day)
                     self.ids.month_grid.add_widget(btn)
-                    btn.canvas.add(Color(0, 0, 0, 1))
-                    btn.canvas.add(Line(rectangle=(btn.x, btn.y, btn.width, btn.height), width=1))
-                    # not working - perhaps add the canvas to the grid cell index???
                 else:
-                    self.ids.month_grid.add_widget(Label(text=' '))
+                    btn = MonthGridBox()
+                    self.ids.month_grid.add_widget(btn)
+
+    def update_label_border(self, instance, *args):
+        instance.border.rectangle = (instance.x, instance.y, instance.width, instance.height)
+
+class MonthGridBox(ButtonBehavior, BoxLayout):
+    def __init__(self, day: datetime = None, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.date: datetime = day
+
+        if day:
+            self.ids.date_label.text = str(self.date.day)
+            self.bind(
+                on_release=lambda instance, d=day: self.on_day_selected(d)
+            )
 
     def on_day_selected(self, day: str) -> None:
         day_view = DayView(selected_day=day)
         day_view.open()
-
-    def update_label_border(self, instance, *args):
-        instance.border.rectangle = (instance.x, instance.y, instance.width, instance.height)
 
 class YearView(BoxLayout):
     def __init__(self, year: int, callback=None, **kwargs) -> None:
@@ -292,8 +293,7 @@ class YearView(BoxLayout):
 
         for month in range(1, 13):
             month_name = get_month_name(month)
-            btn = \
-                Button(
+            btn = Button(
                     text=month_name,
                     background_color=palette.LIGHT_BACKGROUND,
                     color=palette.LIGHT_TEXT
@@ -362,3 +362,5 @@ class WeekView(BoxLayout):
                     self.ids.week_grid.add_widget(event_title_label)
                 else:
                     self.ids.week_grid.add_widget(Label(text=''))
+
+Builder.load_file('kivy_uis/views.kv')

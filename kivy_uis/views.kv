@@ -1,6 +1,6 @@
 #:kivy 2.3.1
 <MonthView>:
-    canvas:
+    canvas.before:
         Color:
             rgba: app.colour_light_base
         Rectangle:
@@ -14,8 +14,30 @@
         size_hint_y: 0.1
         color: app.colour_light_text
     GridLayout:
+        canvas:
+            Color:
+                rgba: 0.5, 0.5, 0.5, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
         id: month_grid
         cols: 7
+
+<MonthGridBox@BoxLayout+ButtonBehavior>:
+    canvas:
+        Color:
+            rgba: app.colour_light_base
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    orientation: 'vertical'
+    padding: dp(10)
+    spacing: dp(10)
+    Label:
+        id: date_label
+        size_hint_y: 0.2
+        halign: 'center'
+        color: app.colour_light_text
 
 <YearView>:
     canvas:

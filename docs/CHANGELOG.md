@@ -19,6 +19,18 @@
 
 # 2025/04/25
 
+# \_CHANGED:
+
+- New box layout to template for month grid blocks
+
+# ADDED:
+
+- UI Update for MonthView
+
+---
+
+# 2025/04/25
+
 # \_ADDED:
 
 - UI Palette file
