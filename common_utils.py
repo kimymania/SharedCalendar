@@ -48,3 +48,14 @@ def get_week_days(this_day: datetime) -> list:
         if current_day in week:
             return [d.strftime('%m/%d') for d in week]
     return []
+
+def get_grid_rows(gridlayout) -> int:
+    """ Get id of dynamically populated GridLayout to calculate number of rows """
+    children_count: int = len(gridlayout.children)
+    cols: int = gridlayout.cols
+
+    if not cols:
+        raise ValueError("GridLayout must have 'cols' set to calculate rows dynamically.")
+
+    rows: int = (children_count + cols - 1) // cols
+    return rows

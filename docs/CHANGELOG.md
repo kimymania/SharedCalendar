@@ -17,13 +17,21 @@
 
 ---
 
+# 2025/04/27
+
+# \_WIP:
+
+- Grid overlay (lines)
+
+---
+
 # 2025/04/25
 
 # \_CHANGED:
 
 - New box layout to template for month grid blocks
 
-# ADDED:
+# \_ADDED:
 
 - UI Update for MonthView
 

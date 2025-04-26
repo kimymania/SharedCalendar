@@ -13,12 +13,10 @@ import palette
 class MainApp(App):
     colour_light_base = ListProperty(palette.LIGHT_BACKGROUND)
     colour_light_text = ListProperty(palette.LIGHT_TEXT)
-    colour_light_selection = ListProperty(palette.LIGHT_SELECTION)
+    colour_light_blue = ListProperty(palette.LIGHT_BLUE)
     def build(self) -> CoreFunctions:
         self.title = 'Calendar App'
         self.locale = 'en_US.UTF-8'
-
-
         return CoreFunctions(locale=self.locale)
 
 if __name__ == '__main__':

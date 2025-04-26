@@ -3,13 +3,16 @@ Calendar UI using Kivy
 """
 from datetime import datetime
 
+from kivy.core.window import Window
 from kivy.uix.popup import Popup
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.properties import StringProperty
-from kivy.graphics import Line, Color, Rectangle
+from kivy.graphics import Line, Color
 from kivy.lang import Builder
 from kivy.metrics import dp
 
@@ -17,9 +20,15 @@ from selectors_logic import DateSelector, TimeSelector, ColourPicker
 
 from database import Database
 from common_utils import (
-    LOCAL_CALENDAR, get_month, get_month_name, get_week_number, get_week_days
+    LOCAL_CALENDAR, get_month, get_month_name, get_week_number, get_week_days,
+    get_grid_rows
 )
 import palette
+
+WINDOW_WIDTH, WINDOW_HEIGHT = Window.size
+
+class Separator(Widget):
+    pass
 
 class AddEventPopup(Popup):
     selected_date_start = StringProperty('')
@@ -221,7 +230,7 @@ class DayViewEvent(ButtonBehavior, BoxLayout):
         popup = ViewEventPopup(self.event_data['key'])
         popup.open()
 
-class MonthView(BoxLayout):
+class MonthView(FloatLayout):
     def __init__(self, year: int, month: int, **kwargs) -> None:
         super().__init__(**kwargs)
         self.current_year = year
@@ -245,11 +254,11 @@ class MonthView(BoxLayout):
             label = Label(
                 text=LOCAL_CALENDAR.formatweekday(day=(day + 6) % 7, width=3),
                 size_hint_y=0.2,
-                color=palette.LIGHT_TEXT
-                )
+                color=palette.LIGHT_TEXT,
+            )
             with label.canvas:
-                Color(palette.LIGHT_BACKGROUND)
-                label.border = Line(rectangle=(label.x, label.y, label.width, label.height), width=3)
+                Color(palette.LIGHT_LINES)
+                label.border = Line(rectangle=(label.x, label.y, label.width, label.height), width=0.5)
             label.bind(pos=self.update_label_border, size=self.update_label_border)
             self.ids.month_grid.add_widget(label)
         for week in get_month(year=year, month=month):
@@ -261,7 +270,12 @@ class MonthView(BoxLayout):
                     btn = MonthGridBox()
                     self.ids.month_grid.add_widget(btn)
 
-    def update_label_border(self, instance, *args):
+        grid = self.ids.month_grid
+        cols: int = self.ids.month_grid.cols
+        rows: int = get_grid_rows(self.ids.month_grid)
+        self.add_widget(GridOverlay(gridlayout=grid, cols=cols, rows=rows))
+
+    def update_label_border(self, instance, *args) -> None:
         instance.border.rectangle = (instance.x, instance.y, instance.width, instance.height)
 
 class MonthGridBox(ButtonBehavior, BoxLayout):
@@ -278,6 +292,37 @@ class MonthGridBox(ButtonBehavior, BoxLayout):
     def on_day_selected(self, day: str) -> None:
         day_view = DayView(selected_day=day)
         day_view.open()
+
+class GridOverlay(Widget):
+    def __init__(self, gridlayout, cols: int, rows: int, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.cols = cols
+        self.rows = rows - 1 # Exclude top column
+        self.bind(pos=self.update_grid, size=self.update_grid)
+        self.size_hint = 0.95, 0.8 # fix y value
+        self.size = (gridlayout.width, gridlayout.height)
+        self.pos_hint = {"center_x": 0.5, "center_y": 0.45}
+        self.update_grid()
+
+    def update_grid(self, *args) -> None:
+        self.canvas.clear()
+        with self.canvas:
+            Color(0, 0, 0, 1)  # Black lines
+            width, height = self.size
+            x0, y0 = self.pos
+            col_width = width / self.cols
+            row_height = height / self.rows
+            # top_row_height = height * 0.2
+
+            # Draw vertical lines
+            for i in range(1, self.cols):
+                x = x0 + i * col_width
+                Line(points=[x, y0, x, y0 + height], width=1)
+
+            # Draw horizontal lines
+            for j in range(1, self.rows):
+                y = y0 + j * row_height
+                Line(points=[x0, y, x0 + width, y], width=1)
 
 class YearView(BoxLayout):
     def __init__(self, year: int, callback=None, **kwargs) -> None:

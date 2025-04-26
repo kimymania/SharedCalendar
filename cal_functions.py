@@ -29,7 +29,7 @@ class CoreFunctions(BoxLayout):
         self.orientation = 'vertical'
         Window.bind(
             on_key_down=self.on_key_down,
-            on_resize=self.on_window_resize
+            # on_resize=self.on_window_resize
         )
         self._touch_start_x = 0
         self._touch_start_y = 0
