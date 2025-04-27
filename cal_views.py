@@ -10,6 +10,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.label import Label
 from kivy.properties import StringProperty
+from kivy.graphics import Color, Line, Rectangle
 from kivy.lang import Builder
 from kivy.metrics import dp
 
@@ -17,7 +18,7 @@ from selectors_logic import DateSelector, TimeSelector, ColourPicker
 
 from database import Database
 from common_utils import (
-    LOCAL_CALENDAR, get_month, get_month_name, get_week_number, get_week_days
+    LOCAL_CALENDAR, get_month, get_week_number, get_week_days
 )
 from palette import RED, background_colour, text_colour, selected_colour, disabled_colour
 
@@ -269,9 +270,16 @@ class MonthGridBox(ButtonBehavior, BoxLayout):
 
         if day:
             self.ids.date_label.text = str(self.date.day)
+            with self.canvas:
+                Color(disabled_colour)
+                Line(points=[self.x, self.y, self.right, self.y], width=1)
             self.bind(
                 on_release=lambda instance, d=day: self.on_day_selected(d)
             )
+        else:
+            with self.canvas:
+                Color(background_colour)
+                Rectangle(pos=self.pos, size=self.size)
 
     def on_day_selected(self, day: str) -> None:
         day_view = DayView(selected_day=day)

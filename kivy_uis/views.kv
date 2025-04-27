@@ -37,13 +37,24 @@
             rectangle: self.x, self.y, self.width, self.height
             width: 1
     orientation: 'vertical'
-    padding: dp(10)
-    spacing: dp(10)
+    padding: dp(5)
     Label:
+        canvas:
+            Color:
+                rgba: app.colour_disabled
+            Line:
+                points: self.x, self.y, self.right, self.y
+                width: 1
         id: date_label
-        size_hint_y: 0.2
+        size_hint_y: 0.1
+        padding: 0, 0, 0, dp(5)
         halign: 'center'
+        font_size: dp(14)
         color: app.colour_text
+    FloatLayout:
+        size_hint_y: 0.8
+        BoxLayout:
+            orientation: 'vertical'
 
 <YearView>:
     canvas:

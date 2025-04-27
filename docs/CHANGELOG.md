@@ -17,7 +17,8 @@
 
 # ISSUES:
 
-- WeekView synchronization with MonthView and YearView is broken agian
+- WeekView synchronization with MonthView and YearView is broken again
+- MonthView Grid - gray line is being shown even for empty grids
 
 ---
 
@@ -26,6 +27,7 @@
 # \_CHANGED:
 
 - YearView UI
+- MonthView Grid UI
 - Loading MonthView from YearView
 
 ---

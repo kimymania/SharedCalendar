@@ -7,7 +7,7 @@ check for dark_theme for theme switching
 WHITE = [1, 1, 1, 1]
 BLACK = [0, 0, 0, 1]
 LIGHT_BLUE = [0.6, 0.85, 0.9, 1]
-GRAY = [0.5, 0.5, 0.5, 1]
+GRAY = [0.5, 0.5, 0.5, 0.5]
 RED = [1, 0, 0, 1]
 GREEN = [0, 1, 0, 1]
 
