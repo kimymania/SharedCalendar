@@ -1,99 +1,108 @@
 #:kivy 2.3.1
-<Separator@Widget>:
-    size_hint: None, None
-    size: 1, 1
-    canvas:
-        Color:
-            rgba: 0.5, 0.5, 0.5, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
-
 <MonthView@FloatLayout>:
     canvas.before:
         Color:
-            rgba: app.colour_light_base
+            rgba: app.colour_background
         Rectangle:
             pos: self.pos
             size: self.size
     BoxLayout:
         orientation: 'vertical'
-        padding: dp(10)
-        spacing: dp(10)
         size_hint: 1, 1
         pos_hint: {"center_x": 0.5, "center_y": 0.5}
         Label:
             id: month_label
             size_hint_y: 0.1
-            color: app.colour_light_text
+            color: app.colour_text
         GridLayout:
-            canvas.before:
+            canvas:
                 Color:
-                    rgba: app.colour_light_blue
+                    rgba: app.colour_selected
                 Rectangle:
                     pos: self.pos
                     size: self.size
-                Line:
-                    rectangle: self.x, self.y, self.width, self.height
-                    width: 1.5
             id: month_grid
             cols: 7
 
 <MonthGridBox@BoxLayout+ButtonBehavior>:
     canvas:
         Color:
-            rgba: app.colour_light_base
+            rgba: app.colour_background
         Rectangle:
             pos: self.pos
             size: self.size
-    orientation: 'vertical'
-    # padding: dp(10)
-    # spacing: dp(10)
-    Label:
-        id: date_label
-        size_hint_y: 0.2
-        halign: 'center'
-        color: app.colour_light_text
-
-<YearView>:
-    canvas:
         Color:
-            rgba: app.colour_light_base
-        Rectangle:
-            pos: self.pos
-            size: self.size
+            rgba: app.colour_selected
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+            width: 1
     orientation: 'vertical'
     padding: dp(10)
     spacing: dp(10)
     Label:
+        id: date_label
+        size_hint_y: 0.2
+        halign: 'center'
+        color: app.colour_text
+
+<YearView>:
+    canvas:
+        Color:
+            rgba: app.colour_background
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    orientation: 'vertical'
+    Label:
         id: year_label
         size_hint_y: 0.1
-        color: app.colour_light_text
+        color: app.colour_text
     GridLayout:
         id: year_grid
         cols: 3
         rows: 4
 
+<YearGridBox@BoxLayout+ButtonBehavior>:
+    canvas:
+        Color:
+            rgba: app.colour_background
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgba: app.colour_selected
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+            width: 1
+    orientation: 'vertical'
+    padding: dp(10)
+    Label:
+        id: month_box_label
+        size_hint_y: 0.2
+        color: app.colour_text
+        font_size: dp(12)
+    GridLayout:
+        id: month_box_grid
+        cols: 7
+
 <WeekView>:
     canvas:
         Color:
-            rgba: app.colour_light_base
+            rgba: app.colour_background
         Rectangle:
             pos: self.pos
             size: self.size
     orientation: 'vertical'
-    padding: dp(10)
-    spacing: dp(10)
     Label:
         id: week_label
         size_hint_y: 0.1
         halign: 'center'
-        color: app.colour_light_text
+        color: app.colour_text
 
     GridLayout:
         canvas:
             Color:
-                rgba: app.colour_light_base
+                rgba: app.colour_background
             Rectangle:
                 pos: self.pos
                 size: self.size

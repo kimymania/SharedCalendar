@@ -8,11 +8,8 @@ from kivy.uix.popup import Popup
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.widget import Widget
 from kivy.uix.label import Label
-from kivy.uix.button import Button
 from kivy.properties import StringProperty
-from kivy.graphics import Line, Color
 from kivy.lang import Builder
 from kivy.metrics import dp
 
@@ -20,15 +17,11 @@ from selectors_logic import DateSelector, TimeSelector, ColourPicker
 
 from database import Database
 from common_utils import (
-    LOCAL_CALENDAR, get_month, get_month_name, get_week_number, get_week_days,
-    get_grid_rows
+    LOCAL_CALENDAR, get_month, get_month_name, get_week_number, get_week_days
 )
-import palette
+from palette import RED, background_colour, text_colour, selected_colour, disabled_colour
 
 WINDOW_WIDTH, WINDOW_HEIGHT = Window.size
-
-class Separator(Widget):
-    pass
 
 class AddEventPopup(Popup):
     selected_date_start = StringProperty('')
@@ -253,13 +246,12 @@ class MonthView(FloatLayout):
         for day in range(7):
             label = Label(
                 text=LOCAL_CALENDAR.formatweekday(day=(day + 6) % 7, width=3),
-                size_hint_y=0.2,
-                color=palette.LIGHT_TEXT,
+                size_hint_y=0.2
             )
-            with label.canvas:
-                Color(palette.LIGHT_LINES)
-                label.border = Line(rectangle=(label.x, label.y, label.width, label.height), width=0.5)
-            label.bind(pos=self.update_label_border, size=self.update_label_border)
+            if day == 0:
+                label.color = RED
+            else:
+                label.color = text_colour
             self.ids.month_grid.add_widget(label)
         for week in get_month(year=year, month=month):
             for day in week:
@@ -269,14 +261,6 @@ class MonthView(FloatLayout):
                 else:
                     btn = MonthGridBox()
                     self.ids.month_grid.add_widget(btn)
-
-        grid = self.ids.month_grid
-        cols: int = self.ids.month_grid.cols
-        rows: int = get_grid_rows(self.ids.month_grid)
-        self.add_widget(GridOverlay(gridlayout=grid, cols=cols, rows=rows))
-
-    def update_label_border(self, instance, *args) -> None:
-        instance.border.rectangle = (instance.x, instance.y, instance.width, instance.height)
 
 class MonthGridBox(ButtonBehavior, BoxLayout):
     def __init__(self, day: datetime = None, **kwargs) -> None:
@@ -293,43 +277,11 @@ class MonthGridBox(ButtonBehavior, BoxLayout):
         day_view = DayView(selected_day=day)
         day_view.open()
 
-class GridOverlay(Widget):
-    def __init__(self, gridlayout, cols: int, rows: int, **kwargs) -> None:
-        super().__init__(**kwargs)
-        self.cols = cols
-        self.rows = rows - 1 # Exclude top column
-        self.bind(pos=self.update_grid, size=self.update_grid)
-        self.size_hint = 0.95, 0.8 # fix y value
-        self.size = (gridlayout.width, gridlayout.height)
-        self.pos_hint = {"center_x": 0.5, "center_y": 0.45}
-        self.update_grid()
-
-    def update_grid(self, *args) -> None:
-        self.canvas.clear()
-        with self.canvas:
-            Color(0, 0, 0, 1)  # Black lines
-            width, height = self.size
-            x0, y0 = self.pos
-            col_width = width / self.cols
-            row_height = height / self.rows
-            # top_row_height = height * 0.2
-
-            # Draw vertical lines
-            for i in range(1, self.cols):
-                x = x0 + i * col_width
-                Line(points=[x, y0, x, y0 + height], width=1)
-
-            # Draw horizontal lines
-            for j in range(1, self.rows):
-                y = y0 + j * row_height
-                Line(points=[x0, y, x0 + width, y], width=1)
-
 class YearView(BoxLayout):
-    def __init__(self, year: int, callback=None, **kwargs) -> None:
+    def __init__(self, year: int, **kwargs) -> None:
         super().__init__(**kwargs)
         self.year = year
         self.year_label = str(self.year)
-        self.callback = callback
         self.build()
 
     def build(self) -> None:
@@ -337,21 +289,51 @@ class YearView(BoxLayout):
         self.ids.year_grid.clear_widgets()
 
         for month in range(1, 13):
-            month_name = get_month_name(month)
-            btn = Button(
-                    text=month_name,
-                    background_color=palette.LIGHT_BACKGROUND,
-                    color=palette.LIGHT_TEXT
+            box = YearGridBox(self.year, month)
+            self.ids.year_grid.add_widget(box)
+
+class YearGridBox(ButtonBehavior, BoxLayout):
+    def __init__(self, year: int, month: int, **kwargs) -> None: # callback parameter can't be entered?
+        super().__init__(**kwargs)
+        self.year: int = year
+        self.month: int = month
+
+        self.ids.month_box_label.text = LOCAL_CALENDAR.formatmonthname(
+            theyear=self.year,
+            themonth=self.month,
+            width=3,
+            withyear=False
+        )
+
+        # week_headers = LOCAL_CALENDAR.formatweekheader(width=2).split(' ')
+        week_headers: list = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
+        for i in range(7):
+            header_label = Label(
+                text = week_headers[i],
+                font_size = dp(10),
+                color = text_colour
+            )
+            self.ids.month_box_grid.add_widget(header_label)
+
+        for week in LOCAL_CALENDAR.monthdays2calendar(year=self.year, month=self.month):
+            for day, index in enumerate(week):
+                day_label = Label(
+                    text = str(index[0]),
+                    font_size = dp(10),
+                    color = text_colour
                 )
-            btn.bind(on_release=lambda instance, m=month: self.on_month_selected(m))
-            self.ids.year_grid.add_widget(btn)
+                if index[0] == 0:
+                    day_label.text = ''
+                self.ids.month_box_grid.add_widget(day_label)
+
+        self.bind(
+            on_release=lambda instance, m=self.month: self.on_month_selected(m)
+        )
 
     def on_month_selected(self, month: str) -> None:
-        """ Callback to CoreFunctions to load MonthView """
-        selected_month = month
-        if self.callback:
-            callback = self.callback(self.year, selected_month)
-        MonthView(year=self.year, month=selected_month)
+        # this currently accesses cal_function's switch_view_to_selected
+        # might need refactoring
+        self.parent.parent.parent.switch_view_to_selected(self.year, month)
 
 class WeekView(BoxLayout):
     def __init__(self, current_day: datetime, **kwargs) -> None:
@@ -373,19 +355,19 @@ class WeekView(BoxLayout):
 
     def build(self) -> None:
         self.ids.week_label.text = f'{self.year_month_label}\nWeek {self.week_label}'
-        self.ids.week_label.color = palette.LIGHT_TEXT
+        self.ids.week_label.color = text_colour
 
         for day in range(7):
             self.ids.week_days.add_widget(
                 Label(
                     text=LOCAL_CALENDAR.formatweekday(day=(day + 6) % 7, width=3),
-                    color = palette.LIGHT_TEXT
+                    color = text_colour
                 ))
         for date in self.week:
             self.ids.week_days.add_widget(
                 Label(
                     text=f'{date}', font_size=dp(13),
-                    color = palette.LIGHT_TEXT
+                    color = text_colour
                 ))
 
     def build_events(self, events) -> None:

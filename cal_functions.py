@@ -148,7 +148,7 @@ class CoreFunctions(BoxLayout):
 
         self.clear_widgets()
         if self.view_index == 0:
-            self.add_widget(YearView(year=year, callback=self.switch_view_to_selected))
+            self.add_widget(YearView(year=year))
         elif self.view_index == 1:
             self.add_widget(MonthView(year=year, month=month))
         elif self.view_index == 2:

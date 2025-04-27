@@ -15,13 +15,27 @@
 - Colors, Graphics
 - Animations
 
+# ISSUES:
+
+- WeekView synchronization with MonthView and YearView is broken agian
+
+---
+
+# 2025/04/28
+
+# \_CHANGED:
+
+- YearView UI
+- Loading MonthView from YearView
+
 ---
 
 # 2025/04/27
 
-# \_WIP:
+# \_ADDED:
 
-- Grid overlay (lines)
+- Grid lines for MonthView
+- Text colour for Sunday is RED now
 
 ---
 
