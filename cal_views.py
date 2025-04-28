@@ -301,7 +301,8 @@ class YearView(BoxLayout):
             self.ids.year_grid.add_widget(box)
 
 class YearGridBox(ButtonBehavior, BoxLayout):
-    def __init__(self, year: int, month: int, **kwargs) -> None: # callback parameter can't be entered?
+    """ Loads month cal as a grid box - but it's slow atm """
+    def __init__(self, year: int, month: int, **kwargs) -> None:
         super().__init__(**kwargs)
         self.year: int = year
         self.month: int = month
@@ -366,11 +367,11 @@ class WeekView(BoxLayout):
         self.ids.week_label.color = text_colour
 
         for day in range(7):
-            self.ids.week_days.add_widget(
-                Label(
-                    text=LOCAL_CALENDAR.formatweekday(day=(day + 6) % 7, width=3),
-                    color = text_colour
-                ))
+            weekday_label = Label(
+                text=LOCAL_CALENDAR.formatweekday(day=(day + 6) % 7, width=3),
+                color = text_colour
+            )
+            self.ids.week_days.add_widget(weekday_label)
         for date in self.week:
             self.ids.week_days.add_widget(
                 Label(

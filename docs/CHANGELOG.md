@@ -19,6 +19,8 @@
 
 - WeekView synchronization with MonthView and YearView is broken again
 - MonthView Grid - gray line is being shown even for empty grids
+- MnothView - there's a white box at the bottom left corner
+- YearView Grid - current system is very slow - takes too long to calculate entire month grid for each month
 
 ---
 
