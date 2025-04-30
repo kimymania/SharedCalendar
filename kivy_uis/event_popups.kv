@@ -1,161 +1,28 @@
 #:kivy 2.3.1
-<MonthView@FloatLayout>:
+
+<AddEventPopup>:
     canvas.before:
         Color:
             rgba: app.colour_background
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    BoxLayout:
-        orientation: 'vertical'
-        size_hint: 1, 1
-        pos_hint: {"center_x": 0.5, "center_y": 0.5}
-        Label:
-            id: month_label
-            size_hint_y: 0.1
-            color: app.colour_text
-        GridLayout:
-            canvas:
-                Color:
-                    rgba: app.colour_selected
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
-            id: month_grid
-            cols: 7
-
-<MonthGridBox@BoxLayout+ButtonBehavior>:
-    canvas:
-        Color:
-            rgba: app.colour_background
-        Rectangle:
+        RoundedRectangle:
             pos: self.pos
             size: self.size
         Color:
-            rgba: app.colour_selected
+            rgba: app.colour_lines
         Line:
-            rectangle: self.x, self.y, self.width, self.height
-            width: 1
-    orientation: 'vertical'
-    padding: dp(5)
-    Label:
-        canvas:
-            Color:
-                rgba: app.colour_disabled
-            Line:
-                points: self.x, self.y, self.right, self.y
-                width: 1
-        id: date_label
-        size_hint_y: 0.1
-        padding: 0, 0, 0, dp(5)
-        halign: 'center'
-        font_size: dp(14)
-        color: app.colour_text
-    FloatLayout:
-        size_hint_y: 0.8
-        BoxLayout:
-            orientation: 'vertical'
-
-<YearView>:
-    canvas:
-        Color:
-            rgba: app.colour_background
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    orientation: 'vertical'
-    Label:
-        id: year_label
-        size_hint_y: 0.1
-        color: app.colour_text
-    GridLayout:
-        id: year_grid
-        cols: 3
-        rows: 4
-
-<YearGridBox@BoxLayout+ButtonBehavior>:
-    canvas:
-        Color:
-            rgba: app.colour_background
-        Rectangle:
-            pos: self.pos
-            size: self.size
-        Color:
-            rgba: app.colour_selected
-        Line:
-            rectangle: self.x, self.y, self.width, self.height
-            width: 1
-    orientation: 'vertical'
-    padding: dp(10)
-    Label:
-        id: month_box_label
-        size_hint_y: 0.2
-        color: app.colour_text
-        font_size: dp(12)
-    GridLayout:
-        id: month_box_grid
-        cols: 7
-
-<WeekView>:
-    canvas:
-        Color:
-            rgba: app.colour_background
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    orientation: 'vertical'
-    Label:
-        id: week_label
-        size_hint_y: 0.1
-        halign: 'center'
-        color: app.colour_text
-    GridLayout:
-        canvas:
-            Color:
-                rgba: app.colour_background
-            Rectangle:
-                pos: self.pos
-                size: self.size
-        id: week_days
-        cols: 7
-        size_hint_y: 0.1
-
-    GridLayout:
-        id: week_grid
-        cols: 7
-
-<DayView>:
-    title: root.selected_day_text
-    title_align: 'center'
-    size_hint: 0.9, 0.9
-    BoxLayout:
-        orientation: 'vertical'
-
-        BoxLayout:
-            orientation: 'vertical'
-            size_hint_y: 0.8
-            padding: dp(10)
-            spacing: dp(10)
-            GridLayout:
-                id: events_list
-                cols: 1
-
-        Button:
-            text: 'Add Event'
-            size_hint_y: 0.1
-            on_release: root.add_event(self)
-
-        Button:
-            text: 'Close'
-            size_hint_y: 0.1
-            on_release: root.close_popup(self)
-
-<AddEventPopup>:
+            rounded_rectangle: self.x, self.y, self.width, self.height, 30
+            width: 2
     title: 'Add Event'
     title_align: 'center'
     size_hint: 0.8, 0.6
     auto_dismiss: True
     BoxLayout:
+        canvas.before:
+            Color:
+                rgba: app.colour_background
+            Rectangle:
+                pos: self.pos
+                size: self.size
         orientation: 'vertical'
         spacing: dp(10)
         padding: dp(10)
@@ -164,7 +31,6 @@
             size_hint_y: 0.35
             hint_text: 'Event Name'
             multiline: False
-
         BoxLayout:
             orientation: 'horizontal'
             spacing: dp(10)
@@ -172,14 +38,13 @@
             Label:
                 text: 'Date'
                 size_hint_x: 0.2
+                color: app.colour_text
             Button:
                 text: root.selected_date_start
                 on_release: root.toggle_date_selector(self, 'start')
-
             Button:
                 text: root.selected_date_end
                 on_release: root.toggle_date_selector(self, 'end')
-
         BoxLayout:
             orientation: 'horizontal'
             spacing: dp(10)
@@ -187,14 +52,13 @@
             Label:
                 text: 'Time'
                 size_hint_x: 0.2
+                color: app.colour_text
             Button:
                 text: root.selected_time_start
                 on_release: root.toggle_time_selector(self, 'start')
-
             Button:
                 text: root.selected_time_end
                 on_release: root.toggle_time_selector(self, 'end')
-
         BoxLayout:
             orientation: 'horizontal'
             spacing: dp(10)
@@ -207,13 +71,11 @@
                 id: colour_picker_btn
                 text: 'Pick Colour'
                 on_release: root.open_colour_picker(self)
-
         TextInput:
             id: event_location
             hint_text: 'Location'
             size_hint_y: 0.35
             multiline: False
-
         BoxLayout:
             orientation: 'horizontal'
             spacing: dp(10)
@@ -221,11 +83,11 @@
             Label:
                 text: 'Repeat'
                 size_hint_x: 0.2
+                color: app.colour_text
             CheckBox:
                 id: event_repeat_checkbox
                 size_hint_x: 0.2
                 on_active: root.toggle_repeat(self)
-
         BoxLayout:
             orientation: 'horizontal'
             spacing: dp(10)
@@ -233,11 +95,11 @@
             Label:
                 text: 'Notification'
                 size_hint_x: 0.2
+                color: app.colour_text
             CheckBox:
                 id: event_notification_checkbox
                 size_hint_x: 0.2
                 on_active: root.toggle_notification(self)
-
         BoxLayout:
             orientation: 'horizontal'
             spacing: dp(10)
@@ -245,11 +107,11 @@
             Label:
                 text: 'Important'
                 size_hint_x: 0.2
+                color: app.colour_text
             CheckBox:
                 id: event_important_checkbox
                 size_hint_x: 0.2
                 on_active: root.toggle_important(self)
-
         AnchorLayout:
             anchor_x: 'center'
             anchor_y: 'bottom'
@@ -258,6 +120,7 @@
                 text: 'Add Event'
                 spacing: dp(5)
                 size_hint: 0.5, 0.3
+                color: app.colour_text
                 on_release: root.save_event(self)
 
 <ViewEventPopup>:
@@ -355,26 +218,3 @@
                 spacing: dp(5)
                 size_hint: 0.5, 0.3
                 on_release: root.open_edit_event(self)
-
-<DayViewEvent@ButtonBehavior+BoxLayout>:
-    orientation: 'horizontal'
-    size_hint_y: None
-    height: dp(40)
-    spacing: dp(10)
-    padding: dp(10), dp(5)
-    BoxLayout:
-        orientation: 'vertical'
-        size_hint_x: 0.3
-        Label:
-            id: start_time
-            halign: 'left'
-            font_size: dp(15)
-        Label:
-            id: end_time
-            halign: 'left'
-            font_size: dp(15)
-
-    Label:
-        id: event_name
-        halign: 'left'
-        valign: 'middle'

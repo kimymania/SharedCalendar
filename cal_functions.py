@@ -20,24 +20,20 @@ class CoreFunctions(BoxLayout):
         super().__init__(**kwargs)
         LOCAL_CALENDAR.locale = locale
         today = datetime.today()
-        self.current_year: int = today.year
-        self.current_month: int = today.month
-        self.current_day: int = today.day
         self.current_date = today
 
-        Window.size = (414, 896) # iPhone 13 resolution scaled down to half
         self.orientation = 'vertical'
+        Window.size = (414, 896) # iPhone 13 resolution scaled down to half
         Window.bind(
             on_key_down=self.on_key_down,
-            # on_resize=self.on_window_resize
+            on_resize=self.on_window_resize
         )
         self._touch_start_x = 0
         self._touch_start_y = 0
 
-        # list of views
         self.views = [
-            YearView(year=self.current_year),
-            MonthView(year=self.current_year, month=self.current_month),
+            YearView(year=self.current_date.year),
+            MonthView(year=self.current_date.year, month=self.current_date.month),
             WeekView(current_day=self.current_date)
         ]
         self.view_index = 1 # initialize to MonthView
@@ -78,7 +74,6 @@ class CoreFunctions(BoxLayout):
             return self.navigate(swipe_right=False)
 
     def on_touch_down(self, touch) -> bool | None:
-        """ Touch down press """
         self._touch_start_y = touch.y
         self._touch_start_x = touch.x
         return super().on_touch_down(touch)
@@ -86,6 +81,7 @@ class CoreFunctions(BoxLayout):
     def on_touch_up(self, touch) -> bool | None:
         """
         Touch release - actions run here
+
         Swipe directions inverted to simulate natural swipe movement
         """
         dy = touch.y - self._touch_start_y
@@ -105,28 +101,34 @@ class CoreFunctions(BoxLayout):
     def navigate(self, swipe_right: bool) -> None:
         """
         Screen navigation
+
         Check view index -> Change current year/date/week accordingly
-        ** Will add day index & navigation as well, hopefully **
         """
+        # Initialization, just in case
+        year: int = self.current_date.year
+        month: int = self.current_date.month
+
         if self.view_index == 0:
             if swipe_right is True:
-                self.current_year -= 1
+                year = self.current_date.year - 1
             elif swipe_right is False:
-                self.current_year += 1
+                year = self.current_date.year + 1
+            self.current_date = self.current_date.replace(year=year)
 
         elif self.view_index == 1:
             if swipe_right is True:
-                if self.current_month == 1:
-                    self.current_month = 12
-                    self.current_year -= 1
+                if self.current_date.month == 1:
+                    month = 12
+                    year -= 1
                 else:
-                    self.current_month -= 1
+                    month -= 1
             elif swipe_right is False:
-                if self.current_month == 12:
-                    self.current_month = 1
-                    self.current_year += 1
+                if month == 12:
+                    month = 1
+                    year += 1
                 else:
-                    self.current_month += 1
+                    month += 1
+            self.current_date = self.current_date.replace(year=year, month=month)
 
         elif self.view_index == 2:
             if swipe_right is True:
@@ -141,10 +143,10 @@ class CoreFunctions(BoxLayout):
 
         Currently clears the entire widget and loads a new one
 
-        You can give year & month arguments, though they default to self.current_year & self.current_month
+        You can give year & month arguments, though they default to self.current_date
         """
-        year = args[0] if len(args) > 0 else self.current_year
-        month = args[1] if len(args) > 1 else self.current_month
+        year = args[0] if len(args) > 0 else self.current_date.year
+        month = args[1] if len(args) > 1 else self.current_date.month
 
         self.clear_widgets()
         if self.view_index == 0:
@@ -181,13 +183,12 @@ class CoreFunctions(BoxLayout):
         Switch views on clicking an interactive ui element, e.g. clicking on a month in the YearView
 
         Can take 2 arguments (year) and (month) -
-        which are defaulted to self.current_year and self.current_month if not explicitly given
+        which are defaulted to self.current_date if not explicitly given
         """
-        year = args[0] if len(args) > 0 else self.current_year
-        month = args[1] if len(args) > 1 else self.current_month
-        self.current_year = year
-        self.current_month = month
+        year = args[0] if len(args) > 0 else self.current_date.year
+        month = args[1] if len(args) > 1 else self.current_date.month
+        self.current_date = self.current_date.replace(year=year, month=month)
 
         self.view_index = 1
         self.clear_widgets()
-        self.add_widget(MonthView(year=year, month=self.current_month))
+        self.add_widget(MonthView(year=year, month=self.current_date.month))

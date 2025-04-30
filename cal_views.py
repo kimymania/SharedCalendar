@@ -9,18 +9,21 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.label import Label
-from kivy.properties import StringProperty
-from kivy.graphics import Color, Line, Rectangle
+from kivy.properties import StringProperty, ListProperty
+from kivy.graphics import Color, Rectangle
 from kivy.lang import Builder
 from kivy.metrics import dp
+from kivy.factory import Factory
 
 from selectors_logic import DateSelector, TimeSelector, ColourPicker
 
 from database import Database
 from common_utils import (
-    LOCAL_CALENDAR, get_month, get_week_number, get_week_days
+    LOCAL_CALENDAR, get_month, get_week_number, get_week_days,
+    find_ancestor
 )
-from palette import RED, background_colour, text_colour, selected_colour, disabled_colour
+from palette import RED, background_colour, text_colour, selected_colour
+
 
 WINDOW_WIDTH, WINDOW_HEIGHT = Window.size
 
@@ -172,7 +175,7 @@ class ViewEventPopup(Popup):
         """ 'Edit Event' function """
         pass
 
-class DayView(Popup):
+class DayView(BoxLayout):
     selected_day_text = StringProperty('')
     def __init__(self, selected_day: datetime, **kwargs) -> None:
         super().__init__(**kwargs)
@@ -181,7 +184,7 @@ class DayView(Popup):
         self.build()
 
     def build(self) -> None:
-        self.ids.events_list.clear_widgets()
+        self.ids.day_events_list.clear_widgets()
 
         current_day: str = self.selected_day.strftime('%y/%m/%d')
         db = Database()
@@ -190,13 +193,18 @@ class DayView(Popup):
         for event in events:
             if current_day == event['start_date'] or current_day == event['end_date']:
                 # Create event UI boxes
-                self.ids.events_list.add_widget(DayViewEvent(event))
+                self.ids.day_events_list.add_widget(DayViewEvent(event))
                 no_events = False
             else:
                 continue
         if no_events:
-            no_label = Label(text='No Events')
-            self.ids.events_list.add_widget(no_label)
+            no_label = Label(
+                text='No Events',
+                color=text_colour,
+                size_hint_y=None,
+                height=dp(20)
+            )
+            self.ids.day_events_list.add_widget(no_label)
 
     def add_event(self, instance) -> None:
         add_event = AddEventPopup(selected_day=self.selected_day)
@@ -206,11 +214,10 @@ class DayView(Popup):
     def refresh_view(self, instance) -> None:
         self.build()
 
-    def close_popup(self, instance) -> None:
-        self.dismiss()
+    def close_view(self, instance) -> None:
+        self.parent.close_dayview(self)
 
 class DayViewEvent(ButtonBehavior, BoxLayout):
-    """ Reusable Event block viewed in DayView """
     def __init__(self, event_data, **kwargs):
         super().__init__(**kwargs)
         self.event_data = event_data
@@ -229,6 +236,7 @@ class MonthView(FloatLayout):
         super().__init__(**kwargs)
         self.current_year = year
         self.current_month = month
+        self.selected_box = None
         self.build()
 
     def build(self) -> None:
@@ -263,27 +271,53 @@ class MonthView(FloatLayout):
                     btn = MonthGridBox()
                     self.ids.month_grid.add_widget(btn)
 
+    def track_selection(self, instance, day: datetime) -> None:
+        """ Change colour of grid boxes """
+        if not self.selected_box:
+            self.selected_box = instance
+            self.selected_box.bg_colour = selected_colour
+        elif self.selected_box != instance:
+            self.selected_box.bg_colour = background_colour
+            self.selected_box = instance
+            self.selected_box.bg_colour = selected_colour
+        elif self.selected_box == instance:
+            day_view = DayView(selected_day=day)
+            self.add_widget(day_view)
+
+    def close_dayview(self, widget):
+        widgets: list = []
+        widgets.append(widget)
+        self.clear_widgets(children=widgets)
+
 class MonthGridBox(ButtonBehavior, BoxLayout):
+    bg_colour = ListProperty(background_colour)
     def __init__(self, day: datetime = None, **kwargs) -> None:
         super().__init__(**kwargs)
         self.date: datetime = day
 
+        with self.canvas.before:
+            self._colour = Color(rgba=self.bg_colour)
+            self._rect = Rectangle(pos=self.pos, size=self.size)
+        self.bind(
+            pos=self.update_graphics,
+            size=self.update_graphics,
+            bg_colour=self.update_colour
+        )
+
         if day:
             self.ids.date_label.text = str(self.date.day)
-            with self.canvas:
-                Color(disabled_colour)
-                Line(points=[self.x, self.y, self.right, self.y], width=1)
-            self.bind(
-                on_release=lambda instance, d=day: self.on_day_selected(d)
-            )
-        else:
-            with self.canvas:
-                Color(background_colour)
-                Rectangle(pos=self.pos, size=self.size)
+            self.bind(on_release=lambda instance, d=day: self.on_day_selected(instance, d))
 
-    def on_day_selected(self, day: str) -> None:
-        day_view = DayView(selected_day=day)
-        day_view.open()
+    def update_graphics(self, *args) -> None:
+        self._rect.pos = self.pos
+        self._rect.size = self.size
+
+    def update_colour(self, instance, new_rgba) -> None:
+        self._colour.rgba = new_rgba
+
+    def on_day_selected(self, instance, day: datetime) -> None:
+        # MonthGridBox > GridLayout > BoxLayout > MonthView(FloatLayout)
+        self.parent.parent.parent.track_selection(instance, day)
 
 class YearView(BoxLayout):
     def __init__(self, year: int, **kwargs) -> None:
@@ -315,6 +349,7 @@ class YearGridBox(ButtonBehavior, BoxLayout):
         )
 
         # week_headers = LOCAL_CALENDAR.formatweekheader(width=2).split(' ')
+        # not suitable for localization but less processing = better performance i think
         week_headers: list = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
         for i in range(7):
             header_label = Label(
@@ -339,10 +374,12 @@ class YearGridBox(ButtonBehavior, BoxLayout):
             on_release=lambda instance, m=self.month: self.on_month_selected(m)
         )
 
-    def on_month_selected(self, month: str) -> None:
-        # this currently accesses cal_function's switch_view_to_selected
-        # might need refactoring
-        self.parent.parent.parent.switch_view_to_selected(self.year, month)
+    def on_month_selected(self, month: int) -> None:
+        core = find_ancestor(widget=self, class_name=Factory.CoreFunctions)
+        if core:
+            core.switch_view_to_selected(self.year, month)
+        else:
+            print("Can't find CoreFunctions")
 
 class WeekView(BoxLayout):
     def __init__(self, current_day: datetime, **kwargs) -> None:
@@ -354,8 +391,8 @@ class WeekView(BoxLayout):
             width=0,
             withyear=True
         )
-        self.week_label: str = get_week_number(current_day=current_day)
-        self.week: list = get_week_days(current_day)
+        self.week_label: str = get_week_number(current_day=self.current_day)
+        self.week: list = get_week_days(self.current_day)
         self.build()
 
         db = Database()
@@ -385,8 +422,7 @@ class WeekView(BoxLayout):
             for day in week:
                 formatted_day = f'{self.current_day.strftime('%y')}/{day}'
                 if formatted_day == event['start_date'] or formatted_day == event['end_date']:
-                    event_title_label = \
-                        Label(
+                    event_title_label = Label(
                             text=event['title'],
                             halign='left',
                             valign='middle',
@@ -399,4 +435,4 @@ class WeekView(BoxLayout):
                 else:
                     self.ids.week_grid.add_widget(Label(text=''))
 
-Builder.load_file('kivy_uis/views.kv')
+Builder.load_file('kivy_uis/main_views.kv')

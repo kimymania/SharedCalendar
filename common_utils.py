@@ -7,6 +7,8 @@ Return calendar dates (year, month, week, weekdays)
 import calendar
 from datetime import datetime
 
+from kivy.uix.widget import Widget
+
 LOCAL_CALENDAR = calendar.LocaleTextCalendar(firstweekday=6)
 TODAY = datetime.today()
 COLOUR_RGBA_SELECTED: list = [0.4, 0.9, 1, 1]
@@ -59,3 +61,16 @@ def get_grid_rows(gridlayout) -> int:
 
     rows: int = (children_count + cols - 1) // cols
     return rows
+
+def find_ancestor(widget: Widget, class_name: type) -> Widget | None:
+    """
+    Climb up the .parent chain until you find an instance of class_name
+
+    Returns the instance or None if not found.
+    """
+    parent = widget.parent
+    while parent:
+        if isinstance(parent, class_name):
+            return parent
+        parent = parent.parent
+    return None

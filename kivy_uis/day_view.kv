@@ -1,0 +1,108 @@
+#:kivy 2.3.1
+
+<DayView@BoxLayout>:
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 0.8
+        BoxShadow:
+            pos: self.pos
+            size: self.size
+            blur_radius: 30
+            border_radius: 40, 40, 40, 40
+            spread_radius: -18, -18
+    canvas:
+        Color:
+            rgba: app.colour_background
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgba: app.colour_lines
+        Line:
+            rounded_rectangle: self.x, self.y, self.width, self.height, 30
+            width: 2
+    orientation: 'vertical'
+    size_hint: 0.9, 0.9
+    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+    BoxLayout:
+        id: day_title_bar
+        orientation: 'horizontal'
+        size_hint_y: 0.07
+        Label:
+            id: day_title
+            text: root.selected_day_text
+            color: app.colour_text
+        Button:
+            text: 'X'
+            size_hint_x: 0.15
+            background_color: 1, 1, 1, 0
+            background_normal: ''
+            color: app.colour_text
+            on_release: root.close_view(self)
+    BoxLayout:
+        canvas:
+            Color:
+                rgba: app.colour_lines
+            Line:
+                rectangle: self.x + dp(15), self.y + dp(5), self.width - dp(15), self.height - dp(5)
+                width: 3
+        orientation: 'vertical'
+        id: day_title_separator
+        size_hint_y: None
+        height: 10
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(10)
+        spacing: dp(10)
+        size_hint_y: 0.9
+        StackLayout:
+            GridLayout:
+                id: day_events_list
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height + dp(20)
+            Button:
+                canvas:
+                    Color:
+                        rgba: app.colour_lines
+                    Line:
+                        rounded_rectangle: self.x, self.y, self.width, self.height, 30
+                        width: 2
+                text: 'Add New Event'
+                on_release: root.add_event(self)
+                background_normal: ''
+                # background_down: ''
+                size_hint_y: None
+                height: dp(20)
+                color: app.colour_text
+
+<DayViewEvent@ButtonBehavior+BoxLayout>:
+    canvas.before:
+        Color:
+            rgba: app.colour_background
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: dp(40)
+    spacing: dp(10)
+    padding: dp(10), dp(5)
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_x: 0.3
+        Label:
+            id: start_time
+            halign: 'left'
+            font_size: dp(15)
+            color: app.colour_text
+        Label:
+            id: end_time
+            halign: 'left'
+            font_size: dp(15)
+            color: app.colour_text
+    Label:
+        id: event_name
+        halign: 'left'
+        valign: 'middle'
+        color: app.colour_text

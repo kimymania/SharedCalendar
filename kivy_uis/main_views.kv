@@ -1,0 +1,117 @@
+#:kivy 2.3.1
+#:include kivy_uis/day_view.kv
+#:include kivy_uis/event_popups.kv
+
+<MonthView@FloatLayout>:
+    canvas.before:
+        Color:
+            rgba: app.colour_background
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: 1, 1
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        Label:
+            id: month_label
+            size_hint_y: 0.1
+            color: app.colour_text
+        GridLayout:
+            canvas:
+                Color:
+                    rgba: app.colour_lines
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            id: month_grid
+            cols: 7
+
+<MonthGridBox@BoxLayout+ButtonBehavior>:
+    canvas.before:
+        Color:
+            rgba: app.colour_lines
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+            width: 1
+    orientation: 'vertical'
+    padding: dp(5)
+    Label:
+        id: date_label
+        size_hint_y: 0.1
+        padding: 0, 0, 0, dp(5)
+        halign: 'center'
+        font_size: dp(14)
+        color: app.colour_text
+    FloatLayout:
+        BoxLayout:
+            orientation: 'vertical'
+
+<YearView>:
+    canvas:
+        Color:
+            rgba: app.colour_background
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    orientation: 'vertical'
+    Label:
+        id: year_label
+        size_hint_y: 0.1
+        color: app.colour_text
+    GridLayout:
+        id: year_grid
+        cols: 3
+        rows: 4
+
+<YearGridBox@BoxLayout+ButtonBehavior>:
+    canvas:
+        Color:
+            rgba: app.colour_background
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgba: app.colour_lines
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+            width: 1
+    orientation: 'vertical'
+    padding: dp(10)
+    Label:
+        id: month_box_label
+        size_hint_y: 0.2
+        color: app.colour_text
+        font_size: dp(12)
+    GridLayout:
+        id: month_box_grid
+        cols: 7
+
+<WeekView>:
+    canvas:
+        Color:
+            rgba: app.colour_background
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    orientation: 'vertical'
+    Label:
+        id: week_label
+        size_hint_y: 0.1
+        halign: 'center'
+        color: app.colour_text
+
+    GridLayout:
+        canvas:
+            Color:
+                rgba: app.colour_background
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        id: week_days
+        cols: 7
+        size_hint_y: 0.1
+
+    GridLayout:
+        id: week_grid
+        cols: 7
