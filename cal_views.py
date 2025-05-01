@@ -20,7 +20,7 @@ from selectors_logic import DateSelector, TimeSelector, ColourPicker
 from database import Database
 from common_utils import (
     LOCAL_CALENDAR, get_month, get_week_number, get_week_days,
-    find_ancestor
+    find_ancestor, format_month_kor
 )
 from palette import RED, background_colour, text_colour, selected_colour
 
@@ -180,7 +180,7 @@ class DayView(BoxLayout):
     def __init__(self, selected_day: datetime, **kwargs) -> None:
         super().__init__(**kwargs)
         self.selected_day: datetime = selected_day
-        self.selected_day_text: str = f'{selected_day.strftime('%Y / %m / %d %A')}'
+        self.selected_day_text: str = f'{selected_day.strftime('%Y년 %m월 %d일 %A')}'
         self.build()
 
     def build(self) -> None:
@@ -199,7 +199,7 @@ class DayView(BoxLayout):
                 continue
         if no_events:
             no_label = Label(
-                text='No Events',
+                text='일정 없음',
                 color=text_colour,
                 size_hint_y=None,
                 height=dp(20)
@@ -245,12 +245,7 @@ class MonthView(FloatLayout):
         year = self.current_year
         month = self.current_month
 
-        self.ids.month_label.text = f"{LOCAL_CALENDAR.formatmonthname(
-            theyear=year,
-            themonth=month,
-            width=0,
-            withyear=True
-        )}"
+        self.ids.month_label.text = format_month_kor(year, month)
 
         for day in range(7):
             label = Label(
@@ -261,7 +256,8 @@ class MonthView(FloatLayout):
                 label.color = RED
             else:
                 label.color = text_colour
-            self.ids.month_grid.add_widget(label)
+            self.ids.month_grid_days.add_widget(label)
+
         for week in get_month(year=year, month=month):
             for day in week:
                 if day.month == month:
@@ -323,7 +319,7 @@ class YearView(BoxLayout):
     def __init__(self, year: int, **kwargs) -> None:
         super().__init__(**kwargs)
         self.year = year
-        self.year_label = str(self.year)
+        self.year_label = f'{self.year}년'
         self.build()
 
     def build(self) -> None:
@@ -350,7 +346,7 @@ class YearGridBox(ButtonBehavior, BoxLayout):
 
         # week_headers = LOCAL_CALENDAR.formatweekheader(width=2).split(' ')
         # not suitable for localization but less processing = better performance i think
-        week_headers: list = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
+        week_headers: list = ['일', '월', '화', '수', '목', '금', '토']
         for i in range(7):
             header_label = Label(
                 text = week_headers[i],
@@ -385,12 +381,7 @@ class WeekView(BoxLayout):
     def __init__(self, current_day: datetime, **kwargs) -> None:
         super().__init__(**kwargs)
         self.current_day: datetime = current_day
-        self.year_month_label: str = LOCAL_CALENDAR.formatmonthname(
-            theyear=self.current_day.year,
-            themonth=self.current_day.month,
-            width=0,
-            withyear=True
-        )
+        self.year_month_label: str = format_month_kor(self.current_day.year, self.current_day.month)
         self.week_label: str = get_week_number(current_day=self.current_day)
         self.week: list = get_week_days(self.current_day)
         self.build()
@@ -400,7 +391,7 @@ class WeekView(BoxLayout):
         self.build_events(events)
 
     def build(self) -> None:
-        self.ids.week_label.text = f'{self.year_month_label}\nWeek {self.week_label}'
+        self.ids.week_label.text = f'{self.year_month_label}\n{self.week_label}주차'
         self.ids.week_label.color = text_colour
 
         for day in range(7):

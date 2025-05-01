@@ -74,3 +74,14 @@ def find_ancestor(widget: Widget, class_name: type) -> Widget | None:
             return parent
         parent = parent.parent
     return None
+
+def format_month_kor(year, month) -> str:
+    month_format: str = LOCAL_CALENDAR.formatmonthname(
+            theyear=year,
+            themonth=month,
+            width=0,
+            withyear=True
+        )
+    split_month, split_year = month_format.split(' ')
+    month_format = f'{split_year}년 {split_month}'
+    return month_format

@@ -15,8 +15,23 @@
         pos_hint: {"center_x": 0.5, "center_y": 0.5}
         Label:
             id: month_label
+            font_size: dp(20)
+            bold: True
             size_hint_y: 0.1
             color: app.colour_text
+        GridLayout:
+            canvas:
+                Color:
+                    rgba: app.colour_lines
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            id: month_grid_days
+            cols: 7
+            rows: 1
+            size_hint_y: None
+            height: dp(25)
+            italic: True
         GridLayout:
             canvas:
                 Color:
@@ -57,6 +72,8 @@
     orientation: 'vertical'
     Label:
         id: year_label
+        font_size: dp(20)
+        bold: True
         size_hint_y: 0.1
         color: app.colour_text
     GridLayout:
@@ -97,10 +114,11 @@
     orientation: 'vertical'
     Label:
         id: week_label
+        font_size: dp(20)
+        bold: True
         size_hint_y: 0.1
         halign: 'center'
         color: app.colour_text
-
     GridLayout:
         canvas:
             Color:
@@ -109,9 +127,9 @@
                 pos: self.pos
                 size: self.size
         id: week_days
+        italic: True
         cols: 7
         size_hint_y: 0.1
-
     GridLayout:
         id: week_grid
         cols: 7

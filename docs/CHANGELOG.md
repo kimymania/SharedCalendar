@@ -21,6 +21,16 @@
 
 ---
 
+## 2025/05/01
+
+- CHANGED: AddEvent popup UI
+- CHANGED: Colour selector UI
+- ADDED: NanumSquareRound font -> set to default (normal, bold)
+- CHANGED: Locale settings to korean -> started localization of app to korean
+- ADDED: Function to get korean year-month format (for use in titles)
+
+---
+
 ## 2025/04/30
 
 - ADDED: MonthGrid: selected grid highlighting

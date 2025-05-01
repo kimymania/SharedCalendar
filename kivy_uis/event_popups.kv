@@ -1,6 +1,6 @@
 #:kivy 2.3.1
 
-<AddEventPopup>:
+<AddEventPopup@Popup>:
     canvas.before:
         Color:
             rgba: app.colour_background
@@ -12,10 +12,12 @@
         Line:
             rounded_rectangle: self.x, self.y, self.width, self.height, 30
             width: 2
-    title: 'Add Event'
+    title: '일정 추가'
     title_align: 'center'
+    title_color: app.colour_text
     size_hint: 0.8, 0.6
     auto_dismiss: True
+    background: ''
     BoxLayout:
         canvas.before:
             Color:
@@ -26,62 +28,130 @@
         orientation: 'vertical'
         spacing: dp(10)
         padding: dp(10)
-        TextInput:
-            id: event_name
-            size_hint_y: 0.35
-            hint_text: 'Event Name'
-            multiline: False
         BoxLayout:
             orientation: 'horizontal'
-            spacing: dp(10)
+            spacing: dp(15)
             size_hint_y: 0.35
             Label:
-                text: 'Date'
-                size_hint_x: 0.2
+                text: '제목'
+                size_hint_x: None
+                width: dp(20)
+                color: app.colour_text
+            TextInput:
+                id: event_name
+                hint_text: '개 산책'
+                multiline: False
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(15)
+            size_hint_y: 0.35
+            Label:
+                text: '날짜'
+                size_hint_x: None
+                width: dp(20)
                 color: app.colour_text
             Button:
+                canvas:
+                    Color:
+                        rgba: app.colour_lines
+                    Line:
+                        rectangle: self.x, self.y, self.width, self.height
+                        width: 1.5
                 text: root.selected_date_start
+                color: app.colour_text
+                background_normal: ''
+                background_color: app.colour_background
                 on_release: root.toggle_date_selector(self, 'start')
             Button:
+                canvas:
+                    Color:
+                        rgba: app.colour_lines
+                    Line:
+                        rectangle: self.x, self.y, self.width, self.height
+                        width: 1.5
                 text: root.selected_date_end
+                color: app.colour_text
+                background_normal: ''
+                background_color: app.colour_background
                 on_release: root.toggle_date_selector(self, 'end')
         BoxLayout:
             orientation: 'horizontal'
-            spacing: dp(10)
+            spacing: dp(15)
             size_hint_y: 0.35
             Label:
-                text: 'Time'
-                size_hint_x: 0.2
+                text: '시간'
+                size_hint_x: None
+                width: dp(20)
                 color: app.colour_text
             Button:
+                canvas:
+                    Color:
+                        rgba: app.colour_lines
+                    Line:
+                        rectangle: self.x, self.y, self.width, self.height
+                        width: 1.5
                 text: root.selected_time_start
+                color: app.colour_text
+                background_normal: ''
+                background_color: app.colour_background
                 on_release: root.toggle_time_selector(self, 'start')
             Button:
+                canvas:
+                    Color:
+                        rgba: app.colour_lines
+                    Line:
+                        rectangle: self.x, self.y, self.width, self.height
+                        width: 1.5
                 text: root.selected_time_end
+                color: app.colour_text
+                background_normal: ''
+                background_color: app.colour_background
                 on_release: root.toggle_time_selector(self, 'end')
         BoxLayout:
             orientation: 'horizontal'
-            spacing: dp(10)
-            size_hint_y: 0.35
-            TextInput:
-                id: event_group_tag_name
-                hint_text: 'Group Tag'
-                multiline: False
-            Button:
-                id: colour_picker_btn
-                text: 'Pick Colour'
-                on_release: root.open_colour_picker(self)
-        TextInput:
-            id: event_location
-            hint_text: 'Location'
-            size_hint_y: 0.35
-            multiline: False
-        BoxLayout:
-            orientation: 'horizontal'
-            spacing: dp(10)
+            spacing: dp(15)
             size_hint_y: 0.35
             Label:
-                text: 'Repeat'
+                text: '태그'
+                size_hint_x: None
+                width: dp(20)
+                color: app.colour_text
+            TextInput:
+                id: event_group_tag_name
+                hint_text: '태그'
+                multiline: False
+            Button:
+                canvas:
+                    Color:
+                        rgba: app.colour_lines
+                    Line:
+                        rectangle: self.x, self.y, self.width, self.height
+                        width: 1.5
+                id: colour_picker_btn
+                text: '색깔 선택'
+                color: app.colour_text
+                background_normal: ''
+                background_color: app.colour_background
+                on_release: root.open_colour_picker(self)
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(15)
+            size_hint_y: 0.35
+            Label:
+                text: '위치'
+                size_hint_x: None
+                width: dp(20)
+                color: app.colour_text
+            TextInput:
+                id: event_location
+                hint_text: '집 앞'
+                multiline: False
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(15)
+            size_hint_y: 0.35
+            Label:
+                text: '반복'
                 size_hint_x: 0.2
                 color: app.colour_text
             CheckBox:
@@ -90,10 +160,10 @@
                 on_active: root.toggle_repeat(self)
         BoxLayout:
             orientation: 'horizontal'
-            spacing: dp(10)
+            spacing: dp(15)
             size_hint_y: 0.35
             Label:
-                text: 'Notification'
+                text: '알림'
                 size_hint_x: 0.2
                 color: app.colour_text
             CheckBox:
@@ -102,10 +172,10 @@
                 on_active: root.toggle_notification(self)
         BoxLayout:
             orientation: 'horizontal'
-            spacing: dp(10)
+            spacing: dp(15)
             size_hint_y: 0.35
             Label:
-                text: 'Important'
+                text: '중요함!'
                 size_hint_x: 0.2
                 color: app.colour_text
             CheckBox:
@@ -116,18 +186,27 @@
             anchor_x: 'center'
             anchor_y: 'bottom'
             Button:
+                canvas:
+                    Color:
+                        rgba: app.colour_lines
+                    Line:
+                        rectangle: self.x, self.y, self.width, self.height
+                        width: 1.5
                 id: event_add_btn
-                text: 'Add Event'
+                text: '일정 추가'
                 spacing: dp(5)
                 size_hint: 0.5, 0.3
                 color: app.colour_text
+                background_normal: ''
+                background_color: app.colour_background
                 on_release: root.save_event(self)
 
-<ViewEventPopup>:
+<ViewEventPopup@Popup>:
     title: 'View Event'
     title_align: 'center'
     size_hint: 0.8, 0.6
     auto_dismiss: True
+    background: ''
     BoxLayout:
         orientation: 'vertical'
         spacing: dp(10)
@@ -135,13 +214,12 @@
         Label:
             id: event_name
             size_hint_y: 0.35
-
         BoxLayout:
             orientation: 'horizontal'
             spacing: dp(10)
             size_hint_y: 0.35
             Label:
-                text: 'Date'
+                text: '날짜'
                 size_hint_x: 0.2
             Label:
                 id: date_start
@@ -153,7 +231,7 @@
             spacing: dp(10)
             size_hint_y: 0.35
             Label:
-                text: 'Time'
+                text: '시간'
                 size_hint_x: 0.2
             Label:
                 id: time_start
@@ -165,7 +243,7 @@
             spacing: dp(10)
             size_hint_y: 0.35
             Label:
-                text: 'Group Tag'
+                text: '태그'
                 halign: 'right'
                 valign: 'middle'
             Label:
@@ -177,7 +255,7 @@
             orientation: 'horizontal'
             size_hint_y: 0.35
             Label:
-                text: 'Location: '
+                text: '위치: '
                 halign: 'right'
                 valign: 'middle'
             Label:
@@ -189,7 +267,7 @@
             orientation: 'horizontal'
             size_hint_y: 0.35
             Label:
-                text: 'Repeat: '
+                text: '반복: '
                 halign: 'right'
                 valign: 'middle'
             Label:
@@ -201,7 +279,7 @@
             orientation: 'horizontal'
             size_hint_y: 0.35
             Label:
-                text: 'Notification: '
+                text: '알림: '
                 halign: 'right'
                 valign: 'middle'
             Label:
@@ -214,7 +292,7 @@
             anchor_y: 'bottom'
             Button:
                 id: event_edit_btn
-                text: 'Edit Event'
+                text: '일정 수정'
                 spacing: dp(5)
                 size_hint: 0.5, 0.3
                 on_release: root.open_edit_event(self)
