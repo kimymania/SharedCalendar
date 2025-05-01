@@ -1,7 +1,5 @@
 ## TODO:
 
-- Refine selectors <<< HALTED - will continue later >>>
-
 - Important! factor will display on YearView specifically (I haven't yet decided the details on how to implement)
 
 - Change time selector graphic display to show selected values in the center
@@ -11,9 +9,8 @@
 - 'Today' button to move back to current day's MonthView instantly
 - Display daily events in MonthView
 - Fix WeekView (looks lame atm)
-- Korean support, fonts
-- Colors, Graphics
 - Animations
+- Change Event colours to match group tag colour
 
 ## ISSUES:
 
@@ -25,7 +22,8 @@
 
 - CHANGED: AddEvent popup UI
 - CHANGED: Colour selector UI
-- ADDED: NanumSquareRound font -> set to default (normal, bold)
+- ADDED: AppleSDGothicNeo font -> set to default (normal, bold)
+- ADDED: NanumSquareRound package (not applied)
 - CHANGED: Locale settings to korean -> started localization of app to korean
 - ADDED: Function to get korean year-month format (for use in titles)
 

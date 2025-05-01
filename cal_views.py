@@ -42,7 +42,7 @@ class AddEventPopup(Popup):
         self.selected_time_start: str = f'{hour}:{minute}'
         self.selected_time_end: str = f'{hour}:{minute}'
         self.group_tag_name: str = 'None'
-        self.group_tag_colour: list = [1, 1, 1, 1]  # white by default
+        self.group_tag_colour: list = [0, 0, 0, 1]  # black by default
         self.repeat: bool = False
         self.notification: bool = False
         self.important: bool = False

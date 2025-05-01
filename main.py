@@ -31,11 +31,9 @@ class MainApp(App):
 
 if __name__ == '__main__':
     LabelBase.register(
-        name='NanumSquareRound',
-        fn_regular='./fonts/NanumSquareRoundL.ttf',
-        fn_italic='./fonts/NanumSquareRoundR.ttf',
-        fn_bold='./fonts/NanumSquareRoundB.ttf',
-        fn_bolditalic='./fonts/NanumSquareRoundEB.ttf'
+        name='AppleSDGothicNeo',
+        fn_regular='./fonts/AppleSDGothicNeo/AppleSDGothicNeoR.ttf',
+        fn_bold='./fonts/AppleSDGothicNeo/AppleSDGothicNeoB.ttf',
     )
 
     # Config.setdefault('kivy', 'default_font', [
@@ -48,13 +46,10 @@ if __name__ == '__main__':
 
     # this is the only piece of code that actually matters when changing font:
     # don't know if italic, bold and bold italic is working as shown here
-    # the Light version is too thin for my liking
     LabelBase.register(
         DEFAULT_FONT,
-        # './fonts/NanumSquareRoundL.ttf',
-        './fonts/NanumSquareRoundR.ttf', # italic
-        './fonts/NanumSquareRoundB.ttf', # bold
-        './fonts/NanumSquareRoundEB.ttf', # bold italic
+        './fonts/AppleSDGothicNeo/AppleSDGothicNeoR.ttf',
+        './fonts/AppleSDGothicNeo/AppleSDGothicNeoB.ttf',
     )
 
     # set locale value for use with datetime.strftime()

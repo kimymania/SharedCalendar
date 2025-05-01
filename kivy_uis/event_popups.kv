@@ -214,6 +214,7 @@
         Label:
             id: event_name
             size_hint_y: 0.35
+            color: app.colour_text
         BoxLayout:
             orientation: 'horizontal'
             spacing: dp(10)
@@ -221,10 +222,13 @@
             Label:
                 text: '날짜'
                 size_hint_x: 0.2
+                color: app.colour_text
             Label:
                 id: date_start
+                color: app.colour_text
             Label:
                 id: date_end
+                color: app.colour_text
 
         BoxLayout:
             orientation: 'horizontal'
@@ -233,10 +237,13 @@
             Label:
                 text: '시간'
                 size_hint_x: 0.2
+                color: app.colour_text
             Label:
                 id: time_start
+                color: app.colour_text
             Label:
                 id: time_end
+                color: app.colour_text
 
         BoxLayout:
             orientation: 'horizontal'
@@ -246,10 +253,12 @@
                 text: '태그'
                 halign: 'right'
                 valign: 'middle'
+                color: app.colour_text
             Label:
                 id: group_tag
                 halign: 'left'
                 valign: 'middle'
+                color: app.colour_text
 
         BoxLayout:
             orientation: 'horizontal'
@@ -258,10 +267,12 @@
                 text: '위치: '
                 halign: 'right'
                 valign: 'middle'
+                color: app.colour_text
             Label:
                 id: event_location
                 halign: 'left'
                 valign: 'middle'
+                color: app.colour_text
 
         BoxLayout:
             orientation: 'horizontal'
@@ -270,10 +281,12 @@
                 text: '반복: '
                 halign: 'right'
                 valign: 'middle'
+                color: app.colour_text
             Label:
                 id: repeat
                 halign: 'left'
                 valign: 'middle'
+                color: app.colour_text
 
         BoxLayout:
             orientation: 'horizontal'
@@ -282,17 +295,32 @@
                 text: '알림: '
                 halign: 'right'
                 valign: 'middle'
+                color: app.colour_text
             Label:
                 id: notification
                 halign: 'left'
                 valign: 'middle'
+                color: app.colour_text
 
         AnchorLayout:
             anchor_x: 'center'
             anchor_y: 'bottom'
             Button:
+                canvas.before:
+                    Color:
+                        rgba: app.colour_background
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                    Color:
+                        rgba: app.colour_lines
+                    Line:
+                        rectangle: self.x, self.y, self.width, self.height
+                        width: 2
                 id: event_edit_btn
                 text: '일정 수정'
+                color: app.colour_text
+                background_normal: ''
                 spacing: dp(5)
                 size_hint: 0.5, 0.3
                 on_release: root.open_edit_event(self)
