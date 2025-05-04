@@ -37,10 +37,10 @@ class AddEventPopup(Popup):
         self.selected_date: datetime = selected_day
         self.selected_date_start = selected_day.strftime('%y/%m/%d')
         self.selected_date_end = selected_day.strftime('%y/%m/%d')
-        hour: str = '12'
-        minute: str = '00'
-        self.selected_time_start: str = f'{hour}:{minute}'
-        self.selected_time_end: str = f'{hour}:{minute}'
+        # hour: str = '12'
+        # minute: str = '00'
+        self.selected_time_start: str = f'{selected_day.hour}:{selected_day.minute}'
+        self.selected_time_end: str = f'{selected_day.hour}:{selected_day.minute}'
         self.group_tag_name: str = 'None'
         self.group_tag_colour: list = [0, 0, 0, 1]  # black by default
         self.repeat: bool = False
@@ -48,7 +48,6 @@ class AddEventPopup(Popup):
         self.important: bool = False
 
     def toggle_date_selector(self, instance, target: str) -> None:
-        """ Toggle date selector for start/end date """
         if target == 'start':
             date_selector = DateSelector(
                 current_day=self.selected_date,
