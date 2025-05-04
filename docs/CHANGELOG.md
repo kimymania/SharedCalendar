@@ -18,6 +18,13 @@
 
 ---
 
+## 2025/05/04
+
+- CHANGED: Time selector UI
+- CHANGED: Date selector logic
+
+---
+
 ## 2025/05/02
 
 - CHANGED: Date selector UI

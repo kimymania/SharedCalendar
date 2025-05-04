@@ -28,19 +28,24 @@ from palette import RED, background_colour, text_colour, selected_colour
 WINDOW_WIDTH, WINDOW_HEIGHT = Window.size
 
 class AddEventPopup(Popup):
-    selected_date_start = StringProperty('')
-    selected_date_end = StringProperty('')
-    selected_time_start = StringProperty('')
-    selected_time_end = StringProperty('')
+    date_start = StringProperty('')
+    date_end = StringProperty('')
+    time_start = StringProperty('')
+    time_end = StringProperty('')
     def __init__(self, selected_day: datetime, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.selected_date: datetime = selected_day
-        self.selected_date_start = selected_day.strftime('%y/%m/%d')
-        self.selected_date_end = selected_day.strftime('%y/%m/%d')
-        # hour: str = '12'
-        # minute: str = '00'
-        self.selected_time_start: str = f'{selected_day.hour}:{selected_day.minute}'
-        self.selected_time_end: str = f'{selected_day.hour}:{selected_day.minute}'
+        selected_date: datetime = datetime.today()
+        this_time = selected_date.time()
+        selected_date.combine(date=selected_day, time=this_time)
+        self.selected_date = selected_day
+        self.date_start = selected_day.strftime('%y/%m/%d')
+        self.date_end = selected_day.strftime('%y/%m/%d')
+        self.time_start: str = f'{selected_date.hour:02}:00'
+        if selected_date.hour < 23:
+            end_hour = selected_date.hour + 1
+        else:
+            end_hour = 0
+        self.time_end: str = f'{end_hour:02}:00'
         self.group_tag_name: str = 'None'
         self.group_tag_colour: list = [0, 0, 0, 1]  # black by default
         self.repeat: bool = False
@@ -51,50 +56,50 @@ class AddEventPopup(Popup):
         if target == 'start':
             date_selector = DateSelector(
                 current_day=self.selected_date,
-                return_date=self.receive_selected_date_start
+                return_date=self.receive_date_start
             )
             date_selector.open()
         elif target == 'end':
             date_selector = DateSelector(
                 current_day=self.selected_date,
-                return_date=self.receive_selected_date_end
+                return_date=self.receive_date_end
             )
             date_selector.open()
         else:
             return
 
-    def receive_selected_date_start(self, date: datetime):
+    def receive_date_start(self, date: datetime):
         """ Store start date """
-        self.selected_date_start = date.strftime('%y/%m/%d')
+        self.date_start = date.strftime('%y/%m/%d')
 
-    def receive_selected_date_end(self, date: datetime):
+    def receive_date_end(self, date: datetime):
         """ Store end date """
-        self.selected_date_end = date.strftime('%y/%m/%d')
+        self.date_end = date.strftime('%y/%m/%d')
 
     def toggle_time_selector(self, instance, target: str) -> None:
         """ Open time selector for start/end time """
         if target == 'start':
             time_selector = TimeSelector(
-                return_time=self.receive_selected_time_start,
-                time=self.selected_time_start
+                return_time=self.receive_time_start,
+                time=self.time_start
             )
             time_selector.open()
         elif target == 'end':
             time_selector = TimeSelector(
-                return_time=self.receive_selected_time_end,
-                time=self.selected_time_end
+                return_time=self.receive_time_end,
+                time=self.time_end
             )
             time_selector.open()
         else:
             return
 
-    def receive_selected_time_start(self, time: datetime) -> None:
+    def receive_time_start(self, time: datetime) -> None:
         """ Store start time """
-        self.selected_time_start = time.strftime('%H:%M')
+        self.time_start = time.strftime('%H:%M')
 
-    def receive_selected_time_end(self, time: datetime) -> None:
+    def receive_time_end(self, time: datetime) -> None:
         """ Store end time """
-        self.selected_time_end = time.strftime('%H:%M')
+        self.time_end = time.strftime('%H:%M')
 
     def open_colour_picker(self, instance) -> None:
         """ Open colour picker """
@@ -132,10 +137,10 @@ class AddEventPopup(Popup):
         Database().add_event(
             key=None,
             title=self.ids.event_name.text,
-            start_date=self.selected_date_start,
-            end_date=self.selected_date_end,
-            start_time=self.selected_time_start,
-            end_time=self.selected_time_end,
+            start_date=self.date_start,
+            end_date=self.date_end,
+            start_time=self.time_start,
+            end_time=self.time_end,
             group_tag={'name': self.ids.event_group_tag_name.text, 'colour': self.group_tag_colour},
             location=self.ids.event_location.text,
             repeat=self.repeat,
@@ -147,8 +152,9 @@ class AddEventPopup(Popup):
         self.dismiss()
 
 class ViewEventPopup(Popup):
-    def __init__(self, event_key: int, **kwargs) -> None:
+    def __init__(self, event_key: int, event_date: datetime, **kwargs) -> None:
         super().__init__(**kwargs)
+        self.event_date = event_date
         db = Database()
         events = db.load_event()
         for event in events:
@@ -172,7 +178,8 @@ class ViewEventPopup(Popup):
 
     def open_edit_event(self, instance):
         """ 'Edit Event' function """
-        pass
+        ... # Change to editing screen
+        self.dismiss()
 
 class DayView(BoxLayout):
     selected_day_text = StringProperty('')
@@ -192,7 +199,10 @@ class DayView(BoxLayout):
         for event in events:
             if current_day == event['start_date'] or current_day == event['end_date']:
                 # Create event UI boxes
-                self.ids.day_events_list.add_widget(DayViewEvent(event))
+                self.ids.day_events_list.add_widget(DayViewEvent(
+                    event_data=event,
+                    event_date=self.selected_day
+                ))
                 no_events = False
             else:
                 continue
@@ -217,9 +227,10 @@ class DayView(BoxLayout):
         self.parent.close_dayview(self)
 
 class DayViewEvent(ButtonBehavior, BoxLayout):
-    def __init__(self, event_data, **kwargs):
+    def __init__(self, event_data, event_date: datetime, **kwargs):
         super().__init__(**kwargs)
         self.event_data = event_data
+        self.event_date = event_date
         self.ids.event_name.text = self.event_data['title']
         self.ids.start_time.text = self.event_data['start_time']
         self.ids.end_time.text = self.event_data['end_time']
@@ -227,7 +238,10 @@ class DayViewEvent(ButtonBehavior, BoxLayout):
 
     def _on_release(self, instance) -> None:
         """ Open ViewEvent Popup """
-        popup = ViewEventPopup(self.event_data['key'])
+        popup = ViewEventPopup(
+            event_key=self.event_data['key'],
+            event_date=self.event_date
+        )
         popup.open()
 
 class MonthView(FloatLayout):

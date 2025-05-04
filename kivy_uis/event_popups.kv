@@ -57,7 +57,7 @@
                     Line:
                         rectangle: self.x, self.y, self.width, self.height
                         width: 1.5
-                text: root.selected_date_start
+                text: root.date_start
                 color: app.colour_text
                 background_normal: ''
                 background_color: app.colour_background
@@ -69,7 +69,7 @@
                     Line:
                         rectangle: self.x, self.y, self.width, self.height
                         width: 1.5
-                text: root.selected_date_end
+                text: root.date_end
                 color: app.colour_text
                 background_normal: ''
                 background_color: app.colour_background
@@ -90,7 +90,7 @@
                     Line:
                         rectangle: self.x, self.y, self.width, self.height
                         width: 1.5
-                text: root.selected_time_start
+                text: root.time_start
                 color: app.colour_text
                 background_normal: ''
                 background_color: app.colour_background
@@ -102,7 +102,7 @@
                     Line:
                         rectangle: self.x, self.y, self.width, self.height
                         width: 1.5
-                text: root.selected_time_end
+                text: root.time_end
                 color: app.colour_text
                 background_normal: ''
                 background_color: app.colour_background
@@ -202,8 +202,9 @@
                 on_release: root.save_event(self)
 
 <ViewEventPopup@Popup>:
-    title: 'View Event'
+    title: '일정 열람'
     title_align: 'center'
+    title_color: app.colour_text
     size_hint: 0.8, 0.6
     auto_dismiss: True
     background: ''
