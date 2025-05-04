@@ -1,8 +1,10 @@
 #:kivy 2.3.1
 <DateSelector@Popup>:
-    title: 'Select Date'
+    title: '날짜 선택'
     title_align: 'center'
-    size_hint: 0.8, 0.6
+    title_color: app.colour_text
+    size_hint: 0.8, 0.7
+    background: ''
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -12,24 +14,36 @@
             Button:
                 id: selector_prev_month
                 text: '<'
+                color: app.colour_text
                 size_hint_x: 0.3
+                background_normal: ''
                 on_release: root.navigate_cal('prev')
             Label:
                 id: selector_month
                 text_align: 'center'
+                color: app.colour_text
             Button:
                 id: selector_next_month
                 text: '>'
+                color: app.colour_text
                 size_hint_x: 0.3
+                background_normal: ''
                 on_release: root.navigate_cal('next')
+        GridLayout:
+            id: selector_calendar_headers
+            cols: 7
+            rows: 1
+            size_hint_y: 0.1
         GridLayout:
             id: selector_calendar
             cols: 7
 
 <TimeSelector@Popup>:
-    title: 'Select Time'
+    title: '시간 선택'
     title_align: 'center'
+    title_color: app.colour_text
     size_hint: 0.8, 0.4
+    background: ''
     # FloatLayout:
     BoxLayout:
         orientation: 'vertical'
@@ -51,14 +65,18 @@
                     Button:
                         id: am_indicator
                         text: 'AM'
+                        color: app.colour_text
                         size_hint_y: None
                         height: dp(40)
+                        background_normal: ''
                         on_release: root.select_meridiem_indicator(self, 'AM')
                     Button:
                         id: pm_indicator
                         text: 'PM'
+                        color: app.colour_text
                         size_hint_y: None
                         height: dp(40)
+                        background_normal: ''
                         on_release: root.select_meridiem_indicator(self, 'PM')
             ScrollView:
                 id: scroll_view_hour
@@ -81,22 +99,26 @@
                     size_hint_y: None
                     height: self.minimum_height
         BoxLayout:
-            orientation: 'horizontal'
-            size_hint: 1, 0.05
             canvas.before:
                 Rectangle:
                     size: self.size
                     pos: self.pos
                 Color:
                     rgba: 0.3, 0.3, 0.3, 1
+            orientation: 'horizontal'
+            size_hint: 1, 0.05
         BoxLayout:
             orientation: 'horizontal'
             size_hint: 1, 0.1
             Button:
-                text: 'OK'
+                text: '선택'
+                color: app.colour_text
+                background_normal: ''
                 on_release: root.close_and_save(self)
             Button:
-                text: 'Cancel'
+                text: '취소'
+                color: app.colour_text
+                background_normal: ''
                 on_release: root.dismiss()
 
 # Basic 2 x 3 colour selector`

@@ -11,7 +11,8 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.metrics import dp
 
-from common_utils import LOCAL_CALENDAR, COLOUR_RGBA_SELECTED, get_month
+from common_utils import LOCAL_CALENDAR, COLOUR_RGBA_SELECTED, get_month, format_month_kor
+from palette import text_colour
 
 Builder.load_file('kivy_uis/selectors.kv')
 
@@ -29,24 +30,27 @@ class DateSelector(Popup):
         self.build()
 
     def build(self) -> None:
+        self.ids.selector_calendar_headers.clear_widgets()
         self.ids.selector_calendar.clear_widgets()
 
         year: int = self.year
         month: int = self.month
 
-        self.ids.selector_month.text = f"{self.calendar.formatmonthname(
-            theyear=year,
-            themonth=month,
-            width=0,
-            withyear=True
-        )}"
+        self.ids.selector_month.text = format_month_kor(year, month)
 
         for weekday in range(7):
-            self.ids.selector_calendar.add_widget(Label(text=self.calendar.formatweekday(day=(weekday + 6) % 7, width=2)))
+            self.ids.selector_calendar_headers.add_widget(Label(
+                text=self.calendar.formatweekday(day=(weekday + 6) % 7, width=2),
+                color=text_colour
+            ))
         for week in get_month(year=year, month=month):
             for day in week:
                 if day.month == month:
-                    btn = Button(text=str(day.day))
+                    btn = Button(
+                        text=str(day.day),
+                        color=text_colour,
+                        background_normal=''
+                    )
                     btn.bind(on_release=self.on_day_selected)
                     self.ids.selector_calendar.add_widget(btn)
                 else:
@@ -140,6 +144,8 @@ class TimeSelector(Popup):
         for hour in range(1, 13):
             btn_hour = Button(
                 text=f'{hour}',
+                color=text_colour,
+                background_normal='',
                 size_hint_y=None,
                 height=dp(40)
             )
@@ -148,6 +154,8 @@ class TimeSelector(Popup):
         for minute in range(0, 60):
             btn_minute = Button(
                 text=f'{minute:02}',
+                color=text_colour,
+                background_normal='',
                 size_hint_y=None,
                 height=dp(40)
             )
@@ -155,7 +163,7 @@ class TimeSelector(Popup):
             self.ids.select_minute.add_widget(btn_minute)
 
     def highlight_selected(self) -> None:
-        """ Highlight initial values """
+        """ and highlight initial values """
         if self.meridiem_indicator == 'AM':
             self.ids.am_indicator.background_color = COLOUR_RGBA_SELECTED
             self.ids.pm_indicator.background_color = [1, 1, 1, 1]
@@ -168,61 +176,6 @@ class TimeSelector(Popup):
 
         for child in self.ids.select_minute.children:
             child.background_color = (child.text == self.selected_minute) and COLOUR_RGBA_SELECTED or [1,1,1,1]
-
-    # def on_kv_post(self, base_widget):
-    #     """ Scroll stop detection -> calls on_scroll_stop"""
-    #     # self.ids.scroll_view_meridian.bind(scroll_y=self._scrollview_snap_meridian)
-    #     # self.ids.scroll_view_hour.bind(scroll_y=self._scrollview_snap_hour)
-    #     self.ids.scroll_view_minute.bind(scroll_y=self._scrollview_snap_minute)
-
-    # def on_scroll_stop(self, instance, value):
-    #     """ Wait 0.2 seconds before snapping, to avoid unnatural instant snapping """
-    #     if self.scroll_timeout:
-    #         self.scroll_timeout.cancel()
-    #     self.scroll_timeout = Clock.schedule_once(instance.on_scroll_stop, 0.2)
-
-    # def _scrollview_snap_meridian(self, instance, value):
-    #     self.ids.select_meridian.parent.bind(scroll_y=self.on_scroll_stop)
-    #     self._scrollview_snap(instance, self.ids.select_meridiem)
-
-    # def _scrollview_snap_hour(self, instance, value):
-    #     self.ids.select_hour.parent.bind(scroll_y=self.on_scroll_stop)
-    #     self._scrollview_snap(instance, self.ids.select_hour)
-
-    # def _scrollview_snap_minute(self, instance, value):
-    #     # self.ids.select_minute.parent.bind(scroll_y=self.on_scroll_stop)
-    #     self._scrollview_snap(instance, self.ids.select_minute)
-
-    # def _scrollview_snap(self, scrollview, layout):
-    #     """
-    #     Used for snapping grids to fixed bars on scrollable views for selection
-
-    #     Referenced in TimeSelector
-    #     """
-    #     children = layout.children
-
-    #     if not children:
-    #         print('NO children')
-    #         return
-
-    #     center_y = scrollview.to_widget(scrollview.center_x, scrollview.center_y)[1] # [0] = x, [1] = y
-    #     print(f'center_y = {center_y}')
-    #     closest = min(children, key=lambda w: abs(w.center_y - center_y))
-    #     print(f'closest = {closest}')
-    #     scroll_target_y = (closest.y + closest.height / 2) - (scrollview.height / 2)
-    #     print(f'scroll_target_y = {scroll_target_y}')
-    #     max_scroll_y = layout.height - scrollview.height
-    #     print(f'max_scroll_y = {max_scroll_y}')
-    #     scroll_target_y = max(0, min(scroll_target_y, max_scroll_y))
-    #     print(f'scroll_target_y = {scroll_target_y}')
-    #     scroll_y = 1 - (scroll_target_y / max_scroll_y) if max_scroll_y > 0 else 1
-    #     print(f'scroll_y = {scroll_y}')
-
-    #     if abs(scrollview.scroll_y - scroll_y) < 0.01: # don't snap if close enough
-    #         print("Won't snap because block is too close to bar")
-    #         return
-
-    #     Animation(scroll_y=scroll_y, d=0.2).start(scrollview)
 
     def select_meridiem_indicator(self, instance, indicator: str) -> None:
         """ Highlight selected hour """

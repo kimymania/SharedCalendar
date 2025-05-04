@@ -18,6 +18,12 @@
 
 ---
 
+## 2025/05/02
+
+- CHANGED: Date selector UI
+
+---
+
 ## 2025/05/01
 
 - CHANGED: AddEvent popup UI
