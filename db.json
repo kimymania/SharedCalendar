@@ -44,5 +44,28 @@
         "notification": false,
         "notification_details": {},
         "important": false
+    },
+    {
+        "key": 3,
+        "title": "1000일",
+        "start_date": "25/05/15",
+        "end_date": "25/05/15",
+        "start_time": "00:00",
+        "end_time": "23:59",
+        "group_tag": {
+            "name": "짠무",
+            "colour": [
+                1,
+                0,
+                0,
+                1
+            ]
+        },
+        "location": "",
+        "repeat": false,
+        "repeat_details": {},
+        "notification": true,
+        "notification_details": {},
+        "important": false
     }
 ]

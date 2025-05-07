@@ -1,5 +1,4 @@
 #:kivy 2.3.1
-
 <AddEventPopup@Popup>:
     canvas.before:
         Color:
@@ -212,60 +211,92 @@
         orientation: 'vertical'
         spacing: dp(10)
         padding: dp(10)
-        Label:
-            id: event_name
-            size_hint_y: 0.35
-            color: app.colour_text
         BoxLayout:
             orientation: 'horizontal'
-            spacing: dp(10)
+            spacing: dp(15)
+            size_hint_y: 0.35
+            Label:
+                text: '제목'
+                size_hint_x: None
+                width: dp(20)
+                color: app.colour_text
+            Label:
+                id: event_name
+                color: app.colour_text
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(15)
             size_hint_y: 0.35
             Label:
                 text: '날짜'
-                size_hint_x: 0.2
+                size_hint_x: None
+                width: dp(20)
                 color: app.colour_text
             Label:
+                canvas:
+                    Color:
+                        rgba: app.colour_lines
+                    Line:
+                        rectangle: self.x, self.y, self.width, self.height
+                        width: 1.5
                 id: date_start
                 color: app.colour_text
             Label:
+                canvas:
+                    Color:
+                        rgba: app.colour_lines
+                    Line:
+                        rectangle: self.x, self.y, self.width, self.height
+                        width: 1.5
                 id: date_end
                 color: app.colour_text
-
         BoxLayout:
             orientation: 'horizontal'
-            spacing: dp(10)
+            spacing: dp(15)
             size_hint_y: 0.35
             Label:
                 text: '시간'
-                size_hint_x: 0.2
+                size_hint_x: None
+                width: dp(20)
                 color: app.colour_text
             Label:
+                canvas:
+                    Color:
+                        rgba: app.colour_lines
+                    Line:
+                        rectangle: self.x, self.y, self.width, self.height
+                        width: 1.5
                 id: time_start
                 color: app.colour_text
             Label:
+                canvas:
+                    Color:
+                        rgba: app.colour_lines
+                    Line:
+                        rectangle: self.x, self.y, self.width, self.height
+                        width: 1.5
                 id: time_end
                 color: app.colour_text
-
         BoxLayout:
             orientation: 'horizontal'
-            spacing: dp(10)
+            spacing: dp(15)
             size_hint_y: 0.35
             Label:
                 text: '태그'
-                halign: 'right'
-                valign: 'middle'
+                size_hint_x: None
+                width: dp(20)
                 color: app.colour_text
             Label:
                 id: group_tag
                 halign: 'left'
                 valign: 'middle'
                 color: app.colour_text
-
         BoxLayout:
             orientation: 'horizontal'
+            spacing: dp(10)
             size_hint_y: 0.35
             Label:
-                text: '위치: '
+                text: '위치'
                 halign: 'right'
                 valign: 'middle'
                 color: app.colour_text
@@ -274,12 +305,12 @@
                 halign: 'left'
                 valign: 'middle'
                 color: app.colour_text
-
         BoxLayout:
             orientation: 'horizontal'
+            spacing: dp(15)
             size_hint_y: 0.35
             Label:
-                text: '반복: '
+                text: '반복'
                 halign: 'right'
                 valign: 'middle'
                 color: app.colour_text
@@ -288,12 +319,12 @@
                 halign: 'left'
                 valign: 'middle'
                 color: app.colour_text
-
         BoxLayout:
             orientation: 'horizontal'
+            spacing: dp(15)
             size_hint_y: 0.35
             Label:
-                text: '알림: '
+                text: '알림'
                 halign: 'right'
                 valign: 'middle'
                 color: app.colour_text
@@ -302,7 +333,6 @@
                 halign: 'left'
                 valign: 'middle'
                 color: app.colour_text
-
         AnchorLayout:
             anchor_x: 'center'
             anchor_y: 'bottom'

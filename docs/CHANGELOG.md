@@ -18,6 +18,12 @@
 
 ---
 
+## 2025/05/08
+
+- CHANGED: View Event popup UI
+
+---
+
 ## 2025/05/04
 
 - CHANGED: Time selector UI

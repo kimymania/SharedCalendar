@@ -34,15 +34,15 @@ class AddEventPopup(Popup):
     time_end = StringProperty('')
     def __init__(self, selected_day: datetime, **kwargs) -> None:
         super().__init__(**kwargs)
-        selected_date: datetime = datetime.today()
-        this_time = selected_date.time()
-        selected_date.combine(date=selected_day, time=this_time)
+        this_date: datetime = datetime.today()
+        this_time = this_date.time()
+        this_date.combine(date=selected_day, time=this_time)
         self.selected_date = selected_day
         self.date_start = selected_day.strftime('%y/%m/%d')
         self.date_end = selected_day.strftime('%y/%m/%d')
-        self.time_start: str = f'{selected_date.hour:02}:00'
-        if selected_date.hour < 23:
-            end_hour = selected_date.hour + 1
+        self.time_start: str = f'{this_date.hour:02}:00'
+        if this_date.hour < 23:
+            end_hour = this_date.hour + 1
         else:
             end_hour = 0
         self.time_end: str = f'{end_hour:02}:00'
@@ -178,7 +178,8 @@ class ViewEventPopup(Popup):
 
     def open_edit_event(self, instance):
         """ 'Edit Event' function """
-        ... # Change to editing screen
+        popup = AddEventPopup(selected_day=self.event_date)
+        popup.open()
         self.dismiss()
 
 class DayView(BoxLayout):
@@ -198,7 +199,6 @@ class DayView(BoxLayout):
         no_events = True
         for event in events:
             if current_day == event['start_date'] or current_day == event['end_date']:
-                # Create event UI boxes
                 self.ids.day_events_list.add_widget(DayViewEvent(
                     event_data=event,
                     event_date=self.selected_day
