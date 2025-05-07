@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 
 from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout
+from kivy.animation import Animation
 
 from common_utils import LOCAL_CALENDAR
 from cal_views import MonthView, YearView, WeekView
@@ -109,20 +110,20 @@ class CoreFunctions(BoxLayout):
         month: int = self.current_date.month
 
         if self.view_index == 0:
-            if swipe_right is True:
+            if swipe_right:
                 year = self.current_date.year - 1
-            elif swipe_right is False:
+            else:
                 year = self.current_date.year + 1
             self.current_date = self.current_date.replace(year=year)
 
         elif self.view_index == 1:
-            if swipe_right is True:
+            if swipe_right:
                 if self.current_date.month == 1:
                     month = 12
                     year -= 1
                 else:
                     month -= 1
-            elif swipe_right is False:
+            else:
                 if month == 12:
                     month = 1
                     year += 1
@@ -131,11 +132,23 @@ class CoreFunctions(BoxLayout):
             self.current_date = self.current_date.replace(year=year, month=month)
 
         elif self.view_index == 2:
-            if swipe_right is True:
+            if swipe_right:
                 self.current_date += timedelta(days=-7)
-            elif swipe_right is False:
+            else:
                 self.current_date += timedelta(days=+7)
+
+        if swipe_right:
+            anim_out = Animation(x=-Window.width, d=0.3)
+        else:
+            anim_out = Animation(x=Window.width, d=0.3)
+        anim_out.bind(on_complete=lambda *args: self.reload_anim())
+        anim_out.start(self)
+
+    def reload_anim(self):
         self.update_calendar_gui()
+        self.x = Window.width
+        anim_in = Animation(x=0, duration=0.3)
+        anim_in.start(self)
 
     def update_calendar_gui(self, *args) -> None:
         """
