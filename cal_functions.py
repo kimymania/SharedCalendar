@@ -5,8 +5,10 @@ Orientation isn't implemented yet
 from datetime import datetime, timedelta
 
 from kivy.core.window import Window
-from kivy.uix.boxlayout import BoxLayout
 from kivy.animation import Animation
+from kivy.graphics.texture import Texture
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.image import Image
 
 from common_utils import LOCAL_CALENDAR
 from cal_views import MonthView, YearView, WeekView
@@ -16,7 +18,7 @@ def get_displayed_date(date_string: str) -> datetime:
     current_day: datetime = None
     return current_day.strptime(date_string, '%Y%m%d')
 
-class CoreFunctions(BoxLayout):
+class CoreFunctions(FloatLayout):
     def __init__(self, locale: str, **kwargs):
         super().__init__(**kwargs)
         LOCAL_CALENDAR.locale = locale
@@ -138,17 +140,40 @@ class CoreFunctions(BoxLayout):
                 self.current_date += timedelta(days=+7)
 
         if swipe_right:
-            anim_out = Animation(x=-Window.width, d=0.3)
-        else:
             anim_out = Animation(x=Window.width, d=0.3)
-        anim_out.bind(on_complete=lambda *args: self.reload_anim())
+            anim_out.bind(on_start=lambda *args: self.reload_anim(direction=True))
+        else:
+            anim_out = Animation(x=-Window.width, d=0.3)
+            anim_out.bind(on_start=lambda *args: self.reload_anim(direction=False))
         anim_out.start(self)
 
-    def reload_anim(self):
+    def reload_anim(self, direction: bool) -> None:
+        self.save_window_image(container=self)
         self.update_calendar_gui()
-        self.x = Window.width
+        if direction:
+            self.x = -Window.width
+        else:
+            self.x = Window.width
         anim_in = Animation(x=0, duration=0.3)
         anim_in.start(self)
+        self.clear_bg(container=self)
+
+    # currently not working
+    # need to find a way to save current screen to memory before launching animation
+    def save_window_image(self, container) -> None:
+        texture = Texture.create(size=Window.size)
+
+        pixels = Window.render_to_texture()
+        texture.blit_buffer(pixels.pixels, colorfmt='rgba', bufferfmt='ubyte')
+        texture.flip_vertical()
+
+        self.bg_image = Image(texture=texture, size=Window.size, pos=(0, 0))
+        container.add_widget(self.bg_image, index=0)
+
+    def clear_bg(self, container):
+        if hasattr(self, 'bg_image') and self.bg_image in container.children:
+            container.remove_widget(self.bg_image)
+            del self.bg_image
 
     def update_calendar_gui(self, *args) -> None:
         """

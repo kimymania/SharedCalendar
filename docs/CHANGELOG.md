@@ -21,6 +21,7 @@
 ## 2025/05/08
 
 - CHANGED: View Event popup UI
+- ADDED: Basic transition animation - WIP
 
 ---
 
