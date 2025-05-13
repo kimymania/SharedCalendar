@@ -148,32 +148,13 @@ class CoreFunctions(FloatLayout):
         anim_out.start(self)
 
     def reload_anim(self, direction: bool) -> None:
-        self.save_window_image(container=self)
         self.update_calendar_gui()
         if direction:
             self.x = -Window.width
         else:
             self.x = Window.width
-        anim_in = Animation(x=0, duration=0.3)
+        anim_in = Animation(x=0, d=0.3)
         anim_in.start(self)
-        self.clear_bg(container=self)
-
-    # currently not working
-    # need to find a way to save current screen to memory before launching animation
-    def save_window_image(self, container) -> None:
-        texture = Texture.create(size=Window.size)
-
-        pixels = Window.render_to_texture()
-        texture.blit_buffer(pixels.pixels, colorfmt='rgba', bufferfmt='ubyte')
-        texture.flip_vertical()
-
-        self.bg_image = Image(texture=texture, size=Window.size, pos=(0, 0))
-        container.add_widget(self.bg_image, index=0)
-
-    def clear_bg(self, container):
-        if hasattr(self, 'bg_image') and self.bg_image in container.children:
-            container.remove_widget(self.bg_image)
-            del self.bg_image
 
     def update_calendar_gui(self, *args) -> None:
         """
